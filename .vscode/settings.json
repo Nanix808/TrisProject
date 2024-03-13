@@ -1,0 +1,11 @@
+{
+    "python.terminal.activateEnvInCurrentTerminal": true,
+    "sqltools.connections": [],
+    "python.testing.pytestArgs": [],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "python.testing.cwd": "${workspaceFolder}/backend/tests",
+    "python.testing.autoTestDiscoverOnSaveEnabled": true,
+    "python.analysis.packageIndexDepths":[["sqlalchemy",2]],
+   
+}
