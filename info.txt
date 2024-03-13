@@ -1,0 +1,6 @@
+1. conda create --name .....
+2. conda activate ....
+3. pip install poerty
+4. poetry config --list 
+5. poetry config virtualenvs.in-project true
+6. poetry shell
