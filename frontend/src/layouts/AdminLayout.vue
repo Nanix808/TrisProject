@@ -20,36 +20,23 @@ import { RouterLink, RouterView } from 'vue-router'
 <style lang="scss">
 .admin__container {
     display: flex;
-    align-items: flex-end;
-    justify-content: flex-end;
+    flex-direction: row;
+    align-content: flex-start;
+
 
 
 
     & .admin__left_side {
-        width: 15%;
-        background-color: $admin-left-side-background;
+        flex: 0 0 270px;
         min-height: 100vh;
-        position: absolute;
-        top: 0;
-        left: 0;
         display: flex;
         flex-direction: column;
-
         justify-content: flex-start;
-
-
-
-
-
-
     }
 
-
     & .admin__right_side {
-        width: 85%;
+        flex: 1 1 auto;
         min-height: 95vh;
-
-
     }
 
 }

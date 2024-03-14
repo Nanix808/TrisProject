@@ -35,20 +35,25 @@ const emit = defineEmits<{
 <style lang="scss">
 button {
   width: 100%;
-  margin: 0 10px 0 10px;
-  cursor: pointer;
-  border-radius: 5px;
-  padding: 10px 25px;
-  color: black;
+
+  background-color: $second-color;
+  /* Green */
   border: none;
-  background-color: #d7dfe2;
-  box-shadow: -5px -5px 10px white, 5px 5px 10px #90a4ae;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
 
 
 }
 
 button.has-success:hover {
-  color: $default-success;
+  color: $second-color-font;
+  background-color: $admin-left-side-background;
 
 }
 
@@ -57,18 +62,18 @@ button.has-error:hover {
 }
 
 button:disabled {
-  box-shadow: -5px -5px 10px white, 5px 5px 10px #90a4ae,
-    inset -5px -5px 10px white, inset 5px 5px 10px #90a4ae;
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 button.has-success:active {
-  color: $default-success;
-  box-shadow: inset 4px 4px 12px #c5c5c5, inset -4px -4px 12px #ffffff;
+  color: $main-color-font;
+
 }
 
 button.has-error:active {
   color: $default-error;
-  box-shadow: inset 4px 4px 12px #c5c5c5, inset -4px -4px 12px #ffffff;
+
 
 }
 </style>

@@ -31,6 +31,13 @@
 
 <style lang="scss">
 .left_menu_admin_container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    height: 100vh;
+    background-color: $admin-left-side-background;
+    width: 270px;
 
     & h2 {
         min-height: 5vh;

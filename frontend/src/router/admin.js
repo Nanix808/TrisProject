@@ -14,17 +14,21 @@ export default [
     meta: {
       layout: "AdminLayout",
     },
+    props: true,
     children: [
       {
-        path: "allusers",
+        path: "",
+        name: "admin_users",
         component: () => import("../views/admin/users/GetUsersAdmin.vue"),
       },
       {
         path: "roles",
+        name: "admin_roles",
         component: () => import("../views/admin/users/GetRolesAdmin.vue"),
       },
       {
         path: "permissions",
+        name: "admin_permissions",
         component: () => import("../views/admin/users/GetPermissionsAdmin.vue"),
       },
     ],

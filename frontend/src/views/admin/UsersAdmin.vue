@@ -1,32 +1,27 @@
 <template>
-
-
-
     <div class="admin__user__container">
         <div class="admin__user__header">
             <div class="admin__user__header_users admin__user__header_items">
-                <router-link to="allusers">
+                <router-link :to="{ name: 'admin_users' }">
                     Пользователи
                 </router-link>
             </div>
             <div class="admin__user__header_roles admin__user__header_items">
-                <router-link to="roles">
+                <router-link :to="{ name: 'admin_roles' }">
                     Роли
                 </router-link>
             </div>
             <div class="admin__user__header_permissions admin__user__header_items">
-                <router-link to="permissions">
+                <router-link :to="{ name: 'admin_permissions' }">
                     Разрешения
                 </router-link>
             </div>
         </div>
-        <RouterView />
-        {{ users }}
-        {{ roles }}
+
+        <div class="admin__user__main__container">
+            <RouterView />
+        </div>
     </div>
-
-
-
 </template>
 
 
@@ -34,22 +29,25 @@
 import { RouterLink, RouterView } from 'vue-router'
 import { ref, onMounted } from 'vue'
 import { UrlApi } from "@/api";
+import { useStore } from 'vuex';
 
-
+const store = useStore()
 const users = ref<any>([])
 const roles = ref<any>([])
 
 onMounted(() => {
+    store.dispatch('admin_get_all_users');
+    store.dispatch('admin_get_all_roles');
 
-    UrlApi.adminUserRoutes.getUsers().then((res) => {
+    // UrlApi.adminUserRoutes.getUsers().then((res) => {
 
-        users.value = res.data
-    });
+    //     users.value = res.data
+    // });
 
-    UrlApi.adminUserRoutes.getRoles().then((res) => {
+    // UrlApi.adminUserRoutes.getRoles().then((res) => {
 
-        roles.value = res.data
-    });
+    //     roles.value = res.data
+    // });
 
 })
 
@@ -61,7 +59,6 @@ onMounted(() => {
 
 <style lang="scss">
 .admin__user__container {
-    color: $second-color-font;
 
 
     & .admin__user__header {
@@ -89,9 +86,18 @@ onMounted(() => {
                 display: flex;
                 align-items: center;
                 justify-content: center;
+
+                &.router-link-active {
+                    color: $main-color-font;
+                }
+
+                &.router-link-exact-active {
+                    color: $second-color-font;
+                }
             }
         }
-
     }
+
+    & .admin__user__main__container {}
 }
 </style>
