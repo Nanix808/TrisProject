@@ -1,0 +1,48 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: "tris"
+      POSTGRES_USER: "test"
+      POSTGRES_PASSWORD: "test"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - mycustomnetwork  
+
+
+  postgres_test:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: "tris_test"
+      POSTGRES_USER: "test"
+      POSTGRES_PASSWORD: "test"
+    ports:
+      - "5433:5432"
+    networks:
+      - mycustomnetwork      
+
+
+#   bewise_ai:
+#     build: ./
+#     container_name: bewise_ai
+#     ports:
+#       - '8000:8000'
+#     restart: unless-stopped
+#     depends_on:
+#       - postgres
+#     networks:
+#       - mycustomnetwork
+
+
+volumes:
+  postgres-data:
+
+
+networks:
+  mycustomnetwork:
+    driver: bridge
+    
