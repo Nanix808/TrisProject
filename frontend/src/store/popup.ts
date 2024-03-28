@@ -1,20 +1,29 @@
-interface UserPayload {
+interface PopapState {
   isLoginPopupOpen: boolean;
+  isRegisterPopupOpen: boolean;
 }
 
 export default {
-  state: (): UserPayload => {
+  state: (): PopapState => {
     const isLoginPopupOpen = false;
+    const isRegisterPopupOpen = false;
     return {
       isLoginPopupOpen: false,
+      isRegisterPopupOpen: false,
     };
   },
   mutations: {
-    openLoginPopup(state: any) {
+    openLoginPopup(state: PopapState) {
       state.isLoginPopupOpen = true;
     },
-    closeLoginPopup(state: any) {
+    closeLoginPopup(state: PopapState) {
       state.isLoginPopupOpen = false;
+    },
+    openRegisterPopup(state: PopapState) {
+      state.isRegisterPopupOpen = true;
+    },
+    closeRegisterPopup(state: PopapState) {
+      state.isRegisterPopupOpen = false;
     },
   },
   // actions: {

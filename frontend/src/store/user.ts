@@ -1,20 +1,26 @@
-import { UrlApi } from "@/api";
-import { UserPayload } from "./types";
+import { UrlApi } from '@/api';
+import { UserPayload } from './types';
 
 interface User {
   email: string;
+  request_unsuccess: boolean;
 }
 
 export default {
   state: (): User => {
-    const email = localStorage.getItem("accessToken") || null;
+    const email = localStorage.getItem('accessToken') || null;
+    // const registerSuccess;
     return {
-      email: "",
+      email: '',
+      request_unsuccess: false,
     };
   },
   mutations: {
-    setUserName(state: any, email: string) {
+    setUserName(state: User, email: string) {
       state.email = email;
+    },
+    request_unsuccess(state: User, success: boolean) {
+      state.request_unsuccess = success;
     },
   },
   actions: {
@@ -25,11 +31,17 @@ export default {
           password_hash: payload.password,
         })
         .then((res) => {
-          console.log(res.data);
-          // commit("setUserName", payload);
-          // commit("setToken", res.data);
+          commit('closeRegisterPopup');
+          // setTimeout(() => {
+          //   commit("setRegisterSuccess", false);
+          // }, 2000);
+        })
+        .catch(() => {
+          commit('request_unsuccess', true);
         });
     },
+
+   
   },
   getters: {
     // isAuthenticatedUser: (state: User): boolean => state.email,

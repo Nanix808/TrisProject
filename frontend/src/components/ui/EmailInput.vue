@@ -2,7 +2,7 @@
   <div class="email_input_container">
     <BaseInput
       :label="label"
-      :isActive="isEmailValid"
+      :isActive="isEmailValid && !props.error"
       @input_value="set_input_value"
     >
     </BaseInput>
@@ -10,12 +10,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import BaseInput from "@/components/ui/BaseInput.vue";
+import { ref} from "vue";
+import { useStore } from 'vuex';
+import BaseInput from "@/components/base/BaseInput.vue";
+
+interface Props {
+  error?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  error: false
+})
+
 
 const emit = defineEmits<{
   (e: 'valid_value', inEmail: boolean, value: string): void
 }>()
+
+const store = useStore()
 
 const text = ref<string>("");
 const label: string = "Электронная почта";
@@ -28,6 +40,8 @@ function set_input_value(input_value) {
   } else {
     isEmailValid.value = false;
   } 
+ 
+  store.commit('request_unsuccess', false);
   emit('valid_value', isEmailValid.value, input_value)
   text.value = input_value;
 }

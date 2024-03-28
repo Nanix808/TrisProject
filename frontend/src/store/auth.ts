@@ -1,5 +1,5 @@
-import { UrlApi } from "@/api";
-import { UserPayload } from "./types";
+import { UrlApi } from '@/api';
+import { UserPayload } from './types';
 
 interface State {
   userName: string;
@@ -9,15 +9,14 @@ interface State {
   isAuthenticated: boolean;
 }
 
-
 export default {
   state: (): State => {
-    const accessToken = localStorage.getItem("accessToken") || null;
-    const refreshToken = localStorage.getItem("refreshToken") || null;
-    const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+    const accessToken = localStorage.getItem('accessToken') || null;
+    const refreshToken = localStorage.getItem('refreshToken') || null;
+    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
     return {
-      userName: "",
-      userEmail: "",
+      userName: '',
+      userEmail: '',
       accessToken,
       refreshToken,
       isAuthenticated,
@@ -31,27 +30,26 @@ export default {
       state.accessToken = data.access_token;
       state.refreshToken = data.refresh_token;
       state.isAuthenticated = true;
-      localStorage.setItem("accessToken", data.access_token);
-      localStorage.setItem("refreshToken", data.refresh_token);
-      localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem('accessToken', data.access_token);
+      localStorage.setItem('refreshToken', data.refresh_token);
+      localStorage.setItem('isAuthenticated', 'true');
     },
   },
   actions: {
     setUser({ commit }, payload: UserPayload) {
-      commit("setUSER", payload);
+      commit('setUSER', payload);
     },
 
     login({ commit }, payload: UserPayload) {
       UrlApi.authRoutes
         .login({ username: payload.email, password: payload.password })
         .then((res) => {
-          commit("setUserName", payload);
-          commit("setToken", res.data);
+          commit('setUserName', payload);
+          commit('setToken', res.data);
+        })
+        .catch(() => {
+          commit('request_unsuccess', true);
         });
-      // .catch(() => {
-      //         commit('showModal', "Вы ввели неправильное имя и пароль", {root: true})
-      //     }
-      // )
     },
   },
   getters: {

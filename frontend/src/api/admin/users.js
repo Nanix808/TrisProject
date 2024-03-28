@@ -9,3 +9,9 @@ export const getRoles = () => {
   const url = "/authorization/";
   return DefaultApiInstance.get(url);
 };
+
+export const updateUser = (id, payload) => {
+  const url = '/users/' + id;
+  console.log(payload);
+  return DefaultApiInstance.patch(url, payload);
+};

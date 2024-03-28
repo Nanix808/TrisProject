@@ -1,63 +1,67 @@
 <template>
   <div v-if="props.isOpen">
-    <BasePopUP :name=name @close="close">
+    <BasePopUP :name="name" @close="close">
       <div class="user-box">
-        <EmailInput @valid_value="set_email_valid_value">
+        <EmailInput
+          :error="store.state.user.request_unsuccess"
+          @valid_value="set_email_valid_value"
+        >
         </EmailInput>
       </div>
       <div class="user-box">
-        <PasswordInput @valid_value="set_password_valid_value">
+        <PasswordInput
+          :error="store.state.user.request_unsuccess"
+          @valid_value="set_password_valid_value"
+        >
         </PasswordInput>
       </div>
       <div class="button-box">
-        <BaseButton :name="'Войти'" :is-active="isEmailValid && isPasswordValid" @click="userLogin">
+        <BaseButton
+          :name="'Войти'"
+          :is-active="isEmailValid && isPasswordValid"
+          @click="userLogin"
+        >
         </BaseButton>
-        <span>Зарегистрироваться</span>
+        <span @click="openRegisterPopup">Зарегистрироваться</span>
         <span>Востановить пароль</span>
       </div>
     </BasePopUP>
   </div>
 </template>
 
-
-
-
-
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useStore } from 'vuex'
-import BasePopUP from '@/components/auth/BasePopUP.vue'
-import EmailInput from '@/components/ui/EmailInput.vue'
-import PasswordInput from '@/components/ui/PasswordInput.vue'
-import BaseButton from '@/components/ui/BaseButton.vue'
+import { ref } from 'vue';
+import { useStore } from 'vuex';
+import BasePopUP from '@/components/base/BasePopUP.vue';
+import EmailInput from '@/components/ui/EmailInput.vue';
+import PasswordInput from '@/components/ui/PasswordInput.vue';
+import BaseButton from '@/components/base/BaseButton.vue';
 
-
-
-const store = useStore()
-
-
+const store = useStore();
 
 interface Props {
-  isOpen: boolean
+  isOpen: boolean;
 }
-const props = defineProps<Props>()
-const isEmailValid = ref<boolean>(false)
-const emailValue = ref<string>("")
-const isPasswordValid = ref<boolean>(false)
-const passwordValue = ref<string>("")
-const name = <string>('Введите логин и пароль')
+const props = defineProps<Props>();
+const isEmailValid = ref<boolean>(false);
+const emailValue = ref<string>('');
+const isPasswordValid = ref<boolean>(false);
+const passwordValue = ref<string>('');
+const name = <string>'Введите логин и пароль';
 
 const emit = defineEmits<{
-  (e: 'close'): void
-}>()
-
+  (e: 'close'): void;
+}>();
 
 function close() {
   emit('close');
 }
 
 function userLogin() {
-  store.dispatch('login', { email: emailValue.value, password: passwordValue.value });
+  store.dispatch('login', {
+    email: emailValue.value,
+    password: passwordValue.value,
+  });
 }
 
 function set_email_valid_value(isEmail: boolean, value: string) {
@@ -69,9 +73,11 @@ function set_password_valid_value(isPassword: boolean, value: string) {
   passwordValue.value = value;
 }
 
-
+function openRegisterPopup() {
+  store.commit('closeLoginPopup');
+  store.commit('openRegisterPopup');
+}
 </script>
-
 
 <style lang="scss">
 .user-box {
@@ -99,8 +105,6 @@ function set_password_valid_value(isPassword: boolean, value: string) {
     &:hover {
       color: $default-success;
     }
-
   }
-
 }
 </style>

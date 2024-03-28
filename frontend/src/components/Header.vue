@@ -3,10 +3,11 @@
         <span @click="Upload">Upload</span>
         <router-link to="/admin">Go to Admin</router-link>
         <!-- <span @click="/admin">Admin</span> -->
-        <LoginPopUP :isOpen=isLoginPopupOpen @close="closeLoginPopup" />
-        <div class="login" @click="openLoginPopup">Войти</div>
+        <LoginPopUP :isOpen=store.state.popup.isLoginPopupOpen @close="store.commit('closeLoginPopup')" />
+        <div class=" login" @click="store.commit('openLoginPopup')">Войти
+        </div>
 
-        <RegisterPopUP :isOpen=false @close="closeLoginPopup" />
+        <RegisterPopUP :isOpen=isRegisterPopupOpen @close="store.commit('closeRegisterPopup')" />
     </div>
 </template>
 
@@ -18,16 +19,27 @@ import { useStore } from 'vuex'
 
 const store = useStore()
 const isLoginPopupOpen = computed(() => store.state.popup.isLoginPopupOpen);
+const isRegisterPopupOpen = computed(() => store.state.popup.isRegisterPopupOpen);
+// && !store.state.user.registerSuccess
 function Upload() {
     store.dispatch('getUsers');
 }
 
-function closeLoginPopup() {
-    store.commit('closeLoginPopup');
-}
-function openLoginPopup() {
-    store.commit('openLoginPopup');
-}
+// function closeLoginPopup() {
+//     store.commit('closeLoginPopup');
+// }
+// function openLoginPopup() {
+//     store.commit('openLoginPopup');
+// }
+
+// function closeRegisterPopup() {
+//     store.commit('closeRegisterPopup');
+// }
+// function openRegisterPopup() {
+
+//     return store.state.popup.isRegisterPopupOpen && !store.state.user.registerSuccess
+//     store.commit('openRegisterPopup');
+// }
 
 </script>
 

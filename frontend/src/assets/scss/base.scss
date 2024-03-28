@@ -30,3 +30,14 @@ a.router-link-exact-active{
 }
 
 
+/* Стили для скролла */
+::-webkit-scrollbar {
+	width: 6px;
+} 
+::-webkit-scrollbar-track {
+	box-shadow: inset 0 0 6px $second-color-font; 
+} 
+::-webkit-scrollbar-thumb {
+	box-shadow: inset 0 0 6px $second-color; 
+}
+
