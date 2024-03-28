@@ -8,3 +8,6 @@ session_name.se*
 __pycache__*
 
 backend/certs/*
+frontend/node_modules/*
+frontend/dist/*
+frontend/.vite/*
