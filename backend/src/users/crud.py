@@ -1,5 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import joinedload
+
 from .models import User
 from authorization.models import Role
 from authorization.crud import RolesCRUD
@@ -15,13 +17,21 @@ class UsersCRUD:
         self.db_session = db_session
 
     async def get_users(self, *args, **kwargs) -> list[User]:
-        query = select(User).order_by(User.id)
+        query = select(User).options(joinedload(User.role)).order_by(User.id)
         result = await self.db_session.execute(query)
         return result.scalars().all()
 
     async def get_user(self, user_id: int, *args, **kwargs) -> User | None:
-        result = await self.db_session.get(User, user_id)
-        return result
+        query = (
+            select(User)
+            .where(User.id == user_id)
+            .options(joinedload(User.role))
+            .order_by(User.id)
+        )
+        user: User | None = await self.db_session.execute(query)
+        user = user.scalars().first()
+        if user:
+            return user
 
     async def get_user_by_username(self, username: str, *args, **kwargs) -> User | None:
         query = select(User).where(User.username == username)

@@ -7,6 +7,7 @@ from .schemas import (
     User,
     UserBase,
     UserCreate,
+    UserCreated,
     UserUpdate,
     UserUpdatePartial,
 )
@@ -32,7 +33,7 @@ async def get_users(
 
 @user_router.post(
     "/",
-    response_model=UserBase,
+    response_model=UserCreated,
     status_code=status.HTTP_201_CREATED,
     tags=["users"],
 )
@@ -53,18 +54,19 @@ async def get_user(user: User = Depends(user_by_id)):
 
 @user_router.put("/{user_id}", response_model=UserUpdate)
 async def update_user(
-    user_update: UserUpdate,
+    user_update: UserUpdatePartial,
     user: User = Depends(user_by_id),
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):
+
     users_crud = UsersCRUD(session)
     user = await users_crud.update_user(user=user, user_update=user_update)
     return user
 
 
-@user_router.patch("/{user_id}")
+@user_router.patch("/{user_id}", response_model=UserCreated)
 async def update_user_partial(
-    user_update: UserUpdatePartial,
+    user_update: UserUpdate,
     user: User = Depends(user_by_id),
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):

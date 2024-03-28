@@ -42,7 +42,7 @@ async def validate_auth_user(
         hashed_password=user.password_hash,
     ):
         raise unauthed_exc
-    if not user.available:
+    if not user.is_active:
         raise unactive_exc
 
     jwt_payload = {

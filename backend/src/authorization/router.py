@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from .schemas import Role
+from .schemas import Role, BaseRole
 
 # # from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -36,11 +36,11 @@ async def get_roles(
 
 @authz_router.post(
     "/",
-    response_model=Role,
+    response_model=BaseRole,
     status_code=status.HTTP_201_CREATED,
 )
 async def create_role(
-    role_in: Role,
+    role_in: BaseRole,
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ) -> Role:
     rolesCrud = RolesCRUD(session)

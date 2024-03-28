@@ -21,9 +21,7 @@ class User(Base):
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
     profile: Mapped["Profile"] = relationship("Profile", back_populates="user")
-    role_id: Mapped[int] = mapped_column(
-        ForeignKey("role.id"), nullable=True
-    )
+    role_id: Mapped[int] = mapped_column(ForeignKey("role.id"), nullable=True)
     role: Mapped["Role"] = relationship("Role", back_populates="user")
     # role_id: Mapped[list["Role"]] = relationship(
     #     "Role", back_populates="user", nullable=False
