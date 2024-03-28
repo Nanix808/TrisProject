@@ -13,14 +13,21 @@ class CoreModel(BaseModel):
     pass
 
 
+class Role(CoreModel):
+    id: int
+    name: str
+
+
 class UserBase(CoreModel):
-    username: str
-    role_id: int | None = None
-    # email: Optional[str]
-    # phone: Optional[str]
-    # is_verified: Optional[bool]
-    is_active: Optional[bool]
-    # is_superuser: Optional[bool]
+    username: str | None = None
+    email: str | None = None
+    phone: str | None = None
+    is_active: bool | None = False
+    is_verified: bool | None = False
+    is_superuser: bool | None = False
+    refresh_token: str | None = None
+    profile_id: int | None = None
+    role: Role | None = None
 
 
 class UserCreate(CoreModel):
@@ -31,26 +38,34 @@ class UserCreate(CoreModel):
     # phone: str
 
 
+class UserCreated(CoreModel):
+    id: int
+    username: str
+
+
 class UserUpdatePartial(UserBase):
+    pass
+
+
+class UserUpdate(CoreModel):
     username: str | None = None
-    password_hash: str | None = None
     email: str | None = None
     phone: str | None = None
-    available: bool | None = False
     is_active: bool | None = False
+    is_verified: bool | None = False
     is_superuser: bool | None = False
-
-
-class UserUpdate(UserBase):
-    pass
+    profile_id: int | None = None
+    role_id: int | None = None
 
 
 class User(UserBase):
     id: int
 
 
-class Role(UserBase):
+class OnlyUserId(UserBase):
     id: int
+    created_on: datetime | None = None
+    updated_at: datetime | None = None
 
 
 # class Gender(Enum):

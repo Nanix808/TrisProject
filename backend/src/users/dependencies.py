@@ -17,6 +17,7 @@ async def user_by_id(
     """
     Dependency to get User by id
     """
+
     users_crud = UsersCRUD(session)
     user = await users_crud.get_user(user_id)
     if user is not None:

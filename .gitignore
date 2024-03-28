@@ -6,5 +6,5 @@ config.cpyt*
 main.cpy*
 session_name.se*
 __pycache__*
-
+*.vite
 backend/certs/*
