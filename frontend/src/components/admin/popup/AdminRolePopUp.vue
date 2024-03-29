@@ -17,48 +17,10 @@
         </BaseTextarea>
       </div>
       <div class="user-box">
-        <BaseTextarea :text="props.data.permissions" :name="'Разрешения'">
-        </BaseTextarea>
+        <ChoiceRole></ChoiceRole>
+        <!-- <BaseTextarea :text="props.data.permissions" :name="'Разрешения'">
+        </BaseTextarea> -->
       </div>
-
-      <!--  <div class="user-box">
-        <EmailInput
-          :error="false"
-          :start-value="props.data.email"
-          @valid_value="set_email_valid_value"
-        >
-        </EmailInput>
-      </div>
-
-      <div class="user-box">
-        <span class="user-box_name">Активый</span>
-        <BaseCheckbox
-          :visible="props.data.is_active"
-          @change="updateUserParameter($event, 'is_active')"
-        >
-        </BaseCheckbox>
-      </div>
-      <div class="user-box">
-        <span class="user-box_name">Суперпользователь</span>
-        <BaseCheckbox
-          :visible="props.data.is_superuser"
-          @change="updateUserParameter($event, 'is_superuser')"
-        >
-        </BaseCheckbox>
-      </div>
-      <div class="user-box">
-        <span class="user-box_name">Роль</span>
-        <BaseSelect
-          :options="store.state.admin_users.roles"
-          :default="props.data.role ? props.data.role.id : ''"
-          @change="updateUserParameter($event, 'role_id')"
-        >
-        </BaseSelect>
-      </div>
-      <div class="user-box">
-        <BaseTextarea :text="props.data.refresh_token" :name="'Рефреш токен'">
-        </BaseTextarea>
-      </div> -->
 
       <div class="button-box">
         <BaseButton
@@ -77,6 +39,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
+import ChoiceRole from '@/components/admin/ui/ChoiceRole.vue';
 import BasePopUP from '@/components/base/BasePopUP.vue';
 import EmailInput from '@/components/ui/EmailInput.vue';
 import BaseButton from '@/components/base/BaseButton.vue';
