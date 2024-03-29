@@ -6,6 +6,7 @@ export default {
     return {
       users: [],
       roles: [],
+      list_endpoint: [],
     };
   },
   mutations: {
@@ -19,6 +20,12 @@ export default {
       state.roles = [];
       newRole.forEach((item) => {
         state.roles.push(item);
+      });
+    },
+    setEndpointsArray(state: UsersState, newEndpoint: any) {
+      state.list_endpoint = [];
+      newEndpoint.forEach((item) => {
+        state.list_endpoint.push(item);
       });
     },
   },
@@ -36,7 +43,7 @@ export default {
     admin_get_all_endpoints({ commit }) {
       AdminUrlApi.adminUserRoutes.getEndpoints().then((res) => {
         console.log(res.data);
-        // commit('setRolesArray', res.data);
+        commit('setEndpointsArray', res.data);
       });
     },
     updatedUser({ commit }, payload: any) {
