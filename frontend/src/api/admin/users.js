@@ -10,6 +10,11 @@ export const getRoles = () => {
   return DefaultApiInstance.get(url);
 };
 
+export const getEndpoints = () => {
+  const url = '/authorization/list_endpoints/';
+  return DefaultApiInstance.get(url);
+};
+
 export const updateUser = (id, payload) => {
   const url = '/users/' + id;
   return DefaultApiInstance.patch(url, payload);

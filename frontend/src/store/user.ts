@@ -40,8 +40,6 @@ export default {
           commit('request_unsuccess', true);
         });
     },
-
-   
   },
   getters: {
     // isAuthenticatedUser: (state: User): boolean => state.email,

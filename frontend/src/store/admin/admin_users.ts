@@ -33,6 +33,12 @@ export default {
         commit('setRolesArray', res.data);
       });
     },
+    admin_get_all_endpoints({ commit }) {
+      AdminUrlApi.adminUserRoutes.getEndpoints().then((res) => {
+        console.log(res.data);
+        // commit('setRolesArray', res.data);
+      });
+    },
     updatedUser({ commit }, payload: any) {
       for (var user in payload) {
         let id = user;

@@ -33,6 +33,7 @@ const roles = ref<any>([]);
 onMounted(() => {
   store.dispatch('admin_get_all_users');
   store.dispatch('admin_get_all_roles');
+  store.dispatch('admin_get_all_endpoints');
 
   // UrlApi.adminUserRoutes.getUsers().then((res) => {
 
