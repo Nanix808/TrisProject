@@ -15,9 +15,8 @@
     table-layout: fixed;
     border: none;
 
- 
-
     & th {
+      color: $second-color-font;
       font-size: 16px;
       padding: 5px;
       background: $second-color;
@@ -31,7 +30,6 @@
     }
 
     & td {
-      color: $second-color-font;
       padding: 5px 10px;
       border: 1px solid #eee;
       text-align: center;

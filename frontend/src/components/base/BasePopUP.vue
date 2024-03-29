@@ -74,7 +74,6 @@ input:-webkit-autofill:active {
   width: 90%;
   border-radius: 20px;
   cursor: default;
-  color: $second-color-font;
 }
 
 .container_button_close {
