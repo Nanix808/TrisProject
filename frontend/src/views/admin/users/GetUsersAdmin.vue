@@ -7,7 +7,6 @@
         :is-active="isChangeParams"
       >
       </BaseButton>
-
       <BaseButton
         :name="'Добавить пользователя'"
         :is-active="true"

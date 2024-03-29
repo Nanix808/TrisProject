@@ -26,8 +26,6 @@ import { ref, onMounted } from 'vue';
 import { UrlApi } from '@/api';
 import { useStore } from 'vuex';
 
-
-
 const store = useStore();
 const users = ref<any>([]);
 const roles = ref<any>([]);
@@ -76,11 +74,11 @@ onMounted(() => {
         justify-content: center;
 
         &.router-link-active {
-          color: $main-color-font;
+          color: $second-color-font;
         }
 
         &.router-link-exact-active {
-          color: $second-color-font;
+          color: $main-color-font;
         }
       }
     }

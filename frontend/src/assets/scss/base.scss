@@ -22,11 +22,11 @@ body {
 
 
 a.router-link-active {
-   color: $second-color-font;
+   color: $main-color-font;
 }
 
 a.router-link-exact-active{
-   color: $second-color-font;
+   color: $main-color-font;
 }
 
 
@@ -35,9 +35,9 @@ a.router-link-exact-active{
 	width: 6px;
 } 
 ::-webkit-scrollbar-track {
-	box-shadow: inset 0 0 6px $second-color-font; 
+	box-shadow: inset 0 0 6px $main-color-font; 
 } 
 ::-webkit-scrollbar-thumb {
-	box-shadow: inset 0 0 6px $second-color; 
+	box-shadow: inset 0 0 6px $main-color-font; 
 }
 
