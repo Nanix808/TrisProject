@@ -1,7 +1,11 @@
 <template>
   <div class="admin__user__container">
     <div class="admin__user__container_button_box">
-      <BaseButton @click="saveChanges" :name="'Сохранить'" :is-active="true">
+      <BaseButton
+        @click="saveChanges"
+        :name="'Сохранить'"
+        :is-active="isChangeParams"
+      >
       </BaseButton>
 
       <BaseButton
@@ -24,8 +28,10 @@
         </thead>
         <tbody>
           <tr v-for="item in store.state.admin_users.users" :key="item">
-            <td @click="choiseuser(item.id)">{{ item.id }}</td>
-            <td @click="choiseuser(item.id)">{{ item.username }}</td>
+            <td class="choised" @click="choiseuser(item.id)">{{ item.id }}</td>
+            <td class="choised" @click="choiseuser(item.id)">
+              {{ item.username }}
+            </td>
             <td>
               <BaseSelect
                 :options="store.state.admin_users.roles"
@@ -52,41 +58,73 @@
         </tbody>
       </BaseTable>
     </div>
+    <AdminUserPopUp
+      :name="'Изменить пользователя'"
+      :isOpen="store.state.popup.isAdminUserPopupOpen"
+      :data="user"
+      @close="store.commit('closeAdminUserPopup')"
+    >
+    </AdminUserPopUp>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import BaseTable from '@/components/base/BaseTable.vue';
 import BaseButton from '@/components/base/BaseButton.vue';
 import BaseSelect from '@/components/base/BaseSelect.vue';
 import BaseCheckbox from '@/components/base/BaseCheckbox.vue';
+import AdminUserPopUp from '@/components/admin/popup/AdminUserPopUp.vue';
+
+const users = computed(() => store.state.admin_users.users);
+const user = computed(() =>
+  users.value.find((u: any) => u.id === change_user.value)
+);
 
 const store = useStore();
 
-const change_params = {};
+const isChangeParams = computed(() => {
+  return Object.keys(change_params.value).length > 0;
+});
+
+const change_params = ref({});
+let change_user = ref<number>(0);
 
 function updateUserParameter(parameter: any, type: string, id: number) {
-  const temp_arr = change_params[id] ?? [];
+  const temp_arr = change_params.value[id] ?? [];
   const paramIndex = temp_arr.findIndex((p) => Object.keys(p)[0] === type);
   if (paramIndex === -1) {
     temp_arr.push({ [type]: parameter });
   } else {
     temp_arr[paramIndex] = { [type]: parameter };
   }
-  change_params[id] = temp_arr;
+  change_params.value[id] = temp_arr;
 }
 
 function saveChanges() {
-  store.dispatch('updatedUser', change_params);
-  Object.keys(change_params).forEach((key) => delete change_params[key]);
+  store.dispatch('updatedUser', change_params.value);
+  change_params.value = {};
+  // Object.keys(change_params).forEach((key) => delete change_params[key]);
+}
+
+function choiseuser(id: number) {
+  store.commit('openAdminUserPopup');
+  change_user.value = id;
 }
 </script>
 <style lang="scss">
 .scrole_table_container {
   overflow-y: auto;
   height: 86vh;
+
+  & .choised {
+    cursor: pointer;
+
+    &:hover {
+      color: $admin-left-side-background;
+    }
+  }
 }
 
 .admin__user__container_button_box {

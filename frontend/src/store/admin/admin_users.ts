@@ -14,8 +14,6 @@ export default {
       newUsers.forEach((item) => {
         state.users.push(item);
       });
-      // console.log(res.data);
-      // state.users.push(item);
     },
     setRolesArray(state: UsersState, newRole: any) {
       state.roles = [];
@@ -45,11 +43,22 @@ export default {
 
         AdminUrlApi.adminUserRoutes
           .updateUser(id, userUpgradeParametrs)
-          .then((res) => {
-            console.log(res.data);
-          })
-          .catch(() => {});
+          .then((res) => {})
+          .catch(() => {})
+          .finally(() => {
+            this.dispatch('admin_get_all_users');
+          });
       }
+    },
+
+    deleteUser({ commit }, id: number) {
+      AdminUrlApi.adminUserRoutes
+        .deleteUser(id)
+        .then((res) => {})
+        .catch((error) => {})
+        .finally(() => {
+          this.dispatch('admin_get_all_users');
+        });
     },
   },
   getters: {

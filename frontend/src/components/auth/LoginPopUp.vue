@@ -41,6 +41,7 @@ const store = useStore();
 
 interface Props {
   isOpen: boolean;
+  width?: string;
 }
 const props = defineProps<Props>();
 const isEmailValid = ref<boolean>(false);
@@ -80,6 +81,10 @@ function openRegisterPopup() {
 </script>
 
 <style lang="scss">
+.login-popup-container {
+  max-width: 480px;
+}
+
 .user-box {
   position: relative;
   padding-bottom: 30px;

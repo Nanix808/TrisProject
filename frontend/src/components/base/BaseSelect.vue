@@ -10,22 +10,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted } from "vue";
 
 interface Props {
   options?: Array<{ id: number; name: string; description: string }>;
   default?: number | string;
 }
 
-const selected_value = ref<string>('');
+const selected_value = ref<string>("");
 
 const emit = defineEmits<{
-  (e: 'change', value: number): void;
+  (e: "change", value: number): void;
 }>();
 
 const props = withDefaults(defineProps<Props>(), {
-  options: ['----'],
-  default: '',
+  options: ["----"],
+  default: "",
 });
 
 onMounted(() => {
@@ -35,6 +35,7 @@ onMounted(() => {
 <style lang="scss">
 .base__select {
   position: relative;
+  width: 100%;
 
   & select {
     appearance: none;
@@ -48,6 +49,7 @@ onMounted(() => {
     border-radius: 0.25rem;
     color: #000;
     cursor: pointer;
+    text-align-last: center;
 
     &::-webkit-scrollbar {
       width: 14px;
@@ -70,7 +72,7 @@ onMounted(() => {
   &::after {
     --size: 0.2rem;
     position: absolute;
-    content: '';
+    content: "";
     right: 1rem;
     pointer-events: none;
   }

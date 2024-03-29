@@ -2,6 +2,7 @@
   <div class="email_input_container">
     <BaseInput
       :label="label"
+      :startValue="props.startValue"
       :isActive="isEmailValid && !props.error"
       @input_value="set_input_value"
     >
@@ -10,27 +11,28 @@
 </template>
 
 <script setup lang="ts">
-import { ref} from "vue";
+import { ref } from 'vue';
 import { useStore } from 'vuex';
-import BaseInput from "@/components/base/BaseInput.vue";
+import BaseInput from '@/components/base/BaseInput.vue';
 
 interface Props {
-  error?: boolean
+  error?: boolean;
+  startValue?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  error: false
-})
-
+  error: false,
+  startValue: '',
+});
 
 const emit = defineEmits<{
-  (e: 'valid_value', inEmail: boolean, value: string): void
-}>()
+  (e: 'valid_value', inEmail: boolean, value: string): void;
+}>();
 
-const store = useStore()
+const store = useStore();
 
-const text = ref<string>("");
-const label: string = "Электронная почта";
+const text = ref<string>('');
+const label: string = 'Электронная почта';
 const isEmailValid = ref<boolean>(false);
 
 function set_input_value(input_value) {
@@ -39,12 +41,16 @@ function set_input_value(input_value) {
     isEmailValid.value = true;
   } else {
     isEmailValid.value = false;
-  } 
- 
+  }
+
   store.commit('request_unsuccess', false);
-  emit('valid_value', isEmailValid.value, input_value)
+  emit('valid_value', isEmailValid.value, input_value);
   text.value = input_value;
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.email_input_container {
+  width: 100%;
+}
+</style>

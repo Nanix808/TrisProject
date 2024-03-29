@@ -7,53 +7,62 @@
       required=""
       spellcheck="false"
       autocomplete="username"
-      :type="iconPasswordShow ? props.showPassword ?'password' : 'text' : 'text'" 
+      :type="
+        iconPasswordShow ? (props.showPassword ? 'password' : 'text') : 'text'
+      "
     />
-    <span 
-    v-if="props.showPassword"
-    class="password-control" @click="iconPasswordShow =!iconPasswordShow"
-                :class="{ password_show: !iconPasswordShow }"
-          ></span>
+    <span
+      v-if="props.showPassword"
+      class="password-control"
+      @click="iconPasswordShow = !iconPasswordShow"
+      :class="{ password_show: !iconPasswordShow }"
+    ></span>
 
-    <label :for="generateRandomId" :class="{ active: input_value, inactive: props.isActive }">{{
-      props.label
-    }}</label>
+    <label
+      :for="generateRandomId"
+      :class="{ active: input_value, inactive: props.isActive }"
+      >{{ props.label }}</label
+    >
   </div>
 </template>
 <script setup lang="ts">
-import { ref} from "vue";
+import { ref, onMounted } from 'vue';
 interface Props {
   label: string;
   isActive: boolean;
   showPassword?: boolean;
+  startValue?: string;
 }
 
-
 const props = withDefaults(defineProps<Props>(), {
-  showPassword: false
-})
-
+  showPassword: false,
+  startValue: '',
+});
 
 // const props = defineProps<Props>();
 
 const emit = defineEmits<{
-  (e: "input_value", value: string): void;
+  (e: 'input_value', value: string): void;
 }>();
+
+onMounted(() => {
+  input_value.value = props.startValue;
+});
 
 const generateRandomId = ref<string>(
   Math.floor(Math.random() * Date.now()).toString(36)
 );
-const input_value = ref<string>("");
+const input_value = ref<string>('');
 const iconPasswordShow = ref<boolean>(true);
 function handleChange(event) {
-  emit("input_value", event.target.value);
+  emit('input_value', event.target.value);
 }
 </script>
 
 <style lang="scss">
 .input_base_container {
   position: relative;
-
+  width: 100%;
   & input {
     width: 100%;
     padding: 10px 0 0 0;
@@ -86,9 +95,9 @@ function handleChange(event) {
 
     &.active {
       top: -20px;
-    left: 0;
-    font-size: 16px;
-    color: $default-error;
+      left: 0;
+      font-size: 16px;
+      color: $default-error;
     }
 
     &.active.inactive {
@@ -108,14 +117,11 @@ function handleChange(event) {
       background: url(@/assets/image/showpassword.svg);
       background-size: cover;
       cursor: pointer;
-      
     }
     &.password_show {
       background: url(@/assets/image/hidepassword.svg);
       background-size: cover;
     }
-}
-  
-
+  }
 }
 </style>
