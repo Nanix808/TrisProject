@@ -63,22 +63,22 @@ app.include_router(user_router, prefix="/users", tags=["users"])
 app.include_router(authz_router, prefix="/authorization", tags=["authorization"])
 
 
-from fastapi.routing import APIRoute
+# from fastapi.routing import APIRoute
 
 
-def get_route_info(route: APIRoute):
-    return {
-        "path": route.path,
-        "methods": route.methods,
-        "dependencies": route.dependencies,
-        # Add more attributes as needed
-    }
+# def get_route_info(route: APIRoute):
+#     return {
+#         "path": route.path,
+#         "methods": route.methods,
+#         "dependencies": route.dependencies,
+#         # Add more attributes as needed
+#     }
 
 
-for route in app.routes:
-    if isinstance(route, APIRoute):
-        route_info = get_route_info(route)
-        print(route_info)
+# for route in app.routes:
+#     if isinstance(route, APIRoute):
+#         route_info = get_route_info(route)
+#         print(route_info)
 # Запуск сервера Uvicorn
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
