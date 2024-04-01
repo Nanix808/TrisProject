@@ -32,7 +32,7 @@
     </BaseTable>
 
     <AdminRolePopUp
-      :name="'Изменить пользователя'"
+      :name="'Изменить роль'"
       :isOpen="store.state.popup.isAdminRolePopupOpen"
       :data="role"
       @close="store.commit('closeAdminRolePopup')"
