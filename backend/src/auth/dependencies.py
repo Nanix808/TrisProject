@@ -57,12 +57,15 @@ async def validate_auth_user(
 def get_current_token_payload(
     token: str = Depends(oauth2_scheme),
 ) -> dict:
-    print("token", token)
+    if token == "null":
+        raise token_invalide_exc
     try:
         payload = auth_utils.decode_jwt(
             token=token,
         )
     except InvalidTokenError as e:
+        raise token_invalide_exc
+    if not payload:
         raise token_invalide_exc
     return payload
 
@@ -82,7 +85,15 @@ async def get_current_auth_user(
 def get_current_active_auth_user(
     user: UserBase = Depends(get_current_auth_user),
 ):
-    if user.available:
+    if user.is_:
+        return user
+    raise unactive_exc
+
+
+def get_current_active_auth_is_superuser_user(
+    user: UserBase = Depends(get_current_active_auth_user),
+):
+    if user.is_superuser:
         return user
     raise unactive_exc
 
@@ -92,20 +103,12 @@ async def authorize(
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ) -> dict:
     # validate the refresh jwt token
-
+    if token == "null":
+        raise refresh_token_invalide_exc
     payload = decode_jwt(token)
-
     if not payload:
         raise refresh_token_invalide_exc
-    # check if "mode": "refresh_token"
-    # if "user_name" not in data and "mode" not in data:
-    #     raise token_invalide_exc
-    # if data["mode"] != "refresh_token":
-    #     raise token_invalide_exc
-    # check if user exists
-
     username = payload.get("username")
-    print("user", username)
     users_crud = UsersCRUD(session)
 
     user = await users_crud.get_user_by_username(username)
@@ -113,12 +116,10 @@ async def authorize(
     if not user or token != user.refresh_token:
         raise refresh_token_invalide_exc
     # generate new refresh token and update user
-    jwt_payload = {
-        "sub": user.username,
-        "username": user.username,
-        "email": user.email,
-    }
-
+    # jwt_payload = {
+    #     "sub": user.username,
+    #     "username": user.username,
+    #     "email": user.email,
+    # }
     # await users_crud.update_user_refresh_token(user, jwt_payload)
-    # generate new access token
     return user

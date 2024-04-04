@@ -15,7 +15,7 @@ class AuthJwt(BaseModel):
     algorithms: str = "RS256"
     tokenUrl: str = "/auth/login/"
     accses_token_expire_minutes: int = 1
-    refresh_token_expire_minutes: int = 1
+    refresh_token_expire_minutes: int = 2
 
 
 class Settings(BaseSettings):

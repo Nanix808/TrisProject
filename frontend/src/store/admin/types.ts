@@ -11,9 +11,16 @@ export interface Role {
   permissions: boolean;
 }
 
+export interface Endpoint {
+  name: string;
+  path: string;
+  methods: string;
+}
+
 export interface UsersState {
   users: User[];
   roles: Role[];
+  list_endpoints: Endpoint[];
 }
 
 // export interface Roles {

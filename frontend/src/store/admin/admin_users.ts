@@ -6,7 +6,7 @@ export default {
     return {
       users: [],
       roles: [],
-      list_endpoint: [],
+      list_endpoints: [],
     };
   },
   mutations: {
@@ -16,35 +16,58 @@ export default {
         state.users.push(item);
       });
     },
+    cleanUsersArray(state: UsersState, newUsers: any) {
+      state.users = [];
+    },
     setRolesArray(state: UsersState, newRole: any) {
       state.roles = [];
       newRole.forEach((item) => {
         state.roles.push(item);
       });
     },
+    cleanRolesArray(state: UsersState, newRole: any) {
+      state.roles = [];
+    },
     setEndpointsArray(state: UsersState, newEndpoint: any) {
-      state.list_endpoint = [];
+      state.list_endpoints = [];
       newEndpoint.forEach((item) => {
-        state.list_endpoint.push(item);
+        state.list_endpoints.push(item);
       });
+    },
+    cleanEndpointsArray(state: UsersState, newEndpoint: any) {
+      state.list_endpoints = [];
     },
   },
   actions: {
     admin_get_all_users({ commit }) {
-      AdminUrlApi.adminUserRoutes.getUsers().then((res) => {
-        commit('setUsersArray', res.data);
-      });
+      AdminUrlApi.adminUserRoutes
+        .getUsers()
+        .then((res) => {
+          commit('setUsersArray', res.data);
+        })
+        .catch((error) => {
+          commit('cleanUsersArray');
+        });
     },
     admin_get_all_roles({ commit }) {
-      AdminUrlApi.adminUserRoutes.getRoles().then((res) => {
-        commit('setRolesArray', res.data);
-      });
+      AdminUrlApi.adminUserRoutes
+        .getRoles()
+        .then((res) => {
+          commit('setRolesArray', res.data);
+        })
+        .catch((error) => {
+          commit('cleanRolesArray');
+        });
     },
     admin_get_all_endpoints({ commit }) {
-      AdminUrlApi.adminUserRoutes.getEndpoints().then((res) => {
-        console.log(res.data);
-        commit('setEndpointsArray', res.data);
-      });
+      AdminUrlApi.adminUserRoutes
+        .getEndpoints()
+        .then((res) => {
+          commit('setEndpointsArray', res.data);
+        })
+        .catch((error) => {
+          commit('cleanEndpointsArray');
+        });
     },
     updatedUser({ commit }, payload: any) {
       for (var user in payload) {

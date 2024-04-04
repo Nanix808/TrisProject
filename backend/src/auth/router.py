@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Header
 
 # from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -26,8 +26,10 @@ def auth_user_issue_jwt(
         "sub": user.username,
         "username": user.username,
         "email": user.email,
+        "is_superuser": user.is_superuser,
     }
     access_token = auth_utils.create_access_jwt(jwt_payload)
+
     return TokenInfo(
         access_token=access_token,
         refresh_token=user.refresh_token,
@@ -48,23 +50,13 @@ def auth_user_check_self_info(
     }
 
 
-from fastapi import Depends, Header
-
-
-# def get_refresh_token(authorization: str = Header(None)):
-#     if authorization:
-#         scheme, _, param = authorization.partition(" ")
-#         if scheme.lower() == "bearer":
-#             print(param)
-#             return param
-
-
-@auth_router.post("/refresh")
+@auth_router.post("/refresh/")
 async def refresh(user: UserBase = Depends(authorize)):
     jwt_payload = {
         "sub": user.username,
         "username": user.username,
         "email": user.email,
+        "is_superuser": user.is_superuser,
     }
     access_token = auth_utils.create_access_jwt(jwt_payload)
     return TokenInfo(
@@ -72,27 +64,3 @@ async def refresh(user: UserBase = Depends(authorize)):
         refresh_token=user.refresh_token,
         token_type="Bearer",
     )
-
-
-# @auth.get("/refresh", status_code=status.HTTP_200_OK)
-# def get_new_access_token(token:str):
-
-#     refesh_data =verify_refresh_token(token)
-
-#     new_access_token = create_access_token(refesh_data.dict())
-#     return {
-#         "access_token": new_access_token,
-#         "token_type":"Bearer",
-#         "status": status.HTTP_200_OK
-#     }
-
-
-# @app.post('/secret')
-# def secret_data(credentials: HTTPAuthorizationCredentials = Security(security)):
-#     token = credentials.credentials
-#     if(auth_handler.decode_token(token)):
-#         return 'Top Secret data only authorized users can access this info'
-
-# @app.get('/notsecret')
-# def not_secret_data():
-#     return 'Not secret data'

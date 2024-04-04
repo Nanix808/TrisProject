@@ -58,7 +58,6 @@ const change_role = ref<number>(0);
 const store = useStore();
 
 function choiserole(id: number) {
-  console.log(id);
   store.commit('openAdminRolePopup');
   change_role.value = id;
 }

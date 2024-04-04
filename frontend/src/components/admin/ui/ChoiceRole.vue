@@ -1,6 +1,6 @@
 <template>
   <div class="email_input_container">
-    {{ store.state.admin_users.list_endpoint }}
+    {{ store.state.admin_users.list_endpoints }}
     <!-- <span class="passworderror"></span>
     <ul class="requirements">
       <li v-for="(requirement, key) in isPasswordError" :key="key"

@@ -13,7 +13,7 @@ from .schemas import (
 )
 from .crud import UsersCRUD
 from .dependencies import user_by_id
-from fastapi import HTTPException
+from authorization.dependencies import get_current_active_auth_is_superuser_user
 
 
 user_router = APIRouter()
@@ -24,6 +24,7 @@ user_router = APIRouter()
     response_model=list[User],
 )
 async def get_users(
+    current_user: dict = Depends(get_current_active_auth_is_superuser_user),
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ) -> list[User]:
     users_crud = UsersCRUD(session)

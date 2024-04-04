@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from .schemas import Role, BaseRole, BaseRouter
 from database import db_helper
 from .crud import RolesCRUD
+from .dependencies import get_current_active_auth_is_superuser_user
 
 authz_router = APIRouter()
 
@@ -16,6 +17,7 @@ authz_router = APIRouter()
     status_code=status.HTTP_200_OK,
 )
 async def get_roles(
+    current_user: dict = Depends(get_current_active_auth_is_superuser_user),
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ) -> list[Role]:
     role_crud = RolesCRUD(session)
@@ -38,7 +40,10 @@ async def create_role(
 
 
 @authz_router.get("/list_endpoints/", response_model=list[BaseRouter])
-def list_endpoints(request: Request):
+def list_endpoints(
+    request: Request,
+    current_user: dict = Depends(get_current_active_auth_is_superuser_user),
+):
     pattern = re.compile("[^a-zA-Z]")
     url_list = [
         {
