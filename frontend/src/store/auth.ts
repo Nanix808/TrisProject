@@ -20,6 +20,7 @@ export default {
     const refreshToken = localStorage.getItem('refreshToken') || null;
     const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
     const refreshTokenRequest = null;
+
     return {
       userName: '',
       userEmail: '',
@@ -57,6 +58,7 @@ export default {
         .then((res) => {
           commit('setUserName', payload);
           commit('setToken', res.data);
+          commit('closeLoginPopup', res.data);
         })
         .catch(() => {
           commit('request_unsuccess', true);

@@ -10,22 +10,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted } from 'vue';
 
 interface Props {
-  options?: Array<{ id: number; name: string; description: string }>;
+  options?: { id: number; name: string; description: string }[];
   default?: number | string;
 }
 
-const selected_value = ref<string>("");
+const selected_value = ref<string>('');
 
 const emit = defineEmits<{
-  (e: "change", value: number): void;
+  (e: 'change', value: number): void;
 }>();
 
 const props = withDefaults(defineProps<Props>(), {
-  options: ["----"],
-  default: "",
+  options: ['----'],
+  default: '',
 });
 
 onMounted(() => {
@@ -72,7 +72,7 @@ onMounted(() => {
   &::after {
     --size: 0.2rem;
     position: absolute;
-    content: "";
+    content: '';
     right: 1rem;
     pointer-events: none;
   }
@@ -80,14 +80,14 @@ onMounted(() => {
   &::before {
     border-left: var(--size) solid transparent;
     border-right: var(--size) solid transparent;
-    border-bottom: var(--size) solid $second-color-font;
+    border-bottom: var(--size) solid $main-color-font;
     top: 40%;
   }
 
   &::after {
     border-left: var(--size) solid transparent;
     border-right: var(--size) solid transparent;
-    border-top: var(--size) solid $second-color-font;
+    border-top: var(--size) solid $main-color-font;
     top: 55%;
   }
 }
