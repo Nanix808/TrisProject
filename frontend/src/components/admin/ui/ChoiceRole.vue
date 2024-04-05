@@ -1,13 +1,16 @@
 <template>
-  <div class="email_input_container">
-    {{ store.state.admin_users.list_endpoints }}
-    <!-- <span class="passworderror"></span>
+  <div class="choise_role_container">
+    <!-- {{ store.state.admin_users.list_endpoints }} -->
+    <span class="passworderror"></span>
     <ul class="requirements">
-      <li v-for="(requirement, key) in isPasswordError" :key="key"
-        :class="requirement.predicate ? 'is-success' : 'is-error'">
-        {{ requirement.name }}
+      <li
+        v-for="(value, key) in store.state.admin_users.list_endpoints"
+        :key="key"
+      >
+        {{ key }}
+        {{ value }}
       </li>
-    </ul> -->
+    </ul>
   </div>
 </template>
 

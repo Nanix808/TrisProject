@@ -39,22 +39,18 @@ async def create_role(
     return roles
 
 
-@authz_router.get("/list_endpoints/", response_model=list[BaseRouter])
+@authz_router.get("/list_endpoints/")
 def list_endpoints(
     request: Request,
     current_user: dict = Depends(get_current_active_auth_is_superuser_user),
 ):
     pattern = re.compile("[^a-zA-Z]")
-    url_list = [
-        {
-            "name": route.name,
-            "path": route.path,
-            "methods": re.sub(pattern, "", str(route.methods)),
-        }
-        for route in request.app.routes
-        if isinstance(route, APIRoute)
-    ]
-    return url_list
+    my_dict = {}
+    for route in request.app.routes:
+        if isinstance(route, APIRoute):
+            key = my_dict.setdefault(route.path.split("/")[1] + "/", set())
+            key.add(re.sub(pattern, "", str(route.methods)))
+    return my_dict
 
 
 # @authz_router.get(

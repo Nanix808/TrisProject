@@ -13,11 +13,11 @@
 import { ref, onMounted } from 'vue';
 
 interface Props {
-  options?: { id: number; name: string; description: string }[];
+  options?: { id: number; name: string; description: string }[] | string[];
   default?: number | string;
 }
 
-const selected_value = ref<string>('');
+const selected_value = ref<string | number>('');
 
 const emit = defineEmits<{
   (e: 'change', value: number): void;

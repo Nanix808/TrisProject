@@ -7,11 +7,11 @@
       <div class="admin__user__header_roles admin__user__header_items">
         <router-link :to="{ name: 'admin_roles' }"> Роли </router-link>
       </div>
-      <div class="admin__user__header_permissions admin__user__header_items">
+      <!-- <div class="admin__user__header_permissions admin__user__header_items">
         <router-link :to="{ name: 'admin_permissions' }">
           Разрешения
         </router-link>
-      </div>
+      </div> -->
     </div>
 
     <div class="admin__user__main__container">
@@ -42,7 +42,7 @@ onMounted(() => {
   & .admin__user__header {
     height: 4vh;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     justify-content: stretch;
 
     color: $main-color-font;

@@ -16,3 +16,8 @@ class BaseRouter(BaseModel):
     path: str | None = None
     name: str | None = None
     methods: str | None = None
+
+
+# class BaseRouter(BaseModel):
+
+#     name: str | None = []

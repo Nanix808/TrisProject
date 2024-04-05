@@ -1,3 +1,5 @@
+import { array } from 'yup';
+
 export interface User {
   username: string;
   role_id: number;
@@ -20,7 +22,7 @@ export interface Endpoint {
 export interface UsersState {
   users: User[];
   roles: Role[];
-  list_endpoints: Endpoint[];
+  list_endpoints: object | null;
 }
 
 // export interface Roles {

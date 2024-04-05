@@ -1,6 +1,6 @@
 import { UrlApi } from '@/api';
 import { UserPayload, ILoginResponse } from './types';
-import { isTokenExpired } from '@/utils/jwt';
+import { isTokenExpired, isSuperUser } from '@/utils/jwt';
 import { AxiosPromise } from 'axios';
 
 interface State {
@@ -9,6 +9,7 @@ interface State {
   accessToken: string | null;
   refreshToken: string | null;
   isAuthenticated: boolean;
+  isSuperUser: boolean;
   refreshTokenRequest: AxiosPromise<ILoginResponse> | null;
 }
 
@@ -19,6 +20,7 @@ export default {
     const accessToken = localStorage.getItem('accessToken') || null;
     const refreshToken = localStorage.getItem('refreshToken') || null;
     const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+    const isSuperUser = localStorage.getItem('isSuperUser') === 'false';
     const refreshTokenRequest = null;
 
     return {
@@ -27,6 +29,7 @@ export default {
       accessToken,
       refreshToken,
       isAuthenticated,
+      isSuperUser,
       // переменная для хранения запроса токена (для избежания race condition)
       refreshTokenRequest,
     };
@@ -42,7 +45,9 @@ export default {
       state.accessToken = data.access_token;
       state.refreshToken = data.refresh_token;
       state.isAuthenticated = true;
+      state.isSuperUser = isSuperUser(data.access_token);
       localStorage.setItem('accessToken', data.access_token);
+      localStorage.setItem('isSuperadmin', data.is_superadmin);
       localStorage.setItem('refreshToken', data.refresh_token);
       localStorage.setItem('isAuthenticated', 'true');
     },

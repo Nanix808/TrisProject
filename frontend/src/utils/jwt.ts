@@ -3,7 +3,7 @@ import { getUnixTime } from './date';
 export interface IAuthTokenInfo {
   exp: number;
   iat: number;
-  login: string;
+  is_superuser: boolean;
 }
 
 const LIFE_TIME_TO_UPDATE_MULTIPLIER = 0.5;
@@ -26,5 +26,22 @@ export const isTokenExpired = (token: string | null): boolean => {
   } catch (e) {
     console.error(e);
     return true;
+  }
+};
+
+export const isSuperUser = (token: string | null): boolean => {
+  if (!token) {
+    return false;
+  }
+
+  try {
+    const tokenInfo = token.split('.')[1];
+    const tokenInfoDecoded = window.atob(tokenInfo);
+    const { is_superuser }: IAuthTokenInfo = JSON.parse(tokenInfoDecoded);
+
+    return is_superuser;
+  } catch (e) {
+    console.error(e);
+    return false;
   }
 };
