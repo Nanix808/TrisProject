@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { loadLayoutMiddleware } from '@/router/middleware/loadLayoutMiddleware';
 import HomeView from '../views/HomeView.vue';
-import auth from './auth.js';
+// import auth from './auth.js';
 import admin from './admin.js';
 
 const router = createRouter({
@@ -23,7 +23,7 @@ const router = createRouter({
         layout: 'DefaultLayout',
       },
     },
-    ...auth,
+    // ...auth,
     ...admin,
   ],
 });

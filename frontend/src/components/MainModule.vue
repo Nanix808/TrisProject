@@ -57,7 +57,7 @@ const cssPropsHover = computed(() => {
   font-size: x-large;
 
   &:hover {
-    color: $second-color;
+    color: $admin-left-side-background;
     transition: all 0.1s linear;
     box-shadow: 0 0 5px $second-color;
 
