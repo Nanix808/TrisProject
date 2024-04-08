@@ -86,15 +86,15 @@ const config = ref({
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  margin: 5px 10px 0px 10px;
 
   & .input-group {
-    margin-left: 10px;
-
     margin-right: 20px;
 
     & input {
       max-width: 150px;
       height: 4vh;
+      font-size: 16px;
       cursor: pointer;
       color: white;
       background-color: $second-color;

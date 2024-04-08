@@ -4,3 +4,10 @@
 4. poetry config --list 
 5. poetry config virtualenvs.in-project true
 6. poetry shell
+
+
+
+
+alembic upgrade heads
+alembic revision --autogenerate -m "added transport"
+

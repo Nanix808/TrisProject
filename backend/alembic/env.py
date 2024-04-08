@@ -11,6 +11,8 @@ from alembic import context
 import os
 import sys
 
+import alembic_postgresql_enum
+
 sys.path.append(os.path.join(sys.path[0], "src"))
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -26,6 +28,7 @@ if config.config_file_name is not None:
 from models import Base
 from users.models import User, Profile
 from authorization.models import Role
+from transport.models import Transport
 from config import settings
 
 target_metadata = Base.metadata

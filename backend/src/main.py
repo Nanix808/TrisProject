@@ -1,10 +1,11 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
 from starlette.middleware.base import BaseHTTPMiddleware
+import uvicorn
 from auth.router import auth_router
 from users.router import user_router
 from authorization.router import authz_router
+from transport.router import transport_router
 
 app = FastAPI()
 
@@ -61,6 +62,7 @@ def translate_method_to_action(method: str) -> str:
 app.include_router(auth_router, prefix="/auth", tags=["auth"])
 app.include_router(user_router, prefix="/users", tags=["users"])
 app.include_router(authz_router, prefix="/authorization", tags=["authorization"])
+app.include_router(transport_router, prefix="/transport", tags=["transport"])
 
 
 # from fastapi.routing import APIRoute
