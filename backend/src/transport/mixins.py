@@ -13,7 +13,7 @@ class TransportRelationMixin:
     _transport_back_populates: str | None = None
 
     @declared_attr
-    def trransport_id(cls) -> Mapped[int]:
+    def transport_id(cls) -> Mapped[int]:
         return mapped_column(
             ForeignKey("transport.id"),
             unique=cls._transport_id_unique,
@@ -21,7 +21,7 @@ class TransportRelationMixin:
         )
 
     @declared_attr
-    def user(cls) -> Mapped["Transport"]:
+    def transport(cls) -> Mapped["Transport"]:
         return relationship(
             "Transport",
             back_populates=cls._transport_back_populates,

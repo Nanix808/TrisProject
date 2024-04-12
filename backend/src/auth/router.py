@@ -1,19 +1,13 @@
-from fastapi import APIRouter, Depends, Header
-
-# from fastapi import HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import APIRouter, Depends
 from .dependencies import (
     validate_auth_user,
     get_current_token_payload,
     get_current_active_auth_user,
     authorize,
 )
-
-# from src.database import get_db
 from users.schemas import UserBase
 from .schemas import TokenInfo
 from . import utils as auth_utils
-from database import db_helper
 
 auth_router = APIRouter()
 

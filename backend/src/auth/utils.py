@@ -1,4 +1,3 @@
-# import datetime
 import bcrypt
 import jwt
 from jwt import ExpiredSignatureError

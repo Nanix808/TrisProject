@@ -136,6 +136,7 @@ class TestUser:
         user = response.json()
         assert response.status_code == 200
         assert user["is_active"] == False
+        
 
     # @pytest.mark.asyncio
     # async def test_delete_all_user(self, ac: AsyncClient):

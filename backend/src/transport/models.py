@@ -10,16 +10,13 @@ from users.mixins import UserRelationMixin
 from sqlalchemy.dialects.postgresql import ENUM as PgEnum
 
 
-class Status(str, enum.Enum):
+class Status(enum.Enum):
     LOAD_UNLOAD = "загрузка/разгрузка"
     PICKUP = "забрать"
     SIGN = "подписать"
 
 
-class Transport(UserRelationMixin, Base):
-    _user_id_unique = True
-    _user_back_populates = "transport"
-
+class Transport(Base):
     data: Mapped[str] = mapped_column(
         String(30),
         nullable=False,
@@ -27,18 +24,9 @@ class Transport(UserRelationMixin, Base):
     time: Mapped[str | None] = mapped_column(String(30))
     destination = mapped_column(String(150))
     notice: Mapped[str | None] = mapped_column(String(500))
-    status = mapped_column(
-        PgEnum(Status, name="status", create_type=False),
-        nullable=True,
-    )
-    # contact: Mapped[str | None] = mapped_column(String(50))
-    # company: Mapped["Сompany"] = relationship("Company", back_populates="transport")
+    status: Mapped[Status] = mapped_column(nullable=True)
+    contact: Mapped[str | None] = mapped_column(String(50))
     car: Mapped["Car"] = relationship("Car", back_populates="transport")
-
-
-class Сompany(TransportRelationMixin, Base):
-    _transport_back_populates = "company"
-    pass
 
 
 class Car(TransportRelationMixin, Base):

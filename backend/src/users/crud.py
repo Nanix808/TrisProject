@@ -60,7 +60,7 @@ class UsersCRUD:
         self,
         user: User,
         user_update: UserUpdate,
-        partial: bool = False,
+        partial: bool = True,
     ) -> User:
         for name, value in user_update.model_dump(exclude_unset=partial).items():
             setattr(user, name, value)

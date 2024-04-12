@@ -26,8 +26,10 @@ if config.config_file_name is not None:
 # add your model's MetaData object here
 # for 'autogenerate' support
 from models import Base
+
 from users.models import User, Profile
 from authorization.models import Role
+
 from transport.models import Transport
 from config import settings
 

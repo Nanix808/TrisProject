@@ -51,38 +51,3 @@ def list_endpoints(
             key = my_dict.setdefault(route.path.split("/")[1] + "/", set())
             key.add(re.sub(pattern, "", str(route.methods)))
     return my_dict
-
-
-# @authz_router.get(
-#     "/",
-#     # response_model=BaseRole,
-#     status_code=status.status.HTTP_200_OK,
-# )
-# async def get_all_routers(
-#     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
-# ) -> Role:
-#     url_list = [
-#         {"path": route.path, "name": route.name} for route in authz_router.app.routes
-#     ]
-#     return url_list
-
-
-# for route in app.routes:
-#     if isinstance(route, APIRoute):
-#         route_info = get_route_info(route)
-#         print(route_info)
-
-
-# def get_route_info(route: APIRoute):
-#     return {
-#         "path": route.path,
-#         "methods": route.methods,
-#         "dependencies": route.dependencies,
-#         # Add more attributes as needed
-#     }
-
-
-# for route in app.routes:
-#     if isinstance(route, APIRoute):
-#         route_info = get_route_info(route)
-#         print(route_info)

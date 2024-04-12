@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import (
     async_scoped_session,
     AsyncConnection,
 )
-from contextlib import asynccontextmanager
+from contextlib import contextmanager, asynccontextmanager
 from typing import AsyncIterator
 from config import settings
 from models import Base
@@ -32,6 +32,7 @@ class DatabaseHelper:
         )
         return session
 
+    @asynccontextmanager
     async def session_dependency(self) -> AsyncSession:
         async with self.session_factory() as session:
             yield session
@@ -47,3 +48,14 @@ db_helper = DatabaseHelper(
     url=settings.DATABASE_URL_psycopg,
     echo=settings.db_echo,
 )
+
+
+engine = create_async_engine(
+    url=settings.DATABASE_URL_psycopg, echo=settings.db_echo, pool_pre_ping=True
+)
+session_factory = async_sessionmaker(expire_on_commit=False)
+
+
+async def get_async_session():
+    async with session_factory() as session:
+        yield session

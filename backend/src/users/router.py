@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Path
+from typing import Annotated
 
 # from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -12,11 +13,25 @@ from .schemas import (
     UserUpdatePartial,
 )
 from .crud import UsersCRUD
-from .dependencies import user_by_id
+from .dependencies import user_by_id, user_service
 from authorization.dependencies import get_current_active_auth_is_superuser_user
-
+from .repositories import UserRepository
+from .service import UserService
 
 user_router = APIRouter()
+
+
+# @user_router.get(
+#     "/",
+#     response_model=list[User],
+# )
+# async def get_users(
+#     # current_user: dict = Depends(get_current_active_auth_is_superuser_user),
+#     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+# ) -> list[User]:
+#     users_crud = UsersCRUD(session)
+#     users = await users_crud.get_users()
+#     return users
 
 
 @user_router.get(
@@ -24,11 +39,10 @@ user_router = APIRouter()
     response_model=list[User],
 )
 async def get_users(
-    current_user: dict = Depends(get_current_active_auth_is_superuser_user),
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+    user_service: Annotated[UserService, Depends(user_service)],
 ) -> list[User]:
-    users_crud = UsersCRUD(session)
-    users = await users_crud.get_users()
+
+    users = await user_service.get_users()
     return users
 
 
@@ -39,12 +53,10 @@ async def get_users(
     tags=["users"],
 )
 async def create_user(
+    user_service: Annotated[UserService, Depends(user_service)],
     user_in: UserCreate,
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ) -> User:
-
-    users_crud = UsersCRUD(session)
-    users = await users_crud.create_user(user_in)
+    users = await user_service.add_one(user_in)
     return users
 
 
@@ -67,24 +79,42 @@ async def update_user(
 
 @user_router.patch("/{user_id}", response_model=UserCreated)
 async def update_user_partial(
+    user_service: Annotated[UserService, Depends(user_service)],
     user_update: UserUpdate,
-    user: User = Depends(user_by_id),
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+    user_id: int = Path(...),
 ):
-    users_crud = UsersCRUD(session)
-    user = await users_crud.update_user(
-        user=user, user_update=user_update, partial=True
-    )
+    user = await user_service.update_user(user_id, user_update)
     return user
+
+
+# @user_router.patch("/{user_id}", response_model=UserCreated)
+# async def update_user_partial(
+#     user_update: UserUpdate,
+#     user: User = Depends(user_by_id),
+#     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+# ):
+#     users_crud = UsersCRUD(session)
+#     user = await users_crud.update_user(
+#         user=user, user_update=user_update, partial=True
+#     )
+#     return user
 
 
 @user_router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_user(
-    user: User = Depends(user_by_id),
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+    user_service: Annotated[UserService, Depends(user_service)],
+    user_id: int = Path(...),
 ) -> None:
-    users_crud = UsersCRUD(session)
-    await users_crud.delete_user(user=user)
+    await user_service.delete_is_active(user_id)
+
+
+# @user_router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+# async def delete_user(
+#     user: User = Depends(user_by_id),
+#     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+# ) -> None:
+#     users_crud = UsersCRUD(session)
+#     await users_crud.delete_user(user=user)
 
 
 # @user_router.get("/auth", response_model=list[ShowResume])
