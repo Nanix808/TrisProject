@@ -56,6 +56,7 @@ class UserUpdate(CoreModel):
     is_superuser: bool | None = False
     profile_id: int | None = None
     role_id: int | None = None
+    refresh_token: str | None = None
 
 
 class User(UserBase):

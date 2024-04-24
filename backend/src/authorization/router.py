@@ -1,12 +1,15 @@
 import re
+from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.routing import APIRoute
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .schemas import Role, BaseRole, BaseRouter
 from database import db_helper
-from .crud import RolesCRUD
-from .dependencies import get_current_active_auth_is_superuser_user
+
+# from .crud import RolesCRUD
+from .dependencies import get_current_active_auth_is_superuser_user, role_service
+from .service import RoleService
 
 authz_router = APIRouter()
 
@@ -17,12 +20,24 @@ authz_router = APIRouter()
     status_code=status.HTTP_200_OK,
 )
 async def get_roles(
-    current_user: dict = Depends(get_current_active_auth_is_superuser_user),
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+    role_service: Annotated[RoleService, Depends(role_service)],
 ) -> list[Role]:
-    role_crud = RolesCRUD(session)
-    roles = await role_crud.get_roles()
+    roles = await role_service.get_roles()
     return roles
+
+
+# @authz_router.get(
+#     "/",
+#     response_model=list[Role],
+#     status_code=status.HTTP_200_OK,
+# )
+# async def get_roles(
+#     current_user: dict = Depends(get_current_active_auth_is_superuser_user),
+#     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+# ) -> list[Role]:
+#     role_crud = RolesCRUD(session)
+#     roles = await role_crud.get_roles()
+#     return roles
 
 
 @authz_router.post(
@@ -32,11 +47,24 @@ async def get_roles(
 )
 async def create_role(
     role_in: BaseRole,
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+    role_service: Annotated[RoleService, Depends(role_service)],
 ) -> Role:
-    rolesCrud = RolesCRUD(session)
-    roles = await rolesCrud.create_role(role_in=role_in)
-    return roles
+    role = await role_service.create_role(role_in=role_in)
+    return role
+
+
+# @authz_router.post(
+#     "/",
+#     response_model=BaseRole,
+#     status_code=status.HTTP_201_CREATED,
+# )
+# async def create_role(
+#     role_in: BaseRole,
+#     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+# ) -> Role:
+#     rolesCrud = RolesCRUD(session)
+#     roles = await rolesCrud.create_role(role_in=role_in)
+#     return roles
 
 
 @authz_router.get("/list_endpoints/")

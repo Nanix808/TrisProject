@@ -93,13 +93,15 @@ const config = ref({
 
     & input {
       max-width: 150px;
-      height: 4vh;
+      // height: 2vh;
       font-size: 16px;
       cursor: pointer;
       color: white;
       background-color: $second-color;
       border: none;
       text-align: center;
+      margin: 4px 2px;
+      padding: 6px;
 
       &:focus {
         outline: none;

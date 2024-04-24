@@ -8,7 +8,7 @@ from .models import User
 from .repositories import UserRepository
 from .service import UserService
 
-from .crud import UsersCRUD
+# from .crud import UsersCRUD
 
 
 def user_service():

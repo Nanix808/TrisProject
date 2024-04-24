@@ -4,6 +4,8 @@ from .schemas import UserCreate, UserUpdate
 from .exceptions import user_in_db_exc
 from auth.utils import hash_password, create_refresh_jwt
 
+# from authorization.dependencies import role_service
+
 
 class UserService:
     def __init__(self, user_repo: AbstractRepository):
@@ -36,10 +38,8 @@ class UserService:
         # check role
         if user_in.role_id is not None:
             user_in.role_id = None
-            # roles_crud = RolesCRUD(self.db_session)
-            # role = await roles_crud.get_role_by_id(user_in.role_id)
+            # role = await role_service.get_role_by_id(user_in.role_id)
             # if not role:
-            #     # in not role in db reset role_id in None
             #     user_in.role_id = None
         user_in.password_hash = hash_password(user_in.password_hash)
         user = User(**user_in.model_dump())

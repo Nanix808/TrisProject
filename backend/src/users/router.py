@@ -12,7 +12,8 @@ from .schemas import (
     UserUpdate,
     UserUpdatePartial,
 )
-from .crud import UsersCRUD
+
+# from .crud import UsersCRUD
 from .dependencies import user_by_id, user_service
 from authorization.dependencies import get_current_active_auth_is_superuser_user
 from .repositories import UserRepository
@@ -65,16 +66,16 @@ async def get_user(user: User = Depends(user_by_id)):
     return user
 
 
-@user_router.put("/{user_id}", response_model=UserUpdate)
-async def update_user(
-    user_update: UserUpdatePartial,
-    user: User = Depends(user_by_id),
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
-):
+# @user_router.put("/{user_id}", response_model=UserUpdate)
+# async def update_user(
+#     user_update: UserUpdatePartial,
+#     user: User = Depends(user_by_id),
+#     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+# ):
 
-    users_crud = UsersCRUD(session)
-    user = await users_crud.update_user(user=user, user_update=user_update)
-    return user
+#     users_crud = UsersCRUD(session)
+#     user = await users_crud.update_user(user=user, user_update=user_update)
+#     return user
 
 
 @user_router.patch("/{user_id}", response_model=UserCreated)

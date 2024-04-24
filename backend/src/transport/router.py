@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
-from .crud import TransportCRUD
+
+# from .crud import TransportCRUD
 from database import db_helper
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -10,13 +11,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 transport_router = APIRouter()
 
 
-@transport_router.get("/")
-async def get_transport(
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
-):
-    users_crud = TransportCRUD(session)
-    users = await users_crud.get_users()
-    return users
+# @transport_router.get("/")
+# async def get_transport(
+#     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+# ):
+#     users_crud = TransportCRUD(session)
+#     users = await users_crud.get_users()
+#     return users
 
 
 from typing import Annotated

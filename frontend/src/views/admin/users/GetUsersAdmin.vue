@@ -128,8 +128,9 @@ function choiseuser(id: number) {
 
 .admin__user__container_button_box {
   display: flex;
+  padding: 5px;
   height: 5vh;
-  align-items: flex-end;
+  align-items: center;
   justify-content: flex-end;
 
   & button {

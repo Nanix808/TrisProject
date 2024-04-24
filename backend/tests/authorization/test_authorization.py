@@ -40,23 +40,23 @@ class TestRole:
         [
             (
                 {
-                    "name": "test_user",
-                    "description": "test_user",
+                    "name": "test_role",
+                    "description": "test_role",
                     "permissions": '{"a": "1", "b": 1}',
                 },
                 201,
                 does_not_raise(),
-                "standart user not create",
+                "standart role not create",
             ),
             (
                 {
-                    "name": "test_user",
-                    "description": "test_unique",
+                    "name": "test_role",
+                    "description": "test_role",
                     "permissions": '{"a": "1", "b": 1}',
                 },
                 401,
                 does_not_raise(),
-                "unique user created",
+                "unique test_role created",
             ),
             (
                 {

@@ -20,7 +20,7 @@ export default {
     const accessToken = localStorage.getItem('accessToken') || null;
     const refreshToken = localStorage.getItem('refreshToken') || null;
     const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
-    const isSuperUser = localStorage.getItem('isSuperUser') === 'false';
+    const isSuperUser = localStorage.getItem('isSuperUser') === 'true';
     const refreshTokenRequest = null;
 
     return {
@@ -45,9 +45,10 @@ export default {
       state.accessToken = data.access_token;
       state.refreshToken = data.refresh_token;
       state.isAuthenticated = true;
-      state.isSuperUser = isSuperUser(data.access_token);
+      const is_admin = isSuperUser(data.access_token);
+      state.isSuperUser = is_admin;
       localStorage.setItem('accessToken', data.access_token);
-      localStorage.setItem('isSuperadmin', data.is_superadmin);
+      localStorage.setItem('isSuperUser', is_admin.toString());
       localStorage.setItem('refreshToken', data.refresh_token);
       localStorage.setItem('isAuthenticated', 'true');
     },

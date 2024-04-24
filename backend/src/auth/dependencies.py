@@ -41,7 +41,8 @@ async def validate_auth_user(
         "username": user.username,
         "email": user.email,
     }
-    await user_service.update_user_refresh_token(user, jwt_payload)
+    refresh_token = await user_service.update_user_refresh_token(user, jwt_payload)
+    user.refresh_token = refresh_token
     return user
 
 
