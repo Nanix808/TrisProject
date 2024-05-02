@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 
 
 class TransportRelationMixin:
-    _transport_id_nullable: bool = False
+    _transport_id_nullable: bool = True
     _transport_id_unique: bool = False
     _transport_back_populates: str | None = None
 
