@@ -63,10 +63,18 @@ class SQLAlchemyRepository(AbstractRepository):
             empty = await session.scalar(stmt)
             return empty
 
-    async def update(self, id, data):
+    async def update(self, id, data, exclude=True):
         async with db_helper.session_dependency() as session:
             empty = await session.get(self.model, id)
-            for name, value in data.model_dump(exclude_unset=True).items():
+            for name, value in data.model_dump(exclude_unset=exclude).items():
                 setattr(empty, name, value)
             await session.commit()
+            return empty
+
+    async def delete(self, id):
+        async with db_helper.session_dependency() as session:
+            empty = await session.get(self.model, id)
+            if empty:
+                await session.delete(empty)
+                await session.commit()
             return empty

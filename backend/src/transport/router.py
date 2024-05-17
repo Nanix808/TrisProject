@@ -1,38 +1,23 @@
-from fastapi import APIRouter, Depends, status
+from typing import Annotated
 
-# from .crud import TransportCRUD
-from database import db_helper
+from fastapi import APIRouter, Depends, status, Path
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from .shemas import TransportCreate
+from database import db_helper
+from .service import TransportService
+from .dependencies import transport_service
+from .shemas import TransportCreate, TransportUpdate
 
-# @transport_router.get("/")
-# async def get_timetable_for_day():
-#     return {"message": "Hello World"}
+
 transport_router = APIRouter()
 
 
-# @transport_router.get("/")
-# async def get_transport(
-#     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
-# ):
-#     users_crud = TransportCRUD(session)
-#     users = await users_crud.get_users()
-#     return users
-
-
-from typing import Annotated
-from .service import TransportService
-from .dependencies import transport_service
-
-
-@transport_router.get("/wer/")
+@transport_router.get("/")
 async def get_transports(
     transport_service: Annotated[TransportService, Depends(transport_service)],
 ):
-
-    users = await transport_service.get_transport()
-    return users
+    transport = await transport_service.get_transport()
+    return transport
 
 
 @transport_router.post("/", status_code=status.HTTP_201_CREATED)
@@ -42,3 +27,22 @@ async def add_transport(
 ):
     transport = await transport_service.add_transport(transport_in)
     return transport
+
+
+@transport_router.delete("/{transport_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_transport(
+    transport_service: Annotated[TransportService, Depends(transport_service)],
+    transport_id: int = Path(...),
+) -> None:
+    await transport_service.delete_hard(transport_id)
+    return None
+
+
+@transport_router.patch("/{transport_id}", status_code=status.HTTP_201_CREATED)
+async def update_transport(
+    transport_service: Annotated[TransportService, Depends(transport_service)],
+    transport_update: TransportUpdate,
+    transport_id: int = Path(...),
+) -> None:
+    await transport_service.update_transport(transport_id, transport_update)
+    return None

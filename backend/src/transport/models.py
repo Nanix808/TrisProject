@@ -19,12 +19,6 @@ class Status(enum.Enum):
 
 
 class Transport(Base):
-    data: Mapped[str] = mapped_column(
-        String(30),
-        nullable=False,
-    )
-
-    time: Mapped[str | None] = mapped_column(String(30))
     destination = mapped_column(String(150))
     notice: Mapped[str | None] = mapped_column(String(500))
     status: Mapped[Status] = mapped_column(nullable=True)
@@ -37,8 +31,12 @@ class Transport(Base):
     updated_at: Mapped[DateTime] = mapped_column(
         DateTime(timezone=False), server_default=func.now(), onupdate=func.now()
     )
-    date_from: Mapped[DateTime] = mapped_column(DateTime(timezone=False), nullable=True)
-    date_to: Mapped[DateTime] = mapped_column(DateTime(timezone=False), nullable=True)
+    date_from: Mapped[DateTime] = mapped_column(DateTime(timezone=False))
+    date_to: Mapped[DateTime] = mapped_column(
+        DateTime(timezone=False),
+        nullable=True,
+        server_default=None,
+    )
 
 
 class Car(Base):

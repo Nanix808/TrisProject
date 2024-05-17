@@ -42,8 +42,8 @@ def transport_list():
     )
     return [
         {
-            "data": "18.05.2024",
-            "time": "16:00",
+            # "data": "18.05.2024",
+            # "time": "16:00",
             "notice": "Срочно",
             "destination": "test",
             "status": Status.LOAD_UNLOAD.name,
@@ -53,8 +53,8 @@ def transport_list():
             "date_to": Obj1 + datetime.timedelta(hours=1),
         },
         {
-            "data": "19.04.2024",
-            "time": "13:00",
+            # "data": "19.04.2024",
+            # "time": "13:00",
             "notice": "В течение часа",
             "destination": "test",
             "status": Status.PICKUP.name,
