@@ -55,11 +55,14 @@ class TransportService:
                 if start_datetime < datetime.datetime.now():
                     raise transport_in_db_time_exc
                 end_datetime = None
-                # item = await self.transport_repo.get_by_id(transport_id)
+                item = await self.transport_repo.get_by_id(transport_id)
                 # transport_update.notice = "item.notice"
 
-                # transport_update = TransportUpdate(**dict(item.__dict__))
-                # exclude_none = False
+                transport_update1 = TransportUpdate(**dict(item.__dict__))
+                exclude_none = False
+                update_data = transport_update.model_dump(exclude_unset=True)
+                # update_data["date_to"] = Nones
+                transport_update = transport_update1.model_copy(update=update_data)
             elif start_datetime > end_datetime:
                 raise transport_in_db_time_exc
             transport_items = await self.transport_repo.check_data(

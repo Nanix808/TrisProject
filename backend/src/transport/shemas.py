@@ -11,8 +11,8 @@ class TransportCreate(BaseModel):
     date_from: datetime
     date_to: datetime | None = None
 
-    class Config:
-        orm_mode = True
+    # class Config:
+    #     orm_mode = True
 
 
 class TransportUpdate(BaseModel):
@@ -24,5 +24,5 @@ class TransportUpdate(BaseModel):
     date_from: datetime | None = None
     date_to: datetime | None = None
 
-    class Config:
-        orm_mode = True
+    # class Config:
+    #     orm_mode = True
