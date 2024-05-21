@@ -22,10 +22,6 @@ class TransportService:
         return users
 
     async def add_transport(self, transport_in: TransportCreate):
-        # filter = {
-        #     "data_from": transport_in.date_from,
-        #     "data_to": transport_in.date_to,
-        # }
         transport = await self.transport_repo.check_data(
             transport_in.date_from, transport_in.date_to
         )
@@ -42,36 +38,37 @@ class TransportService:
         return transport
 
     async def update_transport(
-        self, transport_id: int, transport_update: TransportCreate
+        self, transport_id: int, transport_update: TransportUpdate, user
     ):
-        exclude_none = True
-        start_datetime = transport_update.date_from
-        end_datetime = transport_update.date_to
+        transport_update = transport_update.model_dump(exclude_unset=True)
+        transpotr_from_db = await self.transport_repo.get_by_id(transport_id)
+        if not transpotr_from_db:
+            raise transport_not_found_exc
+        validate_transport = TransportUpdate.model_validate(
+            transpotr_from_db, from_attributes=True
+        )
+        start_datetime = transport_update.get("date_from", None)
+        end_datetime = transport_update.get("date_to", None)
+
         if start_datetime or end_datetime:
             if end_datetime and not start_datetime:
-                item = await self.transport_repo.get_by_id(transport_id)
-                start_datetime = item.date_from
+                start_datetime = validate_transport.date_from
             elif start_datetime and not end_datetime:
                 if start_datetime < datetime.datetime.now():
                     raise transport_in_db_time_exc
-                end_datetime = None
-                item = await self.transport_repo.get_by_id(transport_id)
-                # transport_update.notice = "item.notice"
-
-                transport_update1 = TransportUpdate(**dict(item.__dict__))
-                exclude_none = False
-                update_data = transport_update.model_dump(exclude_unset=True)
-                # update_data["date_to"] = Nones
-                transport_update = transport_update1.model_copy(update=update_data)
+                transport_update["date_to"] = None
             elif start_datetime > end_datetime:
                 raise transport_in_db_time_exc
             transport_items = await self.transport_repo.check_data(
                 start_datetime, end_datetime
             )
-            if transport_items:
+            if transport_items and transport_items.id != transport_id:
                 raise transport_in_db_time_exc
+
+        update_data = validate_transport.model_copy(update=transport_update)
+
         transport = await self.transport_repo.update(
-            transport_id, transport_update, exclude_none
+            transport_id, update_data, exclude=False
         )
         if not transport:
             raise transport_not_found_exc

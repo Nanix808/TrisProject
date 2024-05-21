@@ -119,6 +119,7 @@ def auth_user_issue_jwt(
     jwt_payload = {
         # subject
         "sub": user.username,
+        "sub_id": user.id,
         "username": user.username,
         "email": user.email,
         # "logged_in_at"
@@ -137,6 +138,7 @@ def auth_user_check_self_info(
 ):
     iat = payload.get("iat")
     return {
+        "id": user.id,
         "username": user.username,
         "email": user.email,
         "logged_in_at": iat,

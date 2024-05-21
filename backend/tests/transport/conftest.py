@@ -1,10 +1,12 @@
+import datetime
 import pytest
 
-import datetime
-
-# import pytz
 from sqlalchemy.ext.asyncio import AsyncSession
-from transport.models import Transport, Car, Status
+from fastapi.testclient import TestClient
+
+from src.main import app
+from transport.models import Transport, Car, TypeTask, Status
+from auth.dependencies import get_current_active_auth_user
 
 
 @pytest.fixture(scope="session")
@@ -12,11 +14,9 @@ def car_list():
     return [
         {
             "name": "reno",
-            # "transport_id": 1,
         },
         {
             "name": "vw",
-            # "transport_id": 2,
         },
     ]
 
@@ -42,22 +42,22 @@ def transport_list():
     )
     return [
         {
-            # "data": "18.05.2024",
-            # "time": "16:00",
+            "user_id": 1,
+            "status": Status.CREATED,
             "notice": "Срочно",
             "destination": "test",
-            "status": Status.LOAD_UNLOAD.name,
+            "type_task": TypeTask.LOAD_UNLOAD,
             "contact": "+375297949210 Савосин Виталий",
             "car_id": 1,
             "date_from": Obj1,
             "date_to": Obj1 + datetime.timedelta(hours=1),
         },
         {
-            # "data": "19.04.2024",
-            # "time": "13:00",
+            "user_id": 1,
+            "status": Status.CREATED,
             "notice": "В течение часа",
             "destination": "test",
-            "status": Status.PICKUP.name,
+            "type_task": TypeTask.PICKUP,
             "contact": "+375297949210 Савосин Виталий",
             "car_id": 2,
             "date_from": Obj1 + datetime.timedelta(days=1),
@@ -75,7 +75,21 @@ async def test_create_transport_data(session: AsyncSession, transport_list):
     await session.refresh(trans)
 
 
-# yield
-# await session.execute(User.__table__.delete())
-# await session.execute(Role.__table__.delete())
-# await session.commit()
+# Initialise a test client
+client = TestClient(app)
+
+
+async def get_user():
+    return (
+        {
+            "id": 1,
+            "username": "User_1",
+            "password_hash": "Password_1",
+            "is_active": True,
+            "role_id": 1,
+            "is_superuser": True,
+        },
+    )
+
+
+app.dependency_overrides[get_current_active_auth_user] = get_user

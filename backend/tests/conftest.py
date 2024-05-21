@@ -1,19 +1,17 @@
 from typing import AsyncGenerator
-import asyncio
 import pytest
 from fastapi.testclient import TestClient
 from httpx import AsyncClient
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.pool import NullPool
+from sqlalchemy.ext.asyncio import AsyncSession
+
 
 from src.main import app
 from database import DatabaseHelper, db_helper
 from config import settings
 from models import Base
 from users.models import User
+from authorization.models import Role
 
-import random
 
 db_helper_test = DatabaseHelper(settings.DATABASE_URL_psycopg, echo=False)
 
@@ -52,3 +50,54 @@ async def ac() -> AsyncGenerator[AsyncClient, None]:
         yield ac
 
 
+@pytest.fixture(scope="session")
+def user_list():
+    return [
+        {
+            "username": "User_1",
+            "password_hash": "Password_1",
+            "is_active": True,
+            "role_id": 1,
+        },
+        {
+            "username": "User_2",
+            "password_hash": "Password_2",
+            "is_active": True,
+            "role_id": 1,
+        },
+        {
+            "username": "User_3",
+            "password_hash": "Password_3",
+            "is_superuser": True,
+            "role_id": 1,
+        },
+    ]
+
+
+@pytest.fixture(scope="session")
+def roles_list():
+    return [
+        {
+            "name": "admin",
+            "description": "Administrator",
+            "permissions": {"a": "1", "b": 1},
+        }
+    ]
+
+
+@pytest.fixture(scope="session", autouse=True)
+async def test_create_roles_data_from_users(session: AsyncSession, roles_list):
+    for role in roles_list:
+        role = Role(**role)
+        session.add(role)
+    await session.commit()
+    await session.refresh(role)
+
+
+@pytest.fixture(scope="session", autouse=True)
+async def test_create_users_data(session: AsyncSession, user_list):
+    for user in user_list:
+        user = User(**user)
+        session.add(user)
+    await session.commit()
+    await session.refresh(user)

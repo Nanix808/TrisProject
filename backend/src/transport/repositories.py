@@ -1,8 +1,7 @@
 from .models import Transport
 from repository import SQLAlchemyRepository
 from database import db_helper
-from sqlalchemy import select, func, or_
-from datetime import datetime
+from sqlalchemy import select, or_
 
 
 class TransportRepository(SQLAlchemyRepository):
@@ -14,8 +13,12 @@ class TransportRepository(SQLAlchemyRepository):
             if end_datetime:
                 stmt = select(self.model).filter(
                     or_(
-                        self.model.date_from.between(start_datetime, end_datetime),
-                        self.model.date_to.between(start_datetime, end_datetime),
+                        self.model.date_from.between(
+                            start_datetime, end_datetime
+                        ),
+                        self.model.date_to.between(
+                            start_datetime, end_datetime
+                        ),
                     )
                 )
                 empty = await session.scalar(stmt)

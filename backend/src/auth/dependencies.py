@@ -4,7 +4,7 @@ from jwt.exceptions import InvalidTokenError
 from .utils import decode_jwt
 from fastapi.security import OAuth2PasswordBearer
 from .schemas import UserLogin
-from users.schemas import UserBase
+from users.schemas import UserBase, User
 from config import settings
 from . import utils as auth_utils
 from users.dependencies import user_service
@@ -38,10 +38,13 @@ async def validate_auth_user(
 
     jwt_payload = {
         "sub": user.username,
+        "sub_id": user.id,
         "username": user.username,
         "email": user.email,
     }
-    refresh_token = await user_service.update_user_refresh_token(user, jwt_payload)
+    refresh_token = await user_service.update_user_refresh_token(
+        user, jwt_payload
+    )
     user.refresh_token = refresh_token
     return user
 
@@ -65,7 +68,7 @@ def get_current_token_payload(
 async def get_current_auth_user(
     user_service: Annotated[UserService, Depends(user_service)],
     payload: dict = Depends(get_current_token_payload),
-) -> UserBase:
+) -> User:
     username: str | None = payload.get("sub")
     user = await user_service.get_by_filter({"username": username})
     if user:
@@ -76,7 +79,7 @@ async def get_current_auth_user(
 def get_current_active_auth_user(
     user: UserBase = Depends(get_current_auth_user),
 ):
-    if user.is_:
+    if user.is_active:
         return user
     raise unactive_exc
 

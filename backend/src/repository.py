@@ -25,19 +25,6 @@ class SQLAlchemyRepository(AbstractRepository):
 
     async def add_one(self, empty: dict) -> int:
         async with db_helper.session_dependency() as session:
-            #     async def create_user(self, user_in: UserCreate, *args, **kwargs) -> User | None:
-            # user = await self.get_user_by_username(user_in.username)
-            # if user:
-            #     raise user_in_db_exc
-            # # check role
-            # if user_in.role_id is not None:
-            #     roles_crud = RolesCRUD(self.db_session)
-            #     role = await roles_crud.get_role_by_id(user_in.role_id)
-            #     if not role:
-            #         # in not role in db reset role_id in None
-            #         user_in.role_id = None
-            # user_in.password_hash = hash_password(user_in.password_hash)
-            # user = User(**user_in.model_dump())
             session.add(empty)
             await session.commit()
             await session.refresh(empty)

@@ -12,19 +12,32 @@ from users.mixins import UserRelationMixin
 from sqlalchemy.dialects.postgresql import ENUM as PgEnum
 
 
-class Status(enum.Enum):
+class TypeTask(str, enum.Enum):
     LOAD_UNLOAD = "загрузка/разгрузка"
     PICKUP = "забрать"
     SIGN = "подписать"
 
 
-class Transport(Base):
+class Status(str, enum.Enum):
+    CREATED = "Создана"
+    ACCEPTED = "Принята"
+    COMPLETED = "Выполнена"
+    CANCELED = "Отменена"
+
+
+class Transport(UserRelationMixin, Base):
+    # _user_id_unique = True
+    _user_back_populates = "transport"
+
     destination = mapped_column(String(150))
     notice: Mapped[str | None] = mapped_column(String(500))
+    type_task: Mapped[TypeTask] = mapped_column(nullable=True)
     status: Mapped[Status] = mapped_column(nullable=True)
     contact: Mapped[str | None] = mapped_column(String(50))
     car_id: Mapped[int] = mapped_column(ForeignKey("car.id"))
     car: Mapped["Car"] = relationship("Car", back_populates="transport")
+    # user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    # user: Mapped["User"] = relationship("User", back_populates="transport")
     created_on: Mapped[DateTime] = mapped_column(
         DateTime(timezone=False), server_default=func.now()
     )
@@ -41,4 +54,6 @@ class Transport(Base):
 
 class Car(Base):
     name: Mapped[str] = mapped_column(String(30))
-    transport: Mapped["Transort"] = relationship("Transport", back_populates="car")
+    transport: Mapped["Transport"] = relationship(
+        "Transport", back_populates="car"
+    )

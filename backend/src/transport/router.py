@@ -1,13 +1,12 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, status, Path
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from database import db_helper
 from .service import TransportService
 from .dependencies import transport_service
 from .shemas import TransportCreate, TransportUpdate
-
+from users.schemas import User
+from auth.dependencies import get_current_active_auth_user
 
 transport_router = APIRouter()
 
@@ -29,7 +28,9 @@ async def add_transport(
     return transport
 
 
-@transport_router.delete("/{transport_id}", status_code=status.HTTP_204_NO_CONTENT)
+@transport_router.delete(
+    "/{transport_id}", status_code=status.HTTP_204_NO_CONTENT
+)
 async def delete_transport(
     transport_service: Annotated[TransportService, Depends(transport_service)],
     transport_id: int = Path(...),
@@ -43,6 +44,9 @@ async def update_transport(
     transport_service: Annotated[TransportService, Depends(transport_service)],
     transport_update: TransportUpdate,
     transport_id: int = Path(...),
+    user: User = Depends(get_current_active_auth_user),
 ) -> None:
-    await transport_service.update_transport(transport_id, transport_update)
+    await transport_service.update_transport(
+        transport_id, transport_update, user
+    )
     return None

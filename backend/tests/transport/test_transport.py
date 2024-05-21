@@ -2,7 +2,7 @@ import pytest
 import datetime
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import insert, select
-from transport.models import Transport, Car, Status
+from transport.models import Transport, Car, TypeTask, Status
 from httpx import AsyncClient
 from contextlib import nullcontext as does_not_raise
 
@@ -15,9 +15,11 @@ class TestTransort:
         [
             (
                 {
+                    "user_id": 1,
                     "notice": "Срочно",
+                    "status": Status.CREATED,
                     "destination": "test",
-                    "status": Status.LOAD_UNLOAD.name,
+                    "type_task": TypeTask.LOAD_UNLOAD,
                     "contact": "+375297949210 Савосин Виталий",
                     "car_id": 1,
                     "date_from": "2021-05-23 09:00:00",
@@ -29,9 +31,11 @@ class TestTransort:
             ),
             (
                 {
+                    "user_id": 1,
                     "notice": "Срочно",
                     "destination": "test",
-                    "status": Status.LOAD_UNLOAD.name,
+                    "status": Status.CREATED,
+                    "type_task": TypeTask.LOAD_UNLOAD,
                     "contact": "+375297949210 Савосин Виталий",
                     "car_id": 1,
                     "date_from": "2021-05-23 08:30:00",
@@ -43,9 +47,11 @@ class TestTransort:
             ),
             (
                 {
+                    "user_id": 1,
                     "notice": "Срочно",
                     "destination": "test",
-                    "status": Status.LOAD_UNLOAD.name,
+                    "status": Status.COMPLETED,
+                    "type_task": TypeTask.LOAD_UNLOAD,
                     "contact": "+375297949210 Савосин Виталий",
                     "car_id": 1,
                     "date_from": "2021-05-23 09:00:00",
@@ -57,9 +63,11 @@ class TestTransort:
             ),
             (
                 {
+                    "user_id": 1,
                     "notice": "Срочно",
                     "destination": "test",
-                    "status": Status.LOAD_UNLOAD.name,
+                    "status": Status.COMPLETED,
+                    "type_task": TypeTask.LOAD_UNLOAD,
                     "contact": "+375297949210 Савосин Виталий",
                     "car_id": 1,
                     "date_from": "2021-05-23 08:00:00",
@@ -71,9 +79,11 @@ class TestTransort:
             ),
             (
                 {
+                    "user_id": 1,
                     "notice": "Срочно",
                     "destination": "test",
-                    "status": Status.LOAD_UNLOAD.name,
+                    "status": Status.COMPLETED,
+                    "type_task": TypeTask.LOAD_UNLOAD,
                     "contact": "+375297949210 Савосин Виталий",
                     "car_id": 1,
                     "date_from": "2021-06-23 00:00:00",
@@ -84,9 +94,11 @@ class TestTransort:
             ),
             (
                 {
+                    "user_id": 1,
                     "notice": "Срочно",
                     "destination": "test",
-                    "status": Status.LOAD_UNLOAD.name,
+                    "status": Status.COMPLETED,
+                    "type_task": TypeTask.LOAD_UNLOAD,
                     "contact": "+375297949210 Савосин Виталий",
                     "car_id": 1,
                     "date_from": "2021-06-23 00:00:00",
@@ -113,76 +125,96 @@ class TestTransort:
     @pytest.mark.parametrize(
         "transport_id, transport_update, status_code,  expectation, alert",
         [
-            # (
-            #     4,
-            #     {
-            #         "notice": "Срочно1",
-            #         "destination": "test1",
-            #         "status": Status.LOAD_UNLOAD.name,
-            #         "contact": "+375297949210 Савосин Виталий",
-            #         "car_id": 1,
-            #         "date_from": "2025-06-23 00:00:00",
-            #     },
-            #     201,
-            #     does_not_raise(),
-            #     "standart transport update all filds",
-            # ),
-            # (
-            #     4,
-            #     {
-            #         "notice": "Срочно2",
-            #     },
-            #     201,
-            #     does_not_raise(),
-            #     "standart transport update one field",
-            # ),
-            # (
-            #     4,
-            #     {
-            #         "new_fild": "Срочно2",
-            #     },
-            #     201,
-            #     does_not_raise(),
-            #     "standart transport update non-existent field",
-            # ),
-            # (
-            #     4,
-            #     {
-            #         "date_from": "2020-05-24 10:30:00",
-            #         "date_to": "2020-05-24 11:30:00",
-            #     },
-            #     401,
-            #     does_not_raise(),
-            #     "not unique update date_from or date_to filds",
-            # ),
-            # (
-            #     4,
-            #     {
-            #         "date_from": "2025-05-24 10:30:00",
-            #         "date_to": "2025-05-24 11:30:00",
-            #     },
-            #     201,
-            #     does_not_raise(),
-            #     "not unique update date_from or date_to filds",
-            # ),
-            # (
-            #     4,
-            #     {
-            #         "date_from": "2025-05-24 10:30:00",
-            #         "date_to": "2025-05-24 11:30:00",
-            #     },
-            #     401,
-            #     does_not_raise(),
-            #     "not unique update date_from or date_to filds",
-            # ),
             (
                 4,
                 {
+                    "notice": "Срочно1",
+                    "destination": "test1",
+                    "type_task": "подписать",
+                    "status": Status.CREATED,
+                    "contact": "+375297949210 Савосин Виталий",
+                    "car_id": 1,
+                    "date_from": "2025-06-23 00:00:00",
+                },
+                201,
+                does_not_raise(),
+                "standart transport update all filds",
+            ),
+            (
+                4,
+                {
+                    "notice": "Срочно2",
+                },
+                201,
+                does_not_raise(),
+                "standart transport update one field",
+            ),
+            (
+                4,
+                {
+                    "new_fild": "Срочно2",
+                },
+                201,
+                does_not_raise(),
+                "standart transport update non-existent field",
+            ),
+            (
+                4,
+                {
+                    "date_from": "2020-05-24 10:30:00",
+                    "date_to": "2020-05-24 11:30:00",
+                },
+                401,
+                does_not_raise(),
+                "not unique update date_from or date_to filds",
+            ),
+            (
+                4,
+                {
+                    "date_from": "2025-05-24 10:30:00",
+                    "date_to": "2025-05-24 11:30:00",
+                },
+                201,
+                does_not_raise(),
+                "unique update date_from or date_to filds",
+            ),
+            (
+                3,
+                {
+                    "date_from": "2025-05-24 10:30:00",
+                    "date_to": "2025-05-24 11:30:00",
+                },
+                401,
+                does_not_raise(),
+                "not unique update date_from and date_to filds",
+            ),
+            (
+                4,
+                {
+                    "status": Status.CANCELED,
                     "date_from": "2025-05-24 12:30:00",
                 },
                 201,
                 does_not_raise(),
-                "not unique update date_from or date_to filds",
+                "update only date_from",
+            ),
+            (
+                4,
+                {
+                    "date_to": "2021-06-23 13:30:00",
+                },
+                201,
+                does_not_raise(),
+                "update only date_to",
+            ),
+            (
+                145,
+                {
+                    "date_to": "2021-06-23 13:30:00",
+                },
+                404,
+                does_not_raise(),
+                "error not found transport_id",
             ),
         ],
     )
