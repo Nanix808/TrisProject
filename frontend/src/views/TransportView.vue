@@ -51,7 +51,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import BaseTable from '@/components/base/BaseTable.vue';
 import BaseButton from '@/components/base/BaseButton.vue';
 import flatPickr from 'vue-flatpickr-component';
@@ -59,6 +59,13 @@ import { Russian } from 'flatpickr/dist/l10n/ru.js';
 import 'flatpickr/dist/flatpickr.css';
 // import 'bootstrap/dist/css/bootstrap.css';
 import 'flatpickr/dist/themes/material_green.css';
+import { useStore } from 'vuex';
+
+const store = useStore();
+
+onMounted(() => {
+  store.dispatch('get_all_transport');
+});
 
 const date = ref(null);
 function timeStamp(startHour, endHour) {

@@ -120,6 +120,7 @@ def auth_user_issue_jwt(
         # subject
         "sub": user.username,
         "sub_id": user.id,
+        "role_id": user.role_id,
         "username": user.username,
         "email": user.email,
         # "logged_in_at"
@@ -140,6 +141,7 @@ def auth_user_check_self_info(
     return {
         "id": user.id,
         "username": user.username,
+        "role_id": user.role_id,
         "email": user.email,
         "logged_in_at": iat,
     }

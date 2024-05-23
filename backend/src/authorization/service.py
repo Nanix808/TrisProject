@@ -20,9 +20,7 @@ class RoleService:
         role = Role(**role_in.model_dump())
         role = await self.role_repo.add_one(role)
         return role
-    
-    
-    async def role_by_id(self, id: int):
+
+    async def get_by_id(self, id: int):
         role = await self.role_repo.get_by_id(id)
         return role
-

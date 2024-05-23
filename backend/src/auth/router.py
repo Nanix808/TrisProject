@@ -19,6 +19,7 @@ def auth_user_issue_jwt(
     jwt_payload = {
         "sub": user.username,
         "sub_id": user.id,
+        "role_id": user.role_id,
         "username": user.username,
         "email": user.email,
         "is_superuser": user.is_superuser,
@@ -50,6 +51,7 @@ async def refresh(user: UserBase = Depends(authorize)):
     jwt_payload = {
         "sub": user.username,
         "sub_id": user.id,
+        "role_id": user.role_id,
         "username": user.username,
         "email": user.email,
         "is_superuser": user.is_superuser,

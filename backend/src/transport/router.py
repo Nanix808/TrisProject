@@ -1,12 +1,13 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, status, Path
+from fastapi import APIRouter, Depends, status, Path, Request
 
 from .service import TransportService
 from .dependencies import transport_service
 from .shemas import TransportCreate, TransportUpdate
 from users.schemas import User
 from auth.dependencies import get_current_active_auth_user
+from authorization.dependencies import get_uid_from_request
 
 transport_router = APIRouter()
 
@@ -34,8 +35,9 @@ async def add_transport(
 async def delete_transport(
     transport_service: Annotated[TransportService, Depends(transport_service)],
     transport_id: int = Path(...),
+    uid: int = Depends(get_uid_from_request),
 ) -> None:
-    await transport_service.delete_hard(transport_id)
+    await transport_service.delete_hard(transport_id, uid)
     return None
 
 
@@ -44,9 +46,10 @@ async def update_transport(
     transport_service: Annotated[TransportService, Depends(transport_service)],
     transport_update: TransportUpdate,
     transport_id: int = Path(...),
-    user: User = Depends(get_current_active_auth_user),
+    uid: int = Depends(get_uid_from_request),
 ) -> None:
+
     await transport_service.update_transport(
-        transport_id, transport_update, user
+        transport_id, transport_update, uid
     )
     return None

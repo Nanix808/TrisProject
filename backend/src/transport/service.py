@@ -1,4 +1,8 @@
+import datetime
+
+from fastapi import Request
 from repository import AbstractRepository
+
 from .shemas import TransportCreate, TransportUpdate
 from .models import Transport
 from .exceptions import (
@@ -6,7 +10,8 @@ from .exceptions import (
     transport_not_found_exc,
     transport_in_db_time_exc,
 )
-import datetime
+
+from authorization.exceptions import not_permission_exc
 
 
 class TransportService:
@@ -31,14 +36,22 @@ class TransportService:
         transport = await self.transport_repo.add_one(transport)
         return transport
 
-    async def delete_hard(self, transport_id: int):
+    async def delete_hard(self, transport_id: int, uid: int):
+        transpotr_from_db = await self.transport_repo.get_by_id(transport_id)
+        # Проверка может ли пользователь изменить транспорт
+        # 0 если он суперадмин
+        # или его id совпадает c transport.user_id
+        if not transpotr_from_db:
+            raise transport_not_found_exc
+        if uid != transpotr_from_db.user_id and uid != 0:
+            raise not_permission_exc
         transport = await self.transport_repo.delete(transport_id)
         if not transport:
             raise transport_not_found_exc
         return transport
 
     async def update_transport(
-        self, transport_id: int, transport_update: TransportUpdate, user
+        self, transport_id: int, transport_update: TransportUpdate, uid: int
     ):
         transport_update = transport_update.model_dump(exclude_unset=True)
         transpotr_from_db = await self.transport_repo.get_by_id(transport_id)
@@ -47,6 +60,12 @@ class TransportService:
         validate_transport = TransportUpdate.model_validate(
             transpotr_from_db, from_attributes=True
         )
+        # Проверка может ли пользователь изменить транспорт
+        # 0 если он суперадмин
+        # или его id совпадает c transport.user_id
+        if uid != transpotr_from_db.user_id and uid != 0:
+            raise not_permission_exc
+
         start_datetime = transport_update.get("date_from", None)
         end_datetime = transport_update.get("date_to", None)
 

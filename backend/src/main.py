@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
 import uvicorn
@@ -6,7 +6,9 @@ from auth.router import auth_router
 from users.router import user_router
 from authorization.router import authz_router
 from transport.router import transport_router
-from middleware import RBACMiddleware
+
+from middleware import auth_middleware
+
 
 app = FastAPI()
 
@@ -31,17 +33,24 @@ app.add_middleware(
 )
 
 
-
+# router = APIRouter(dependencies=[Depends(auth_middleware)])
 
 # Add the middleware to FastAPI
-app.add_middleware(RBACMiddleware)
+# app.add_middleware(RBACMiddleware)
 
 
 # Add the router to FastAPI
 app.include_router(auth_router, prefix="/auth", tags=["auth"])
 app.include_router(user_router, prefix="/users", tags=["users"])
-app.include_router(authz_router, prefix="/authorization", tags=["authorization"])
-app.include_router(transport_router, prefix="/transport", tags=["transport"])
+app.include_router(
+    authz_router, prefix="/authorization", tags=["authorization"]
+)
+app.include_router(
+    transport_router,
+    prefix="/transport",
+    tags=["transport"],
+    dependencies=[Depends(auth_middleware)],
+)
 
 
 # from fastapi.routing import APIRoute

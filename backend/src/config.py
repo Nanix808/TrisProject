@@ -14,14 +14,16 @@ class AuthJwt(BaseModel):
     private_key_path: str = BASE_DIR / "certs" / "jwt-private.pem"
     algorithms: str = "RS256"
     tokenUrl: str = "/auth/login/"
-    accses_token_expire_minutes: int = 1
+    accses_token_expire_minutes: int = 240
     refresh_token_expire_minutes: int = 240
 
 
 class Settings(BaseSettings):
     """Class Settings"""
 
-    model_config = SettingsConfigDict(env_file=DOTENV, env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(
+        env_file=DOTENV, env_file_encoding="utf-8"
+    )
 
     auth_jwt: AuthJwt = AuthJwt()
 

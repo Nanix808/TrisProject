@@ -21,6 +21,10 @@ oauth2_scheme = OAuth2PasswordBearer(
 )
 
 
+async def validate_auth_user2():
+    return 2
+
+
 async def validate_auth_user(
     payload: UserLogin,
     user_service: Annotated[UserService, Depends(user_service)],
@@ -39,6 +43,7 @@ async def validate_auth_user(
     jwt_payload = {
         "sub": user.username,
         "sub_id": user.id,
+        "role_id": user.role_id,
         "username": user.username,
         "email": user.email,
     }

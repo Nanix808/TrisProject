@@ -1,12 +1,19 @@
 import datetime
 import pytest
 
+# from fastapi import Request
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.testclient import TestClient
 
 from src.main import app
 from transport.models import Transport, Car, TypeTask, Status
 from auth.dependencies import get_current_active_auth_user
+
+from authorization.dependencies import (
+    get_permissions,
+    get_role_from_token,
+    get_uid_from_request,
+)
 
 
 @pytest.fixture(scope="session")
@@ -92,4 +99,19 @@ async def get_user():
     )
 
 
+def get_permissions_fake():
+    return True
+
+
+def get_role_from_token_fake():
+    return None
+
+
+def get_uid_from_request_fake():
+    return 0
+
+
 app.dependency_overrides[get_current_active_auth_user] = get_user
+app.dependency_overrides[get_permissions] = get_permissions_fake
+app.dependency_overrides[get_role_from_token] = get_role_from_token_fake
+app.dependency_overrides[get_uid_from_request] = get_uid_from_request_fake
