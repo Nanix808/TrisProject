@@ -31,6 +31,15 @@ const props = defineProps<Props>();
     white-space: nowrap;
     background-color: $header-color;
     border-radius: 5px 5px 0 0;
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 22px;
+      top: -10px;
+      border: 5px solid transparent;
+      border-bottom: 5px solid $header-color;
+    }
   }
 }
 </style>
