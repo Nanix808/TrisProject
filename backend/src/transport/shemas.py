@@ -1,5 +1,5 @@
 from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 from .models import TypeTask, Status
 
@@ -26,3 +26,12 @@ class TransportUpdate(BaseModel):
     user_id: int | None = None
     date_from: datetime | None = None
     date_to: datetime | None = None
+
+
+class DateFromRequest(BaseModel):
+    date_in: str | None = None
+
+    @validator("date_in")
+    def parse_date_in(cls, v):
+        date_obj = datetime.strptime(v, "%m/%d/%Y")
+        return date_obj

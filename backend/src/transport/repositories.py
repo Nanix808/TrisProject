@@ -1,4 +1,4 @@
-from .models import Transport
+from .models import Transport, Car
 from repository import SQLAlchemyRepository
 from database import db_helper
 from sqlalchemy import select, or_
@@ -23,3 +23,7 @@ class TransportRepository(SQLAlchemyRepository):
                 )
                 empty = await session.scalar(stmt)
             return empty
+
+
+class CarRepository(SQLAlchemyRepository):
+    model = Car

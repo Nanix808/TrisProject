@@ -1,10 +1,10 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, status, Path, Request
+from fastapi import APIRouter, Depends, status, Path, Request, Body
 
-from .service import TransportService
-from .dependencies import transport_service
-from .shemas import TransportCreate, TransportUpdate
+from .service import TransportService, CarService
+from .dependencies import transport_service, car_service
+from .shemas import TransportCreate, TransportUpdate, DateFromRequest
 from users.schemas import User
 from auth.dependencies import get_current_active_auth_user
 from authorization.dependencies import get_uid_from_request
@@ -17,6 +17,15 @@ async def get_transports(
     transport_service: Annotated[TransportService, Depends(transport_service)],
 ):
     transport = await transport_service.get_transport()
+    return transport
+
+
+@transport_router.post("/get_by_date")
+async def get_transports_by_date(
+    transport_service: Annotated[TransportService, Depends(transport_service)],
+    date: DateFromRequest,
+):
+    transport = await transport_service.get_transport_by_date(date.date_in)
     return transport
 
 
@@ -53,3 +62,11 @@ async def update_transport(
         transport_id, transport_update, uid
     )
     return None
+
+
+@transport_router.get("/cars")
+async def get_cars(
+    car_service: Annotated[CarService, Depends(car_service)],
+):
+    cars = await car_service.get_cars()
+    return cars

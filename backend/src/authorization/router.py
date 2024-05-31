@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from .schemas import Role, BaseRole, BaseRouter
 from database import db_helper
 
-# from .crud import RolesCRUD
+
 from .dependencies import get_current_active_auth_is_superuser_user, role_service
 from .service import RoleService
 

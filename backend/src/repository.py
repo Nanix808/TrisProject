@@ -32,7 +32,7 @@ class SQLAlchemyRepository(AbstractRepository):
 
     async def find_all(self):
         async with db_helper.session_dependency() as session:
-            stmt = select(self.model)
+            stmt = select(self.model).order_by(self.model.id)
             res = await session.execute(stmt)
             return res.scalars().all()
 

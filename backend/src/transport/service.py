@@ -26,6 +26,13 @@ class TransportService:
         users = await self.transport_repo.find_all()
         return users
 
+    async def get_transport_by_date(self, date):
+        users = await self.transport_repo.check_data(
+            date,
+            date.replace(minute=59, hour=23, second=59),
+        )
+        return users
+
     async def add_transport(self, transport_in: TransportCreate):
         transport = await self.transport_repo.check_data(
             transport_in.date_from, transport_in.date_to
@@ -92,3 +99,12 @@ class TransportService:
         if not transport:
             raise transport_not_found_exc
         return transport
+
+
+class CarService:
+    def __init__(self, car_repo: AbstractRepository):
+        self.car_repo: AbstractRepository = car_repo()
+
+    async def get_cars(self):
+        cars = await self.car_repo.find_all()
+        return cars

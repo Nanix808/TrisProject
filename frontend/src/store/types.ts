@@ -14,6 +14,7 @@ export interface ILoginResponse {
 }
 
 export interface Transport {
+  id: number;
   notice: string;
   destination: string;
   type_task: string;
@@ -23,10 +24,14 @@ export interface Transport {
   user_id: string;
   date_from: Date;
   date_to: Date;
-  id: number;
 }
 
+export interface Cars {
+  id: number;
+  name: string;
+}
 
 export interface TransportState {
   transports: Transport[];
+  cars: Cars[];
 }
