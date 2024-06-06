@@ -19,23 +19,22 @@ class TransportService:
         self.transport_repo: AbstractRepository = transport_repo()
 
     async def get_by_filter(self, filter: dict):
-        users = await self.transport_repo.get_by_filter(filter)
-        return users
+        transport = await self.transport_repo.get_by_filter(filter)
+        return transport
 
     async def get_transport(self):
-        users = await self.transport_repo.find_all()
-        return users
+        transport = await self.transport_repo.find_all()
+        return transport
 
-    async def get_transport_by_date(self, date):
-        users = await self.transport_repo.check_data(
-            date,
-            date.replace(minute=59, hour=23, second=59),
+    async def get_transport_by_date(self, date, car_id):
+        transport = await self.transport_repo.check_data(
+            date, date.replace(minute=59, hour=23, second=59), car_id
         )
-        return users
+        return transport
 
     async def add_transport(self, transport_in: TransportCreate):
         transport = await self.transport_repo.check_data(
-            transport_in.date_from, transport_in.date_to
+            transport_in.date_from, transport_in.date_to, transport_in.car_id
         )
         if transport:
             raise transport_in_db_time_exc
@@ -75,20 +74,30 @@ class TransportService:
 
         start_datetime = transport_update.get("date_from", None)
         end_datetime = transport_update.get("date_to", None)
+        car_id = transport_update.get("car_id", None)
 
-        if start_datetime or end_datetime:
+        if start_datetime or end_datetime or car_id:
             if end_datetime and not start_datetime:
                 start_datetime = validate_transport.date_from
             elif start_datetime and not end_datetime:
                 if start_datetime < datetime.datetime.now():
                     raise transport_in_db_time_exc
                 transport_update["date_to"] = None
-            elif start_datetime > end_datetime:
+            elif (
+                start_datetime
+                and end_datetime
+                and start_datetime > end_datetime
+            ):
                 raise transport_in_db_time_exc
+            elif car_id and not end_datetime and not start_datetime:
+                start_datetime = validate_transport.date_from
+                end_datetime = validate_transport.date_to
             transport_items = await self.transport_repo.check_data(
-                start_datetime, end_datetime
+                start_datetime,
+                end_datetime,
+                transport_update.get("car_id", validate_transport.car_id),
             )
-            if transport_items and transport_items.id != transport_id:
+            if transport_items and transport_items[0].id != transport_id:
                 raise transport_in_db_time_exc
 
         update_data = validate_transport.model_copy(update=transport_update)

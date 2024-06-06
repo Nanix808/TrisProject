@@ -101,7 +101,7 @@ function handleChange(event) {
     }
 
     &.active.inactive {
-      color: $default-success;
+      color: $second-color;
     }
   }
 

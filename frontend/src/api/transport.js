@@ -7,12 +7,18 @@ export const getTransport = () => {
 
 export const getTransport_by_date = (date) => {
   const url = '/transport/get_by_date/';
-  return DefaultApiInstance.post(url, { date_in: '05/25/2025' });
+  return DefaultApiInstance.post(url, date);
 };
 
 export const getCars = () => {
   const url = '/transport/cars/';
   return DefaultApiInstance.get(url);
+};
+
+export const addTransport = (payload) => {
+  console.log(payload);
+  const url = '/transport/';
+  return DefaultApiInstance.post(url, payload);
 };
 
 // export const createUser = (payload) => {

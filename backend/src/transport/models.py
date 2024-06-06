@@ -13,9 +13,9 @@ from sqlalchemy.dialects.postgresql import ENUM as PgEnum
 
 
 class TypeTask(str, enum.Enum):
-    LOAD_UNLOAD = "загрузка/разгрузка"
-    PICKUP = "забрать"
-    SIGN = "подписать"
+    LOAD_UNLOAD = "Загрузка"
+    PICKUP = "Забрать"
+    SIGN = "Подписать"
 
 
 class Status(str, enum.Enum):
@@ -26,7 +26,6 @@ class Status(str, enum.Enum):
 
 
 class Transport(UserRelationMixin, Base):
-    # _user_id_unique = True
     _user_back_populates = "transport"
 
     destination = mapped_column(String(150))
@@ -36,8 +35,6 @@ class Transport(UserRelationMixin, Base):
     contact: Mapped[str | None] = mapped_column(String(50))
     car_id: Mapped[int] = mapped_column(ForeignKey("car.id"))
     car: Mapped["Car"] = relationship("Car", back_populates="transport")
-    # user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
-    # user: Mapped["User"] = relationship("User", back_populates="transport")
     created_on: Mapped[DateTime] = mapped_column(
         DateTime(timezone=False), server_default=func.now()
     )

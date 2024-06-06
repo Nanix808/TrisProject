@@ -1,36 +1,26 @@
 <template>
-
-
-  <button :disabled="!props.isActive" :class="!props.isActive ? 'has-error' : 'has-success'"
-    @click.stop="emit('click')">{{ props.name }}
+  <button
+    :disabled="!props.isActive"
+    :class="!props.isActive ? 'has-error' : 'has-success'"
+    @click.stop="emit('click')"
+  >
+    {{ props.name }}
   </button>
-
-
-
 </template>
-
 
 <script setup lang="ts">
 import { ref } from 'vue';
 interface Props {
-  name: string
-  isActive: boolean
+  name: string;
+  isActive: boolean;
 }
 
-const props = defineProps<Props>()
-
-
+const props = defineProps<Props>();
 
 const emit = defineEmits<{
-  (e: 'click'): void
-}>()
-
-
-
+  (e: 'click'): void;
+}>();
 </script>
-
-
-
 
 <style lang="scss">
 button {
@@ -47,14 +37,12 @@ button {
   font-size: 16px;
   margin: 4px 2px;
   cursor: pointer;
-
-
+  border-radius: 5px;
 }
 
 button.has-success:hover {
   color: $second-color-font;
   background-color: $admin-left-side-background;
-
 }
 
 button.has-error:hover {
@@ -68,12 +56,9 @@ button:disabled {
 
 button.has-success:active {
   color: $main-color-font;
-
 }
 
 button.has-error:active {
   color: $default-error;
-
-
 }
 </style>

@@ -33,5 +33,6 @@ export interface Cars {
 
 export interface TransportState {
   transports: Transport[];
+  transports_without_time_to: Transport[];
   cars: Cars[];
 }

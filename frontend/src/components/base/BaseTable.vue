@@ -11,9 +11,9 @@
 <style lang="scss">
 .base__table__container {
   & .table {
-    width: 100%;
     table-layout: fixed;
     border: none;
+    width: 100%;
 
     & th {
       color: $second-color-font;

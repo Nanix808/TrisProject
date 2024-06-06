@@ -1,9 +1,10 @@
 import { UrlApi } from '@/api';
 import { UserPayload, ILoginResponse } from './types';
-import { isTokenExpired, isSuperUser } from '@/utils/jwt';
+import { isTokenExpired, isSuperUser, getIdUser } from '@/utils/jwt';
 import { AxiosPromise } from 'axios';
 
 interface State {
+  userId: number | null;
   userName: string;
   userEmail: string;
   accessToken: string | null;
@@ -25,6 +26,7 @@ export default {
 
     return {
       userName: '',
+      userId: null,
       userEmail: '',
       accessToken,
       refreshToken,
@@ -47,6 +49,7 @@ export default {
       state.isAuthenticated = true;
       const is_admin = isSuperUser(data.access_token);
       state.isSuperUser = is_admin;
+      state.userId = getIdUser(data.access_token);
       localStorage.setItem('accessToken', data.access_token);
       localStorage.setItem('isSuperUser', is_admin.toString());
       localStorage.setItem('refreshToken', data.refresh_token);

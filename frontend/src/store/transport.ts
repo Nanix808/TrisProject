@@ -5,15 +5,21 @@ export default {
   state(): TransportState {
     return {
       transports: [],
+      transports_without_time_to: [],
       cars: [],
     };
   },
   mutations: {
     setTransportsArray(state: TransportState, newTransports: any) {
       state.transports = [];
-      newTransports.forEach((item) => {
-        state.transports.push(item);
-      });
+      (state.transports_without_time_to = []),
+        newTransports.forEach((item) => {
+          if (item.date_to == null) {
+            state.transports_without_time_to.push(item);
+          } else {
+            state.transports.push(item);
+          }
+        });
     },
     setCarsArray(state: TransportState, newCars: any) {
       state.cars = [];
@@ -33,10 +39,22 @@ export default {
           //   commit('cleanUsersArray');
         });
     },
-    get_transport_by_date({ commit }, date) {
+    get_transport_by_date({ commit }, payload: any) {
       UrlApi.transportRoutes
-        .getTransport_by_date(date)
+        .getTransport_by_date(payload)
         .then((res) => {
+          // console.log(res.data);
+          commit('setTransportsArray', res.data);
+        })
+        .catch((error) => {
+          //   commit('cleanUsersArray');
+        });
+    },
+    addTransport({ commit }, payload: any) {
+      UrlApi.transportRoutes
+        .addTransport(payload)
+        .then((res) => {
+          console.log(res.data);
           // commit('setTransportsArray', res.data);
         })
         .catch((error) => {

@@ -130,7 +130,7 @@ class TestTransort:
                 {
                     "notice": "Срочно1",
                     "destination": "test1",
-                    "type_task": "подписать",
+                    "type_task": "Подписать",
                     "status": Status.CREATED,
                     "contact": "+375297949210 Савосин Виталий",
                     "car_id": 1,
@@ -164,9 +164,29 @@ class TestTransort:
                     "date_from": "2020-05-24 10:30:00",
                     "date_to": "2020-05-24 11:30:00",
                 },
+                201,
+                does_not_raise(),
+                "Изменение дыты которая занята другой машиной, но свободна для текущей",
+            ),
+            (
+                4,
+                {
+                    "car_id": 2,
+                    "date_from": "2020-05-24 10:30:00",
+                    "date_to": "2020-05-24 11:30:00",
+                },
                 401,
                 does_not_raise(),
-                "not unique update date_from or date_to filds",
+                "Изменение car_id и даты которая занята",
+            ),
+            (
+                4,
+                {
+                    "car_id": 2,
+                },
+                401,
+                does_not_raise(),
+                "Изменение car_id и даты которая занята",
             ),
             (
                 4,

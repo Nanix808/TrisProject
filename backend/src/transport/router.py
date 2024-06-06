@@ -4,7 +4,12 @@ from fastapi import APIRouter, Depends, status, Path, Request, Body
 
 from .service import TransportService, CarService
 from .dependencies import transport_service, car_service
-from .shemas import TransportCreate, TransportUpdate, DateFromRequest
+from .shemas import (
+    TransportCreate,
+    TransportUpdate,
+    DateFromRequest,
+    TransportReturn,
+)
 from users.schemas import User
 from auth.dependencies import get_current_active_auth_user
 from authorization.dependencies import get_uid_from_request
@@ -20,12 +25,15 @@ async def get_transports(
     return transport
 
 
-@transport_router.post("/get_by_date")
+@transport_router.post("/get_by_date", response_model=list[TransportReturn])
 async def get_transports_by_date(
     transport_service: Annotated[TransportService, Depends(transport_service)],
-    date: DateFromRequest,
+    payload: DateFromRequest,
 ):
-    transport = await transport_service.get_transport_by_date(date.date_in)
+
+    transport = await transport_service.get_transport_by_date(
+        payload.date_in, payload.car_id
+    )
     return transport
 
 
