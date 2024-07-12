@@ -8,7 +8,10 @@ from .schemas import Role, BaseRole, BaseRouter
 from database import db_helper
 
 
-from .dependencies import get_current_active_auth_is_superuser_user, role_service
+from .dependencies import (
+    get_current_active_auth_is_superuser_user,
+    role_service,
+)
 from .service import RoleService
 
 authz_router = APIRouter()
@@ -75,7 +78,9 @@ def list_endpoints(
     pattern = re.compile("[^a-zA-Z]")
     my_dict = {}
     for route in request.app.routes:
+        if route.path.split("/")[1] in ["auth", "users", "authorization"]:
+            continue
         if isinstance(route, APIRoute):
-            key = my_dict.setdefault(route.path.split("/")[1] + "/", set())
+            key = my_dict.setdefault(route.path.split("/")[1], set())
             key.add(re.sub(pattern, "", str(route.methods)))
     return my_dict

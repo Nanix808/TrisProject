@@ -31,6 +31,10 @@ class TransportRepository(SQLAlchemyRepository):
                                 self.model.date_to.between(
                                     start_datetime, end_datetime
                                 ),
+                                and_(
+                                    self.model.date_from <= start_datetime,
+                                    self.model.date_to >= end_datetime,
+                                ),
                             ),
                         )
                     )

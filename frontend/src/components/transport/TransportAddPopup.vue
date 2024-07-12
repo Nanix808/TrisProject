@@ -9,9 +9,10 @@
       <div class="box car-box" :class="car_id ? 'car-active' : ''">
         <span class="car-box_name">Выберете машину</span>
         <BaseSelect
+          :isActive="!(props.update && !get_router_name_admin_permission)"
           :options="store.state.transport.cars"
           @change="updateCarParameter($event)"
-          :default="car_id ? car_id : ''"
+          :default="car_id"
         >
         </BaseSelect>
       </div>
@@ -27,6 +28,7 @@
             <flat-pickr
               id="date_from"
               v-model="date_from"
+              :disabled="props.update && !get_router_name_admin_permission"
               :config="config"
               ref="datepicker_from"
               class="form-control"
@@ -44,6 +46,7 @@
               v-model="date_to"
               id="date_to"
               :config="config"
+              :disabled="props.update && !get_router_name_admin_permission"
               ref="datepicker_to"
               class="form-control"
               placeholder="Выберете дату окончания"
@@ -52,12 +55,30 @@
           </div>
         </div>
 
+        <div
+          class="box destination-box"
+          :class="status_value ? 'car-active' : ''"
+          v-if="get_router_name_admin_permission && props.update"
+        >
+          <span class="car-box_name">Статус</span>
+          <BaseSelect
+            :options="status"
+            @change="updateStatusParameter($event)"
+            :default="
+              status.find((item) => item.name === status_value)
+                ? status.find((item) => item.name === status_value).id
+                : ''
+            "
+          >
+          </BaseSelect>
+        </div>
+
         <div class="box destination-box">
           <BaseInput
             :label="'Пункт назначения'"
             @input_value="destination = $event"
             :startValue="destination"
-            :isActive="true"
+            :disabled="props.update && !get_router_name_admin_permission"
           />
         </div>
         <div class="box destination-box">
@@ -65,7 +86,7 @@
             :label="'Контактные данные (Имя и телефон)'"
             @input_value="contact = $event"
             :startValue="contact"
-            :isActive="true"
+            :disabled="props.update && !get_router_name_admin_permission"
           />
         </div>
         <div class="box destination-box">
@@ -73,23 +94,23 @@
             :label="'Примечание'"
             @input_value="notice = $event"
             :startValue="notice"
-            :isActive="true"
+            :disabled="props.update && !get_router_name_admin_permission"
           />
         </div>
       </div>
-
       <div class="car_button-box">
         <BaseButton
-          :name="'Сохранить'"
+          v-if="!(props.update && !get_router_name_admin_permission)"
+          :name="props.update ? 'Изменить' : 'Сохранить'"
           :is-active="isCorrectParams"
           @click="addTransport"
         >
         </BaseButton>
         <BaseButton
-          v-if="props.user_id == store.state.auth.userId"
+          v-if="props.update"
+          :is-active="isCorrectParamsDellete || store.state.auth.isSuperUser"
           :name="'Удалить'"
-          :is-active="true"
-          @click="deleteUser"
+          @click="deleteTransport"
         >
         </BaseButton>
       </div>
@@ -98,7 +119,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useStore } from 'vuex';
 import BasePopUP from '@/components/base/BasePopUP.vue';
 import BaseSelect from '@/components/base/BaseSelect.vue';
@@ -106,7 +127,7 @@ import BaseButton from '@/components/base/BaseButton.vue';
 import BaseInput from '@/components/base/BaseInput.vue';
 import flatPickr from 'vue-flatpickr-component';
 import { Russian } from 'flatpickr/dist/l10n/ru.js';
-
+import { useRouter } from 'vue-router';
 const store = useStore();
 
 interface Props {
@@ -114,37 +135,69 @@ interface Props {
   name: string;
   data: any;
   user_id: number;
+  update: boolean;
 }
+
+const props = withDefaults(defineProps<Props>(), {
+  isOpen: false,
+  update: false,
+});
 const emit = defineEmits<{
   (e: 'close'): void;
 }>();
+
+const router = useRouter();
 const car_id = ref(null);
-const props = defineProps<Props>();
 const date_from = ref(null);
 const date_to = ref(null);
-
 const datepicker_from = ref(null);
 const datepicker_to = ref(null);
 const destination = ref(null);
 const contact = ref(null);
 const notice = ref(null);
+const status_value = ref(null);
 
-const config = ref({
-  // wrap: true, // set wrap to true only when using 'input-group'
-  altFormat: 'd-M-Y H:i',
-  altInput: true,
-  dateFormat: 'Y-m-d H:i',
-  enableTime: true,
-  minDate: 'today',
-  static: true,
-  minTime: '9:00',
-  maxTime: '18:00',
-  minuteIncrement: 30,
-  time_24hr: true,
-  weekNumbers: false,
-  locale: Russian, // locale for this instance only
+const status = ref([
+  { name: 'Создана', id: 1 },
+  { name: 'Принята', id: 2 },
+  { name: 'Выполнена', id: 3 },
+  { name: 'Отменена', id: 4 },
+]);
+
+const get_router_name_admin_permission = computed(() => {
+  if (
+    store.state.auth.isSuperUser ||
+    store.state.auth.permissions[router.currentRoute.value.name].includes(
+      'ADMIN'
+    )
+  ) {
+    return true;
+  }
+  return false;
 });
 
+const config = computed(() => {
+  return {
+    altFormat: 'd-M-Y H:i',
+    altInput: true,
+    dateFormat: 'Y-m-d H:i',
+    enableTime: true,
+    defaultHour: 9,
+    defaultMinute: 0,
+    minDate: get_router_name_admin_permission.value
+      ? new Date(Date.now() - 3600 * 1000 * 24).setHours(0, 0, 0, 0)
+      : roundToNearestHalfHour(),
+    static: true,
+    minTime: get_router_name_admin_permission.value
+      ? '09:00'
+      : get_time_roundToNearestHalfHour(),
+    maxTime: '18:00',
+    minuteIncrement: 30,
+    time_24hr: true,
+    weekNumbers: false,
+    locale: Russian, 
+  };
+});
 const isCorrectParams = computed(() => {
   const allField =
     car_id.value &&
@@ -154,13 +207,54 @@ const isCorrectParams = computed(() => {
     notice.value
       ? true
       : false;
-  if (date_to.value) {
-    return allField && new Date(date_from.value) < new Date(date_to.value);
+  if (date_to.value && get_router_name_admin_permission.value) {
+    return (
+      allField &&
+      new Date(date_from.value) < new Date(date_to.value) &&
+      get_router_name_admin_permission.value
+    );
+  } else if (date_to.value && !get_router_name_admin_permission.value) {
+    return (
+      allField &&
+      new Date(date_from.value) < new Date(date_to.value) &&
+      new Date(date_from.value) >= new Date()
+    );
   }
   return allField;
 });
 
+const isCorrectParamsDellete = computed(() => {
+  if (
+    !get_router_name_admin_permission.value &&
+    date_to.value &&
+    new Date(date_to.value) <= new Date()
+  ) {
+    return false;
+  }
+
+  return true;
+});
+
+function get_time_roundToNearestHalfHour() {
+  const time = roundToNearestHalfHour();
+  var hh = ('0' + time.getHours()).slice(-2);
+  var min = time.getMinutes();
+  return hh + ':' + min + ':00';
+}
+function roundToNearestHalfHour() {
+  const halfHour = 30 * 60 * 1000; // 30 минут в миллисекундах
+  const currentTime = new Date().getTime();
+  const nextHalfHour = Math.ceil(currentTime / halfHour) * halfHour;
+  return new Date(nextHalfHour);
+}
 function close() {
+  car_id.value = props.data.car_id;
+  destination.value = props.data.destination;
+  contact.value = props.data.contact;
+  notice.value = props.data.notice;
+  date_from.value = props.data.date_from;
+  date_to.value = props.data.date_to;
+  status_value.value = props.data.status;
   emit('close');
 }
 
@@ -169,14 +263,26 @@ function close_calendars() {
   datepicker_to.value.fp.close();
 }
 
-function deleteUser() {
-  if (confirm('Вы действительно хотите удалить пользователя?')) {
-    store.dispatch('deleteUser', props.data.id);
+function deleteTransport() {
+  if (confirm('Вы действительно хотите удалить запись?')) {
+    const payload = {
+      car_id_page: router.currentRoute.value.query.car,
+      id: props.data.id,
+      date: props.data.date,
+    };
+    store.dispatch('deleteTransport', payload);
+    emit('close');
   }
 }
 
 function updateCarParameter(event) {
   car_id.value = event;
+}
+
+function updateStatusParameter(event) {
+  if (status.value.find((item) => item.id === event)) {
+    status_value.value = status.value.find((item) => item.id === event).name;
+  }
 }
 
 function addTransport() {
@@ -190,28 +296,57 @@ function addTransport() {
   }
   if (date_to.value) {
     var date_to_without_time = new Date(date_to.value);
-    date_to_without_time.setMinutes(date_to_without_time.getMinutes() - 1);
+
+    if (
+      date_to_without_time.getMinutes() === 30 ||
+      date_to_without_time.getMinutes() === 0
+    ) {
+      date_to_without_time.setMinutes(date_to_without_time.getMinutes() - 1);
+    }
+
     var mm = ('0' + (date_to_without_time.getMonth() + 1)).slice(-2);
     var dd = ('0' + date_to_without_time.getDate()).slice(-2);
     var yy = date_to_without_time.getFullYear();
-    var hh = date_to_without_time.getHours();
+    var hh = ('0' + date_to_without_time.getHours()).slice(-2);
     var min = date_to_without_time.getMinutes();
     date_to_new = yy + '-' + mm + '-' + dd + ' ' + hh + ':' + min + ':00';
   }
   const payload = {
+    car_id_page: router.currentRoute.value.query.car,
+    id: props.data.id,
+    date: props.data.date,
     user_id: props.user_id,
     date_from: date_from.value,
     date_to: date_to_new,
     car_id: car_id.value,
     destination: destination.value,
     type_task: 'Подписать',
-    status: 'Создана',
+    status: status_value.value,
     contact: contact.value,
     notice: notice.value,
   };
-  store.dispatch('addTransport', payload);
+  console.log(payload);
+  if (props.update) {
+    store.dispatch('editTransport', payload);
+  } else {
+    store.dispatch('addTransport', payload);
+  }
+
   emit('close');
 }
+
+watch(
+  () => props.data,
+  (newValue) => {
+    car_id.value = newValue.car_id;
+    destination.value = newValue.destination;
+    contact.value = newValue.contact;
+    notice.value = newValue.notice;
+    date_from.value = newValue.date_from;
+    date_to.value = newValue.date_to;
+    status_value.value = newValue.status;
+  }
+);
 </script>
 
 <style lang="scss">

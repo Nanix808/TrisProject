@@ -14,8 +14,8 @@ class AuthJwt(BaseModel):
     private_key_path: str = BASE_DIR / "certs" / "jwt-private.pem"
     algorithms: str = "RS256"
     tokenUrl: str = "/auth/login/"
-    accses_token_expire_minutes: int = 240
-    refresh_token_expire_minutes: int = 240
+    accses_token_expire_minutes: int = 2
+    refresh_token_expire_minutes: int = 1440
 
 
 class Settings(BaseSettings):

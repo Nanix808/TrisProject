@@ -1,12 +1,21 @@
 <template>
   <div class="admin__roles__container">
+    <div class="admin__role__container_button_box">
+      <!-- <BaseButton :is-active="false" :name="'Сохранить'"> </BaseButton> -->
+      <BaseButton
+        :name="'Добавить роль'"
+        :is-active="true"
+        @click="choiserole(0)"
+      >
+      </BaseButton>
+    </div>
     <BaseTable>
       <thead>
         <tr>
           <th class="box-1">№</th>
           <th class="box-2">Название роли</th>
-          <th class="box-3">Описание роли</th>
-          <th class="box-4">Разрешения</th>
+          <th class="box-4">Описание роли</th>
+          <th class="box-3">Разрешения</th>
         </tr>
       </thead>
       <tbody>
@@ -45,12 +54,23 @@
 import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import BaseTable from '@/components/base/BaseTable.vue';
+import BaseButton from '@/components/base/BaseButton.vue';
 import BaseTextarea from '@/components/base/BaseTextarea.vue';
 import AdminRolePopUp from '@/components/admin/popup/AdminRolePopUp.vue';
 
 const roles = computed(() => store.state.admin_users.roles);
-const role = computed(() =>
+const found_role = computed(() =>
   roles.value.find((u: any) => u.id === change_role.value)
+);
+const role = computed(() =>
+  found_role.value
+    ? found_role.value
+    : {
+        id: 0,
+        name: '',
+        description: '',
+        permissions: '',
+      }
 );
 
 const change_role = ref<number>(0);
@@ -70,13 +90,26 @@ function choiserole(id: number) {
 }
 
 .box-2 {
-  width: 150px;
+  width: 100px;
 }
 
 tr {
   cursor: pointer;
   &:hover {
     color: $admin-left-side-background;
+  }
+}
+
+.admin__role__container_button_box {
+  display: flex;
+  padding: 5px;
+  height: 5vh;
+  align-items: center;
+  justify-content: flex-end;
+
+  & button {
+    max-width: 200px;
+    border-radius: 15px;
   }
 }
 </style>

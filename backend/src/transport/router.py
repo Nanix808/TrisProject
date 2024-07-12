@@ -1,4 +1,5 @@
 from typing import Annotated
+from datetime import datetime
 
 from fastapi import APIRouter, Depends, status, Path, Request, Body
 
@@ -7,7 +8,7 @@ from .dependencies import transport_service, car_service
 from .shemas import (
     TransportCreate,
     TransportUpdate,
-    DateFromRequest,
+    # DateFromRequest,
     TransportReturn,
 )
 from users.schemas import User
@@ -25,15 +26,14 @@ async def get_transports(
     return transport
 
 
-@transport_router.post("/get_by_date", response_model=list[TransportReturn])
+@transport_router.get("/get_by_date", response_model=list[TransportReturn])
 async def get_transports_by_date(
     transport_service: Annotated[TransportService, Depends(transport_service)],
-    payload: DateFromRequest,
+    date_in: str | None = None,
+    car_id: int | None = None,
 ):
-
-    transport = await transport_service.get_transport_by_date(
-        payload.date_in, payload.car_id
-    )
+    date_in = datetime.strptime(date_in, "%m/%d/%Y")
+    transport = await transport_service.get_transport_by_date(date_in, car_id)
     return transport
 
 

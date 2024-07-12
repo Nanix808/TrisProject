@@ -80,8 +80,8 @@ class TransportService:
             if end_datetime and not start_datetime:
                 start_datetime = validate_transport.date_from
             elif start_datetime and not end_datetime:
-                if start_datetime < datetime.datetime.now():
-                    raise transport_in_db_time_exc
+                # if start_datetime < datetime.datetime.now():
+                #     raise transport_in_db_time_exc
                 transport_update["date_to"] = None
             elif (
                 start_datetime

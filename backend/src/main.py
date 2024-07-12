@@ -10,8 +10,6 @@ from transport.router import transport_router
 from middleware import auth_middleware
 
 
-app = FastAPI()
-
 app = FastAPI(debug=True)
 
 

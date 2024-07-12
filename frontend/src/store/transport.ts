@@ -50,15 +50,47 @@ export default {
           //   commit('cleanUsersArray');
         });
     },
-    addTransport({ commit }, payload: any) {
+    addTransport({ commit, dispatch }, payload: any) {
       UrlApi.transportRoutes
         .addTransport(payload)
         .then((res) => {
-          console.log(res.data);
+          dispatch(
+            'get_transport_by_date',
+            (payload = { date_in: payload.date, car_id: payload.car_id })
+          );
+        })
+        .catch((error) => {
+          commit('cleanUsersArray');
+        });
+    },
+    editTransport({ commit, dispatch }, payload: any) {
+      UrlApi.transportRoutes
+        .editTransport(payload.id, payload)
+        .then((res) => {
+          // location.reload();
+          dispatch(
+            'get_transport_by_date',
+            (payload = { date_in: payload.date, car_id: payload.car_id_page })
+          );
+          // self.get_transport_by_date({ commit }, payload);
+
           // commit('setTransportsArray', res.data);
         })
         .catch((error) => {
-          //   commit('cleanUsersArray');
+          commit('cleanUsersArray');
+        });
+    },
+    deleteTransport({ commit, dispatch }, payload: any) {
+      UrlApi.transportRoutes
+        .deleteTransport(payload.id)
+        .then((res) => {
+          dispatch(
+            'get_transport_by_date',
+            (payload = { date_in: payload.date, car_id: payload.car_id_page })
+          );
+        })
+        .catch((error) => {
+          commit('cleanUsersArray');
         });
     },
     async get_all_cars({ commit }) {

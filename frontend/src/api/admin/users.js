@@ -25,3 +25,14 @@ export const deleteUser = (id) => {
   console.log(url);
   return DefaultApiInstance.delete(url);
 };
+
+export const adminaddRole = (payload) => {
+  const url = '/authorization/';
+  console.log(url, payload);
+  return DefaultApiInstance.post(url, payload);
+};
+export const adminupdateRole = (id, payload) => {
+  const url = '/authorization/' + id;
+
+  return DefaultApiInstance.putch(url, payload);
+};

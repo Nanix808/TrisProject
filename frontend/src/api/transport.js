@@ -7,7 +7,12 @@ export const getTransport = () => {
 
 export const getTransport_by_date = (date) => {
   const url = '/transport/get_by_date/';
-  return DefaultApiInstance.post(url, date);
+  return DefaultApiInstance.get(url, {
+    params: {
+      date_in: date.date_in,
+      car_id: date.car_id,
+    },
+  });
 };
 
 export const getCars = () => {
@@ -16,9 +21,17 @@ export const getCars = () => {
 };
 
 export const addTransport = (payload) => {
-  console.log(payload);
   const url = '/transport/';
   return DefaultApiInstance.post(url, payload);
+};
+
+export const editTransport = (id, payload) => {
+  const url = '/transport/' + id;
+  return DefaultApiInstance.patch(url, payload);
+};
+export const deleteTransport = (id) => {
+  const url = '/transport/' + id;
+  return DefaultApiInstance.delete(url);
 };
 
 // export const createUser = (payload) => {

@@ -231,3 +231,28 @@
 #                     dp[i][j] = max(dp[i][j], dp[i - 1][k] + (forest[i][j] == "C"))
 
 #     print(max(dp[-1]))
+
+
+class A:
+
+    def __init__(self, a):
+        self.a = a
+
+    def __repr__(self):
+        return str(self.a)
+
+    def __hash__(self):
+        return 15
+
+    def __eq__(self, other):
+        return self.a == other.a
+
+
+a = A(1)
+b = A(1)
+print(id(a), hash(a), id(b), hash(b), a == b, a is b)
+# def T(n: list[int]) -> list[int]:
+#     return list(filter(lambda x: x >= 0, n))
+
+
+# print(T([-1, 2, 3, 4, 5]))

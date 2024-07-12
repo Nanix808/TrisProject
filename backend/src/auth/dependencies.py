@@ -21,8 +21,8 @@ oauth2_scheme = OAuth2PasswordBearer(
 )
 
 
-async def validate_auth_user2():
-    return 2
+# async def validate_auth_user2():
+#     return 2
 
 
 async def validate_auth_user(
@@ -44,6 +44,7 @@ async def validate_auth_user(
         "sub": user.username,
         "sub_id": user.id,
         "role_id": user.role_id,
+        "permissions": user.role.permissions or [],
         "username": user.username,
         "email": user.email,
     }

@@ -23,7 +23,7 @@ class UserService:
         return users
 
     async def get_by_filter(self, filter: dict):
-        users = await self.user_repo.get_by_filter(filter)
+        users = await self.user_repo.get_by_filter_user(filter)
         return users
 
     async def delete_is_active(self, id: int):

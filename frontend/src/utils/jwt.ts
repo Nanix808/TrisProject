@@ -5,6 +5,7 @@ export interface IAuthTokenInfo {
   iat: number;
   is_superuser: boolean;
   sub_id: number | null;
+  permissions: string;
 }
 
 const LIFE_TIME_TO_UPDATE_MULTIPLIER = 0.5;
@@ -61,5 +62,22 @@ export const getIdUser = (token: string | null): number | null => {
   } catch (e) {
     console.error(e);
     return null;
+  }
+};
+
+export const isPermissions = (token: string | null): string => {
+  if (!token) {
+    return '';
+  }
+
+  try {
+    const tokenInfo = token.split('.')[1];
+    const tokenInfoDecoded = window.atob(tokenInfo);
+    const { permissions }: IAuthTokenInfo = JSON.parse(tokenInfoDecoded);
+
+    return permissions;
+  } catch (e) {
+    console.error(e);
+    return '';
   }
 };

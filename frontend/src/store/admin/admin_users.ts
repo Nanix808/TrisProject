@@ -104,8 +104,30 @@ export default {
           this.dispatch('admin_get_all_users');
         });
     },
+    addRole({ commit, dispatch }, payload) {
+      AdminUrlApi.adminUserRoutes
+        .adminaddRole(payload)
+        .then((res) => {
+          dispatch('admin_get_all_roles');
+          console.log(res.data);
+          // commit('setEndpointsArray', res.data);
+        })
+        .catch((error) => {
+          // commit('cleanEndpointsArray');
+        });
+    },
+    updateRole({ commit, dispatch }, payload) {
+      AdminUrlApi.adminUserRoutes
+        .adminupdateRole(payload.id, payload)
+        .then((res) => {
+          dispatch('admin_get_all_roles');
+          console.log(res.data);
+          // commit('setEndpointsArray', res.data);
+        })
+        .catch((error) => {
+          // commit('cleanEndpointsArray');
+        });
+    },
   },
-  getters: {
-    // isAuthenticatedUser: (state: User): boolean => state.email,
-  },
+  getters: {},
 };

@@ -10,7 +10,11 @@ class UserRepository(SQLAlchemyRepository):
 
     async def find_all(self):
         async with db_helper.session_dependency() as session:
-            stmt = select(self.model).options(joinedload(User.role)).order_by(User.id)
+            stmt = (
+                select(self.model)
+                .options(joinedload(User.role))
+                .order_by(User.id)
+            )
             res = await session.execute(stmt)
             return res.scalars().all()
 
@@ -32,3 +36,13 @@ class UserRepository(SQLAlchemyRepository):
             user = await session.get(self.model, id)
             setattr(user, "is_active", False)
             await session.commit()
+
+    async def get_by_filter_user(self, filter):
+        async with db_helper.session_dependency() as session:
+            stmt = (
+                select(self.model)
+                .options(joinedload(User.role))
+                .filter_by(**filter)
+            )
+            user = await session.scalar(stmt)
+            return user

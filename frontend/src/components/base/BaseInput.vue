@@ -3,6 +3,7 @@
     <input
       v-model="input_value"
       :id="generateRandomId"
+      :disabled="props.disabled"
       @input="handleChange"
       required=""
       spellcheck="false"
@@ -29,14 +30,17 @@
 import { ref, onMounted } from 'vue';
 interface Props {
   label: string;
-  isActive: boolean;
+  isActive?: boolean;
   showPassword?: boolean;
   startValue?: string;
+  disabled?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   showPassword: false,
+  isActive: true,
   startValue: '',
+  disabled: false,
 });
 
 // const props = defineProps<Props>();

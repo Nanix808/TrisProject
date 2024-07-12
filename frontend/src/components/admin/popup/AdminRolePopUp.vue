@@ -1,25 +1,90 @@
 <template>
   <div v-if="props.isOpen">
     <BasePopUP :name="props.name" @close="close" :width="60">
-      <h3>{{ props.data.username }} id: {{ props.data.id }}</h3>
-
       <div class="user-box">
         <BaseInput
           :isActive="true"
           :label="'Название роли'"
-          :start-value="props.data.name"
-          @input_value="updateUserParameter($event, 'username')"
+          @input_value="name = $event"
+          :start-value="name"
         >
         </BaseInput>
       </div>
       <div class="user-box">
-        <BaseTextarea :text="props.data.description" :name="'Описание'">
-        </BaseTextarea>
+        <BaseInput
+          :isActive="true"
+          :label="'Описание роли'"
+          @input_value="description = $event"
+          :start-value="description"
+        >
+        </BaseInput>
       </div>
       <div class="user-box">
-        <ChoiceRole></ChoiceRole>
-        <!-- <BaseTextarea :text="props.data.permissions" :name="'Разрешения'">
-        </BaseTextarea> -->
+        <BaseTable>
+          <thead>
+            <tr>
+              <th class="box-2">Приложение</th>
+              <th class="box-4">Чтение</th>
+              <th class="box-4">Добавление</th>
+              <th class="box-2">Изменение</th>
+              <th class="box-4">Удаление</th>
+              <th class="box-4">Админ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(value, key, index) in checked_value" :key="index">
+              <td class="choised">{{ key }}</td>
+              <td class="choised">
+                <input
+                  type="checkbox"
+                  name="switch"
+                  class="check"
+                  :checked="value.includes('GET')"
+                  @change="updateUserParameter($event, key, 'GET')"
+                />
+              </td>
+              <td class="choised">
+                <input
+                  type="checkbox"
+                  name="switch"
+                  class="check"
+                  :checked="value.includes('POST')"
+                  @change="updateUserParameter($event, key, 'POST')"
+                />
+              </td>
+              <td class="choised">
+                <input
+                  type="checkbox"
+                  name="switch"
+                  class="check"
+                  :checked="value.includes('PUTCH') || value.includes('PUT')"
+                  @change="
+                    updateUserParameter($event, key, 'PUTCH'),
+                      updateUserParameter($event, key, 'PUT')
+                  "
+                />
+              </td>
+              <td class="choised">
+                <input
+                  type="checkbox"
+                  name="switch"
+                  class="check"
+                  :checked="value.includes('DELETE')"
+                  @change="updateUserParameter($event, key, 'DELETE')"
+                />
+              </td>
+              <td class="choised">
+                <input
+                  type="checkbox"
+                  name="switch"
+                  class="check"
+                  :checked="value.includes('ADMIN')"
+                  @change="updateUserParameter($event, key, 'ADMIN')"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </BaseTable>
       </div>
 
       <div class="button-box">
@@ -37,15 +102,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useStore } from 'vuex';
-import ChoiceRole from '@/components/admin/ui/ChoiceRole.vue';
+
 import BasePopUP from '@/components/base/BasePopUP.vue';
-import EmailInput from '@/components/ui/EmailInput.vue';
 import BaseButton from '@/components/base/BaseButton.vue';
-import BaseSelect from '@/components/base/BaseSelect.vue';
-import BaseCheckbox from '@/components/base/BaseCheckbox.vue';
-import BaseTextarea from '@/components/base/BaseTextarea.vue';
+import BaseTable from '@/components/base/BaseTable.vue';
 import BaseInput from '@/components/base/BaseInput.vue';
 
 const store = useStore();
@@ -55,15 +117,47 @@ interface Props {
   name: string;
   data: any;
 }
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  update: false,
+});
+const name = ref('');
+const description = ref();
 
-const isEmailValid = ref<boolean>(false);
-const emailValue = ref<string>('');
+const checked_value = ref<any>({});
 
 const change_params = ref({});
 
+// onMounted(() => {
+//   console.log('mounted');
+//   checked_value.value = store.state.admin_users.list_endpoints;
+// });
+
+const isChangeCheckedValue = computed(() => {
+  return (
+    JSON.stringify(checked_value.value) !==
+    JSON.stringify(store.state.admin_users.list_endpoints)
+  );
+});
+
+const isCorrectDescriptionName = computed(() => {
+  return name.value !== '' && description.value !== '';
+});
+
+const isChangeDescriptionName = computed(() => {
+  return (
+    props.data.name !== name.value ||
+    props.data.description !== description.value
+  );
+});
 const isChangeParams = computed(() => {
-  return Object.keys(change_params.value).length > 0;
+  return (
+    (isChangeDescriptionName.value && isCorrectDescriptionName.value) ||
+    (isChangeCheckedValue.value && isCorrectDescriptionName.value)
+  );
+});
+
+const store_endpoints = computed(() => {
+  return store.state.admin_users.list_endpoints;
 });
 
 const emit = defineEmits<{
@@ -74,35 +168,46 @@ function close() {
   emit('close');
 }
 
-function set_email_valid_value(isEmail: boolean, value: string) {
-  isEmailValid.value = isEmail;
-  emailValue.value = value;
-  if (isEmailValid.value) {
-    updateUserParameter(emailValue.value, 'email');
-  }
-}
-
-function updateUserParameter(parameter: any, type: string) {
-  const temp_arr = change_params.value[props.data.id] ?? [];
-  const paramIndex = temp_arr.findIndex((p) => Object.keys(p)[0] === type);
-  if (paramIndex === -1) {
-    temp_arr.push({ [type]: parameter });
+function updateUserParameter(event, key, value) {
+  if (event.target.checked) {
+    checked_value.value[key].push(value);
   } else {
-    temp_arr[paramIndex] = { [type]: parameter };
+    var index = checked_value.value[key].indexOf(value);
+    if (index > -1) {
+      checked_value.value[key].splice(index, 1);
+    }
   }
-  change_params.value[props.data.id] = temp_arr;
 }
 
 function saveChanges() {
-  store.dispatch('updatedUser', change_params.value);
-  change_params.value = {};
+  let payload = {
+    id: props.data.id,
+    name: name.value,
+    description: description.value,
+    permissions: checked_value.value,
+  };
+
+  if (props.data.id == 0) {
+    store.dispatch('addRole', payload);
+  }
+  else {
+    store.dispatch('updatedRole', payload);
+  }
+  emit('close');
+  // store.dispatch('updatedRole', payload);
+  // change_params.value = {};
 }
 
-function deleteUser() {
-  if (confirm('Вы действительно хотите удалить пользователя?')) {
-    store.dispatch('deleteUser', props.data.id);
+watch(
+  () => props.isOpen,
+  () => {
+    checked_value.value = JSON.parse(
+      JSON.stringify(store.state.admin_users.list_endpoints)
+    );
+    name.value = props.data.name;
+    description.value = props.data.description;
   }
-}
+);
 </script>
 
 <style lang="scss" scoped>
@@ -118,5 +223,34 @@ function deleteUser() {
 .button-box {
   display: flex;
   flex-direction: row;
+}
+.check {
+  -webkit-appearance: none;
+  height: 20px;
+  width: 20px;
+
+  transition: 0.1s;
+  background-color: #fe0006;
+  text-align: center;
+  font-weight: 600;
+  color: white;
+  border-radius: 3px;
+  outline: none;
+}
+
+.check:checked {
+  background-color: #0e9700;
+}
+
+.check:before {
+  content: '✖';
+}
+.check:checked:before {
+  content: '✔';
+}
+
+.check:hover {
+  cursor: pointer;
+  opacity: 0.8;
 }
 </style>

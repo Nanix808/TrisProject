@@ -32,7 +32,7 @@ def get_role_from_token(
         request.state.uid = 0
         return None
     role_id: int | None = payload.get("role_id")
-    user_id: int | None = payload.get("id")
+    user_id: int | None = payload.get("sub_id")
     request.state.uid = user_id
     if role_id and user_id:
         return role_id

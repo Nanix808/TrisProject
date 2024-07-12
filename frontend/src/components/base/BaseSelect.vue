@@ -1,6 +1,10 @@
 <template>
   <div class="base__select">
-    <select v-model="selected_value" @change="emit('change', selected_value)">
+    <select
+      v-model="selected_value"
+      :disabled="!props.isActive"
+      @change="emit('change', selected_value)"
+    >
       <option value="" selected disabled hidden>-----Выбрать-----</option>
       <option v-for="item in props.options" :key="item.id" :value="item.id">
         {{ item.name }}
@@ -13,8 +17,9 @@
 import { ref, onMounted } from 'vue';
 
 interface Props {
-  options?: { id: number; name: string; description: string }[] | string[];
+  options?: string[] | { id: number; name: string }[];
   default?: number | string;
+  isActive?: boolean;
 }
 
 const selected_value = ref<string | number>('');
@@ -26,6 +31,7 @@ const emit = defineEmits<{
 const props = withDefaults(defineProps<Props>(), {
   options: ['----'],
   default: '',
+  isActive: true,
 });
 
 onMounted(() => {

@@ -1,6 +1,11 @@
 import { UrlApi } from '@/api';
 import { UserPayload, ILoginResponse } from './types';
-import { isTokenExpired, isSuperUser, getIdUser } from '@/utils/jwt';
+import {
+  isTokenExpired,
+  isSuperUser,
+  getIdUser,
+  isPermissions,
+} from '@/utils/jwt';
 import { AxiosPromise } from 'axios';
 
 interface State {
@@ -9,9 +14,11 @@ interface State {
   userEmail: string;
   accessToken: string | null;
   refreshToken: string | null;
+  name: string | null;
   isAuthenticated: boolean;
   isSuperUser: boolean;
   refreshTokenRequest: AxiosPromise<ILoginResponse> | null;
+  permissions: any;
 }
 
 let refreshTokenRequest: any = null;
@@ -22,7 +29,9 @@ export default {
     const refreshToken = localStorage.getItem('refreshToken') || null;
     const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
     const isSuperUser = localStorage.getItem('isSuperUser') === 'true';
+    const name = localStorage.getItem('name');
     const refreshTokenRequest = null;
+    const permissions = JSON.parse(localStorage.getItem('permissions')) || null;
 
     return {
       userName: '',
@@ -31,13 +40,16 @@ export default {
       accessToken,
       refreshToken,
       isAuthenticated,
+      name: name || '',
       isSuperUser,
+      permissions,
       // переменная для хранения запроса токена (для избежания race condition)
       refreshTokenRequest,
     };
   },
   mutations: {
     setUserName(state: any, payload: any) {
+      localStorage.setItem('name', payload.email);
       state.name = payload.email;
     },
     setrefreshTokenRequest(state: any, data: any) {
@@ -49,13 +61,17 @@ export default {
       state.isAuthenticated = true;
       const is_admin = isSuperUser(data.access_token);
       state.isSuperUser = is_admin;
+      const permissions = isPermissions(data.access_token);
+      state.permissions = permissions;
       state.userId = getIdUser(data.access_token);
       localStorage.setItem('accessToken', data.access_token);
       localStorage.setItem('isSuperUser', is_admin.toString());
       localStorage.setItem('refreshToken', data.refresh_token);
       localStorage.setItem('isAuthenticated', 'true');
+      localStorage.setItem('permissions', JSON.stringify(permissions));
     },
   },
+
   actions: {
     setUser({ commit }, payload: UserPayload) {
       commit('setUSER', payload);

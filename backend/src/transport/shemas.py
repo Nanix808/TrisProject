@@ -29,14 +29,14 @@ class TransportUpdate(BaseModel):
     date_to: datetime | None = None
 
 
-class DateFromRequest(BaseModel):
-    date_in: str | None = None
-    car_id: int | None = None
+# class DateFromRequest(BaseModel):
+#     date_in: str | None = None
+#     car_id: int | None = None
 
-    @validator("date_in")
-    def parse_date_in(cls, v):
-        date_obj = datetime.strptime(v, "%m/%d/%Y")
-        return date_obj
+#     @validator("date_in")
+#     def parse_date_in(cls, v):
+#         date_obj = datetime.strptime(v, "%m/%d/%Y")
+#         return date_obj
 
 
 class TransportReturn(BaseModel):
