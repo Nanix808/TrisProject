@@ -1,6 +1,6 @@
 import re
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi import APIRouter, Depends, HTTPException, status, Request, Path
 from fastapi.routing import APIRoute
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -68,6 +68,18 @@ async def create_role(
 #     rolesCrud = RolesCRUD(session)
 #     roles = await rolesCrud.create_role(role_in=role_in)
 #     return roles
+
+
+@authz_router.patch("/{role_id}", status_code=status.HTTP_201_CREATED)
+async def update_transport(
+    role_service: Annotated[RoleService, Depends(role_service)],
+    role_update: BaseRole,
+    role_id: int = Path(...),
+    isSuperAdmin: int = Depends(get_current_active_auth_is_superuser_user),
+) -> None:
+
+    await role_service.update_role(role_id, role_update)
+    return None
 
 
 @authz_router.get("/list_endpoints/")

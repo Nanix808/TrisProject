@@ -1,7 +1,7 @@
 from repository import AbstractRepository
 from .models import Role
 from .schemas import BaseRole
-from .exceptions import role_in_db_exc
+from .exceptions import role_in_db_exc, role_not_in_db_exc
 
 
 class RoleService:
@@ -23,4 +23,11 @@ class RoleService:
 
     async def get_by_id(self, id: int):
         role = await self.role_repo.get_by_id(id)
+        return role
+
+    async def update_role(self, role_id: int, role_update: BaseRole):
+
+        role = await self.role_repo.update(role_id, role_update, exclude=False)
+        if not role:
+            raise role_not_in_db_exc
         return role

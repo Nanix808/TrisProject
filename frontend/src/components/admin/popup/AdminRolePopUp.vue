@@ -191,7 +191,7 @@ function saveChanges() {
     store.dispatch('addRole', payload);
   }
   else {
-    store.dispatch('updatedRole', payload);
+    store.dispatch('updateRole', payload);
   }
   emit('close');
   // store.dispatch('updatedRole', payload);

@@ -34,5 +34,5 @@ export const adminaddRole = (payload) => {
 export const adminupdateRole = (id, payload) => {
   const url = '/authorization/' + id;
 
-  return DefaultApiInstance.putch(url, payload);
+  return DefaultApiInstance.patch(url, payload);
 };
