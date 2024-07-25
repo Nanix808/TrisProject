@@ -1,17 +1,7 @@
 <template>
-    <div>23333333333333333333333333334</div>
-
+  <div>Статистика</div>
 </template>
 
-
-<script setup lang="ts">
-
-
-
-</script>
-
-
-
-
+<script setup lang="ts"></script>
 
 <style lang="scss"></style>

@@ -30,6 +30,10 @@ class UserService:
         users = await self.user_repo.delete_is_active(id)
         return users
 
+    async def delete_user(self, id: int):
+        users = await self.user_repo.delete(id)
+        return users
+
     async def add_one(self, user_in: UserCreate):
         filter = {"username": user_in.username}
         user = await self.user_repo.get_by_filter(filter)

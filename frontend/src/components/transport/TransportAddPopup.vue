@@ -1,120 +1,124 @@
 <template>
-  <div v-if="props.isOpen">
-    <BasePopUP
-      :name="props.name"
-      @close="close"
-      :width="60"
-      @click="close_calendars"
-    >
-      <div class="box car-box" :class="car_id ? 'car-active' : ''">
-        <span class="car-box_name">Выберете машину</span>
-        <BaseSelect
-          :isActive="!(props.update && !get_router_name_admin_permission)"
-          :options="store.state.transport.cars"
-          @change="updateCarParameter($event)"
-          :default="car_id"
-        >
-        </BaseSelect>
-      </div>
-
-      <div class="box calendar-box">
-        <div class="calendar-box_date">
-          <div
-            class="calendar_date_from"
-            @click.stop
-            :class="date_from ? 'car-active' : ''"
-          >
-            <label for="date_from" @click="close_calendars">Время от</label>
-            <flat-pickr
-              id="date_from"
-              v-model="date_from"
-              :disabled="props.update && !get_router_name_admin_permission"
-              :config="config"
-              ref="datepicker_from"
-              class="form-control"
-              placeholder="Выберете дату начала"
-              name="date"
-            />
-          </div>
-          <div
-            class="calendar_date_to"
-            @click.stop
-            :class="date_to ? 'car-active' : ''"
-          >
-            <label for="date_from" @click="close_calendars">Время до</label>
-            <flat-pickr
-              v-model="date_to"
-              id="date_to"
-              :config="config"
-              :disabled="props.update && !get_router_name_admin_permission"
-              ref="datepicker_to"
-              class="form-control"
-              placeholder="Выберете дату окончания"
-              name="date"
-            />
-          </div>
-        </div>
-
-        <div
-          class="box destination-box"
-          :class="status_value ? 'car-active' : ''"
-          v-if="get_router_name_admin_permission && props.update"
-        >
-          <span class="car-box_name">Статус</span>
+  <div class="transport-add-popup-container">
+    <div v-if="props.isOpen" class="transport-add-popup">
+      <BasePopUP
+        :name="props.name"
+        @close="close"
+        :width="60"
+        @click="close_calendars"
+      >
+        <div class="box car-box" :class="car_id ? 'car-active' : ''">
+          <span class="car-box_name">Выберете машину</span>
           <BaseSelect
-            :options="status"
-            @change="updateStatusParameter($event)"
-            :default="
-              status.find((item) => item.name === status_value)
-                ? status.find((item) => item.name === status_value).id
-                : ''
-            "
+            :isActive="!(props.update && !get_router_name_admin_permission)"
+            :options="store.state.transport.cars"
+            @change="updateCarParameter($event)"
+            :default="car_id"
           >
           </BaseSelect>
         </div>
 
-        <div class="box destination-box">
-          <BaseInput
-            :label="'Пункт назначения'"
-            @input_value="destination = $event"
-            :startValue="destination"
-            :disabled="props.update && !get_router_name_admin_permission"
-          />
+        <div class="box calendar-box">
+          <div class="calendar-box_date">
+            <div
+              class="calendar_date_from"
+              @click.stop
+              :class="date_from ? 'car-active' : ''"
+            >
+              <label for="date_from" @click="close_calendars">Время от</label>
+              <flat-pickr
+                id="date_from"
+                v-model="date_from"
+                :disabled="props.update && !get_router_name_admin_permission"
+                :config="config"
+                ref="datepicker_from"
+                class="form-control"
+                placeholder="Выберете дату начала"
+                name="date"
+                @on-close="onValueUpdateFrom($event)"
+              />
+            </div>
+            <div
+              class="calendar_date_to"
+              @click.stop
+              :class="date_to ? 'car-active' : ''"
+            >
+              <label for="date_from" @click="close_calendars">Время до</label>
+              <flat-pickr
+                v-model="date_to"
+                id="date_to"
+                :config="config"
+                :disabled="props.update && !get_router_name_admin_permission"
+                ref="datepicker_to"
+                class="form-control"
+                placeholder="Выберете дату окончания"
+                name="date"
+                @on-close="onValueUpdateTo($event)"
+              />
+            </div>
+          </div>
+
+          <div
+            class="box destination-box"
+            :class="status_value ? 'car-active' : ''"
+            v-if="get_router_name_admin_permission && props.update"
+          >
+            <span class="car-box_name">Статус</span>
+            <BaseSelect
+              :options="status"
+              @change="updateStatusParameter($event)"
+              :default="
+                status.find((item) => item.name === status_value)
+                  ? status.find((item) => item.name === status_value).id
+                  : ''
+              "
+            >
+            </BaseSelect>
+          </div>
+
+          <div class="box destination-box">
+            <BaseInput
+              :label="'Пункт назначения'"
+              @input_value="destination = $event"
+              :startValue="destination"
+              :disabled="props.update && !get_router_name_admin_permission"
+            />
+          </div>
+          <div class="box destination-box">
+            <BaseInput
+              :label="'Контактные данные'"
+              @input_value="contact = $event"
+              :startValue="contact"
+              :disabled="props.update && !get_router_name_admin_permission"
+            />
+          </div>
+          <div class="box destination-box">
+            <BaseInput
+              :label="'Примечание'"
+              @input_value="notice = $event"
+              :startValue="notice"
+              :disabled="props.update && !get_router_name_admin_permission"
+            />
+          </div>
         </div>
-        <div class="box destination-box">
-          <BaseInput
-            :label="'Контактные данные (Имя и телефон)'"
-            @input_value="contact = $event"
-            :startValue="contact"
-            :disabled="props.update && !get_router_name_admin_permission"
-          />
+        <div class="car_button-box">
+          <BaseButton
+            v-if="!(props.update && !get_router_name_admin_permission)"
+            :name="props.update ? 'Изменить' : 'Сохранить'"
+            :is-active="isCorrectParams"
+            @click="addTransport"
+          >
+          </BaseButton>
+          <BaseButton
+            v-if="props.update"
+            :is-active="isCorrectParamsDellete || store.state.auth.isSuperUser"
+            :name="'Удалить'"
+            @click="deleteTransport"
+          >
+          </BaseButton>
         </div>
-        <div class="box destination-box">
-          <BaseInput
-            :label="'Примечание'"
-            @input_value="notice = $event"
-            :startValue="notice"
-            :disabled="props.update && !get_router_name_admin_permission"
-          />
-        </div>
-      </div>
-      <div class="car_button-box">
-        <BaseButton
-          v-if="!(props.update && !get_router_name_admin_permission)"
-          :name="props.update ? 'Изменить' : 'Сохранить'"
-          :is-active="isCorrectParams"
-          @click="addTransport"
-        >
-        </BaseButton>
-        <BaseButton
-          v-if="props.update"
-          :is-active="isCorrectParamsDellete || store.state.auth.isSuperUser"
-          :name="'Удалить'"
-          @click="deleteTransport"
-        >
-        </BaseButton>
-      </div>
-    </BasePopUP>
+      </BasePopUP>
+    </div>
   </div>
 </template>
 
@@ -149,7 +153,7 @@ const emit = defineEmits<{
 const router = useRouter();
 const car_id = ref(null);
 const date_from = ref(null);
-const date_to = ref(null);
+const date_to = ref('2024-07-22 12:00');
 const datepicker_from = ref(null);
 const datepicker_to = ref(null);
 const destination = ref(null);
@@ -180,6 +184,7 @@ const config = computed(() => {
   return {
     altFormat: 'd-M-Y H:i',
     altInput: true,
+    allowInput: false,
     dateFormat: 'Y-m-d H:i',
     enableTime: true,
     defaultHour: 9,
@@ -195,7 +200,7 @@ const config = computed(() => {
     minuteIncrement: 30,
     time_24hr: true,
     weekNumbers: false,
-    locale: Russian, 
+    locale: Russian,
   };
 });
 const isCorrectParams = computed(() => {
@@ -247,6 +252,20 @@ function roundToNearestHalfHour() {
   const nextHalfHour = Math.ceil(currentTime / halfHour) * halfHour;
   return new Date(nextHalfHour);
 }
+
+function onValueUpdateFrom(time) {
+  const halfHour = 30 * 60 * 1000;
+  const currentTime = new Date(time).getTime();
+  const nextHalfHour = Math.ceil(currentTime / halfHour) * halfHour;
+  datepicker_from.value.fp.setDate(new Date(nextHalfHour));
+}
+function onValueUpdateTo(time) {
+  const halfHour = 30 * 60 * 1000;
+  const currentTime = new Date(time).getTime();
+  const nextHalfHour = Math.ceil(currentTime / halfHour) * halfHour;
+  datepicker_to.value.fp.setDate(new Date(nextHalfHour));
+}
+
 function close() {
   car_id.value = props.data.car_id;
   destination.value = props.data.destination;
@@ -325,7 +344,6 @@ function addTransport() {
     contact: contact.value,
     notice: notice.value,
   };
-  console.log(payload);
   if (props.update) {
     store.dispatch('editTransport', payload);
   } else {
@@ -429,5 +447,26 @@ label,
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.transport-add-popup-container {
+  & .popup {
+    max-width: 660px;
+  }
+}
+
+@media (max-width: 720px) {
+  .calendar-box_date {
+    flex-direction: column;
+
+    & .calendar_date_from {
+      margin: 0 0 10px 0;
+    }
+  }
+  .transport-add-popup-container {
+    & .popup {
+      max-width: auto;
+    }
+  }
 }
 </style>

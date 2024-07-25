@@ -1,11 +1,8 @@
 <template>
   <div class="admin__user__container">
-    <div class="admin__user__header">
-      <div class="admin__user__header_users admin__user__header_items">
-        <router-link :to="{ name: 'admin_users' }"> Пользователи </router-link>
-      </div>
+    <div class="admin__user__header_transport">
       <div class="admin__user__header_roles admin__user__header_items">
-        <router-link :to="{ name: 'admin_roles' }"> Роли </router-link>
+        <router-link :to="{ name: 'admin_cars' }"> Машины </router-link>
       </div>
     </div>
 
@@ -26,18 +23,16 @@ const users = ref<any>([]);
 const roles = ref<any>([]);
 
 onMounted(() => {
-  store.dispatch('admin_get_all_roles');
-  store.dispatch('admin_get_all_users');
-  store.dispatch('admin_get_all_endpoints');
+  store.dispatch('get_all_cars');
 });
 </script>
 
 <style lang="scss">
 .admin__user__container {
-  & .admin__user__header {
+  & .admin__user__header_transport {
     height: 4vh;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(1, 1fr);
     justify-content: stretch;
 
     color: $main-color-font;
@@ -71,21 +66,6 @@ onMounted(() => {
   }
 
   & .admin__user__main__container {
-  }
-}
-
-@media (max-width: 600px) {
-  .admin__user__container {
-    & .admin__user__header {
-      grid-template-columns: repeat(1, 1fr);
-      height: 10vh;
-
-      & .admin__user__header_items {
-        margin-bottom: 3px;
-      }
-    }
-    & .admin__user__main__container {
-    }
   }
 }
 </style>

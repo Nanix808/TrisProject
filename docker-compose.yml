@@ -1,60 +1,84 @@
 version: "3"
 services:
   postgres:
-    image: postgres:latest
+    image: postgres:15.1
+    restart: unless-stopped
     environment:
-      POSTGRES_DB: "tris"
-      POSTGRES_USER: "test"
-      POSTGRES_PASSWORD: "test"
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       TZ: "Europe/Moscow"
       PGTZ: "Europe/Moscow"
     volumes:
-      - postgres-data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-    networks:
-      - mycustomnetwork  
-
-
-  postgres_test:
-    image: postgres:latest
-    environment:
-      POSTGRES_DB: "tris_test"
-      POSTGRES_USER: "test"
-      POSTGRES_PASSWORD: "test"
-      TZ: "Europe/Moscow"
-      PGTZ: "Europe/Moscow"
+      - postgres_db:/var/lib/postgresql/data
     ports:
       - "5433:5432"
     networks:
-      - mycustomnetwork      
+      - mycustomnetwork
+
+  trisbackend:
+    build: backend/.
+    container_name: trisbackend
+    restart: unless-stopped
+    command: bash -c "cd src && uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+    environment:
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PORT: ${DB_PORT}
+      MODE: ${MODE}
+      DB_HOST: postgres
+    ports:
+      - "7070:8000"
+    depends_on:
+      - postgres
+    networks:
+      - mycustomnetwork 
+
+  tris_frontend:
+    build: 
+      context: frontend/
+      args:
+        VITE_BASE_URL: ${VITE_BASE_URL}
+    container_name: tris_frontend
+    ports:
+      - '8000:80'
+    restart: unless-stopped
+    # entrypoint: /bin/sh
+    # arguments:
+     
+    #   -VITE_BASE_URL=tris_backend
+    environment:
+      VITE_BASE_URL: trisbackend
+    depends_on:
+      - trisbackend
+    networks:
+      - mycustomnetwork 
+ 
 
 
-#   bewise_ai:
-#     build: ./
-#     container_name: bewise_ai
-#     ports:
-#       - '8000:8000'
-#     restart: unless-stopped
-#     depends_on:
-#       - postgres
-#     networks:
-#       - mycustomnetwork
+  # frontend:  
+
+
+  # postgres_test:
+  #   image: postgres:latest
+  #   environment:
+  #     POSTGRES_DB: "tris_test"
+  #     POSTGRES_USER: "test"
+  #     POSTGRES_PASSWORD: "test"
+  #     TZ: "Europe/Moscow"
+  #     PGTZ: "Europe/Moscow"
+  #   ports:
+  #     - "5433:5432"
+  #   networks:
+  #     - mycustomnetwork      
+
 
 
 volumes:
-  postgres-data:
+  postgres_db:
 
 
 networks:
   mycustomnetwork:
     driver: bridge
-
-
-
-version: '3'
-services:
-  postgres:
-    image: hello-world
-    
-    

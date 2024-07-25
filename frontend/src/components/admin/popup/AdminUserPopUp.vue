@@ -1,68 +1,62 @@
 <template>
-  <div v-if="props.isOpen">
-    <BasePopUP :name="props.name" @close="close" :width="60">
-      <h3>{{ props.data.username }} id: {{ props.data.id }}</h3>
-
-      <div class="user-box">
-        <BaseInput
-          :isActive="true"
-          :label="'Имя пользователя'"
-          :start-value="props.data.username"
-          @input_value="updateUserParameter($event, 'username')"
-        >
-        </BaseInput>
-      </div>
-
-      <div class="user-box">
-        <EmailInput
-          :error="false"
-          :start-value="props.data.email"
-          @valid_value="set_email_valid_value"
-        >
-        </EmailInput>
-      </div>
-
-      <div class="user-box">
-        <span class="user-box_name">Активый</span>
-        <BaseCheckbox
-          :visible="props.data.is_active"
-          @change="updateUserParameter($event, 'is_active')"
-        >
-        </BaseCheckbox>
-      </div>
-      <div class="user-box">
-        <span class="user-box_name">Суперпользователь</span>
-        <BaseCheckbox
-          :visible="props.data.is_superuser"
-          @change="updateUserParameter($event, 'is_superuser')"
-        >
-        </BaseCheckbox>
-      </div>
-      <div class="user-box">
-        <span class="user-box_name">Роль</span>
-        <BaseSelect
-          :options="store.state.admin_users.roles"
-          :default="props.data.role ? props.data.role.id : ''"
-          @change="updateUserParameter($event, 'role_id')"
-        >
-        </BaseSelect>
-      </div>
-      <div class="user-box">
-        <BaseTextarea :text="props.data.refresh_token" :name="'Рефреш токен'">
-        </BaseTextarea>
-      </div>
-
-      <div class="button-box">
-        <BaseButton
-          :name="'Сохранить'"
-          :is-active="isChangeParams"
-          @click="saveChanges"
-        >
-        </BaseButton>
-        <BaseButton :name="'Удалить'" :is-active="true" @click="deleteUser">
-        </BaseButton>
-      </div>
-    </BasePopUP>
+  <div class="admin-user-popup-container">
+    <div v-if="props.isOpen">
+      <BasePopUP :name="props.name" @close="close" :width="60">
+        <h3>{{ props.data.username }} id: {{ props.data.id }}</h3>
+        <div class="user-box">
+          <BaseInput
+            :isActive="true"
+            :label="'Имя пользователя'"
+            :start-value="props.data.username"
+            @input_value="updateUserParameter($event, 'username')"
+          >
+          </BaseInput>
+        </div>
+        <div class="user-box">
+          <EmailInput
+            :error="false"
+            :start-value="props.data.email"
+            @valid_value="set_email_valid_value"
+          >
+          </EmailInput>
+        </div>
+        <div class="user-box">
+          <span class="user-box_name">Активый</span>
+          <BaseCheckbox
+            :visible="props.data.is_active"
+            @change="updateUserParameter($event, 'is_active')"
+          >
+          </BaseCheckbox>
+        </div>
+        <div class="user-box">
+          <span class="user-box_name">Суперпользователь</span>
+          <BaseCheckbox
+            :visible="props.data.is_superuser"
+            @change="updateUserParameter($event, 'is_superuser')"
+          >
+          </BaseCheckbox>
+        </div>
+        <div class="user-box role_box">
+          <span class="user-box_name">Роль</span>
+          <BaseSelect
+            :options="store.state.admin_users.roles"
+            :default="props.data.role ? props.data.role.id : ''"
+            @change="updateUserParameter($event, 'role_id')"
+          >
+          </BaseSelect>
+        </div>
+        <div class="button-box">
+          <BaseButton
+            :name="'Сохранить'"
+            :is-active="isChangeParams"
+            @click="saveChanges"
+          >
+          </BaseButton>
+          <BaseButton :name="'Удалить'" :is-active="true" @click="deleteUser">
+          </BaseButton>
+        </div>
+      </BasePopUP>
+    </div>
   </div>
 </template>
 
@@ -134,7 +128,7 @@ function deleteUser() {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .user-box {
   display: flex;
   align-items: center;
@@ -147,5 +141,23 @@ function deleteUser() {
 .button-box {
   display: flex;
   flex-direction: row;
+}
+
+.admin-user-popup-container {
+  & .popup {
+    max-width: 660px;
+  }
+}
+
+@media (max-width: 720px) {
+  .role_box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    & span {
+      margin-bottom: 5px;
+    }
+  }
 }
 </style>

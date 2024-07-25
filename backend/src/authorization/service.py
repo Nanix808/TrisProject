@@ -31,3 +31,9 @@ class RoleService:
         if not role:
             raise role_not_in_db_exc
         return role
+
+    async def delete(self, role_id: int):
+        role = await self.role_repo.delete(role_id)
+        if not role:
+            raise role_not_in_db_exc
+        return role

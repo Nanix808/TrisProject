@@ -2,32 +2,38 @@
   <main>
     <div class="home_container">
       <MainModule
+        v-if="
+          store.state.auth.isSuperUser ||
+          'transport' in store.state.auth.permissions
+        "
         :name="'Транспорт'"
         :name_path="'transport'"
         :image_path="'/src/assets/image/car.svg'"
         :image_path_hover="'/src/assets/image/car-hover.svg'"
       />
-      <!-- <div class="transport_module_container">
-          <router-link :to="{ name: 'transport' }">Транспорт</router-link>
-        </div> -->
     </div>
   </main>
 </template>
 
 <script setup>
 import MainModule from '@/components/MainModule.vue';
+import { ref, onMounted, watch } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
 </script>
 
 <style lang="scss">
-.module_content {
+.home_container {
   display: flex;
-  & .transport_module_container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 200px;
-    height: 200px;
-    border: 1px solid black;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 20px;
+}
+
+@media (max-width: 600px) {
+  .home_container {
+    flex-direction: column;
   }
 }
 </style>

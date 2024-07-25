@@ -3,6 +3,7 @@ interface PopapState {
   isRegisterPopupOpen: boolean;
   isAdminUserPopupOpen: boolean;
   isAdminRolePopupOpen: boolean;
+  isAdminCarPopupOpen: boolean;
 }
 
 export default {
@@ -11,11 +12,13 @@ export default {
     const isRegisterPopupOpen = false;
     const isAdminUserPopupOpen = false;
     const isAdminRolePopupOpen = false;
+    const isAdminCarPopupOpen = false;
     return {
       isLoginPopupOpen: false,
       isRegisterPopupOpen: false,
       isAdminUserPopupOpen: false,
       isAdminRolePopupOpen: false,
+      isAdminCarPopupOpen: false,
     };
   },
   mutations: {
@@ -42,6 +45,12 @@ export default {
     },
     closeAdminRolePopup(state: PopapState) {
       state.isAdminRolePopupOpen = false;
+    },
+    openAdminCarPopup(state: PopapState) {
+      state.isAdminCarPopupOpen = true;
+    },
+    closeAdminCarPopup(state: PopapState) {
+      state.isAdminCarPopupOpen = false;
     },
   },
 };

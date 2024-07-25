@@ -7,6 +7,7 @@ import {
   isPermissions,
 } from '@/utils/jwt';
 import { AxiosPromise } from 'axios';
+import router from '@/router/index.js'; // Импортируйте маршрутизатор
 
 interface State {
   userId: number | null;
@@ -52,6 +53,21 @@ export default {
       localStorage.setItem('name', payload.email);
       state.name = payload.email;
     },
+    resetUser(state: any) {
+      state.accessToken = '';
+      state.refreshToken = '';
+      state.isAuthenticated = false;
+      state.isSuperUser = false;
+      state.permissions = {};
+
+      localStorage.removeItem('name');
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('isAuthenticated');
+      localStorage.removeItem('isSuperUser');
+      localStorage.removeItem('name');
+      localStorage.removeItem('permissions');
+    },
     setrefreshTokenRequest(state: any, data: any) {
       state.refreshTokenRequest = data;
     },
@@ -75,6 +91,9 @@ export default {
   actions: {
     setUser({ commit }, payload: UserPayload) {
       commit('setUSER', payload);
+    },
+    resetUser({ commit }) {
+      commit('resetUser');
     },
 
     login({ commit }, payload: UserPayload) {
@@ -109,6 +128,20 @@ export default {
       } catch (error) {
         commit('setrefreshTokenRequest', null);
         return null;
+      }
+    },
+    checkUserActivity({ state, commit }) {
+      if (state.isAuthenticated) {
+      } else {
+        router.push({ name: 'home' });
+        commit('openLoginPopup');
+      }
+    },
+    checkUserActivityAdmin({ state, commit }) {
+      if (state.isSuperUser) {
+      } else {
+        router.push({ name: 'home' });
+        commit('openLoginPopup');
       }
     },
   },

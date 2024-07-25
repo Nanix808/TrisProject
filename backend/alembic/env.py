@@ -43,6 +43,12 @@ target_metadata = Base.metadata
 config.set_main_option("sqlalchemy.url", settings.DATABASE_URL_psycopg)
 
 
+print(
+    settings.DATABASE_URL_psycopg,
+    "------------------------------------------------",
+)
+
+
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
 

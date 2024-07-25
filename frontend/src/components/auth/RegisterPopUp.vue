@@ -1,44 +1,45 @@
 <template>
   <div v-if="props.isOpen">
-    <BasePopUP :name="name" @close="close">
-      <div class="user-box">
-        <EmailInput
-          :error="store.state.user.request_unsuccess"
-          @valid_value="set_email_valid_value"
-        >
-        </EmailInput>
-      </div>
-      <div class="user-box">
-        <PasswordInput
-          @valid_value="set_password_valid_value"
-          :error="store.state.user.request_unsuccess"
-        >
-        </PasswordInput>
-      </div>
-      <div class="user-box">
-        <PasswordInput
-          :label="'Подтвердите пароль'"
-          :error="store.state.user.request_unsuccess"
-          @valid_value="set_password_confirm_valid_value"
-        >
-        </PasswordInput>
-      </div>
-      <div class="button-box">
-        <BaseButton
-          :name="'Зарегистрироваться'"
-          :is-active="
-            isEmailValid &&
-            isPasswordValid &&
-            isPasswordConfirmValid &&
-            passwordConfirmValue === passwordValue
-          "
-          @click="userRegister"
-        >
-        </BaseButton>
-        <span @click="openLoginPopup">Войти</span>
-        <span>Востановить пароль</span>
-      </div>
-    </BasePopUP>
+    <div class="register-popup-container">
+      <BasePopUP :name="name" @close="close">
+        <div class="user-box">
+          <EmailInput
+            :error="store.state.user.request_unsuccess"
+            @valid_value="set_email_valid_value"
+          >
+          </EmailInput>
+        </div>
+        <div class="user-box">
+          <PasswordInput
+            @valid_value="set_password_valid_value"
+            :error="store.state.user.request_unsuccess"
+          >
+          </PasswordInput>
+        </div>
+        <div class="user-box">
+          <PasswordInput
+            :label="'Подтвердите пароль'"
+            :error="store.state.user.request_unsuccess"
+            @valid_value="set_password_confirm_valid_value"
+          >
+          </PasswordInput>
+        </div>
+        <div class="button-box">
+          <BaseButton
+            :name="'Зарегистрироваться'"
+            :is-active="
+              isEmailValid &&
+              isPasswordValid &&
+              isPasswordConfirmValid &&
+              passwordConfirmValue === passwordValue
+            "
+            @click="userRegister"
+          >
+          </BaseButton>
+          <span @click="openLoginPopup">Войти</span>
+        </div>
+      </BasePopUP>
+    </div>
   </div>
 </template>
 
@@ -100,6 +101,11 @@ function openLoginPopup() {
 </script>
 
 <style lang="scss">
+.register-popup-container {
+  & .popup {
+    max-width: 480px;
+  }
+}
 .user-box {
   position: relative;
   padding-bottom: 30px;

@@ -1,35 +1,7 @@
 <template>
-    <div class="admin__home__container">
-
-        hello
-    </div>
-
+  <div class="admin__home__container">Домашняя</div>
 </template>
 
-
-<script setup lang="ts">
-// import { ref, onMounted } from 'vue'
-// import { UrlApi } from "@/api";
-
-
-// onMounted(() => {
-//     console.log('mounted')
-
-//     UrlApi.authRoutes
-//         .login()
-//         .then((res) => {
-//             console.log(res)
-//         });
-
-// })
-
-
-
-
-</script>
-
-
-
-
+<script setup lang="ts"></script>
 
 <style lang="scss"></style>

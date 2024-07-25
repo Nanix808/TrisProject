@@ -65,16 +65,18 @@
           <td :class="['choised']" @click="">
             {{ get_short_name(get_user(item).user.username) }}
           </td>
-          <td :class="['choised']" @click="">
+          <td :class="['choised', 'hidden']" @click="">
             {{ get_user(item).destination }}
           </td>
-          <td :class="['choised']" @click="">{{ get_user(item).contact }}</td>
+          <td :class="['choised', 'hidden']" @click="">
+            {{ get_user(item).contact }}
+          </td>
           <td :class="['choised']" @click="">{{ get_user(item).status }}</td>
           <td :class="['choised', 'notice_td']">
             <div
               v-if="get_user(item).notice"
               class="transport_notice_container transport_notice"
-              @click.stop="set_notice_text(get_user(item).notice)"
+              @click.stop="set_notice_text(get_user(item))"
             >
               <div class="transport_notice_icon"></div>
             </div>
@@ -101,7 +103,7 @@
             <div
               v-if="item.notice"
               class="transport_notice_container transport_notice"
-              @click.stop="set_notice_text(item.notice)"
+              @click.stop="set_notice_text(item.destination)"
             >
               <div class="transport_notice_icon"></div>
             </div>
@@ -110,13 +112,15 @@
       </tbody>
     </BaseTable>
 
-    <BaseTextPopUP
+    <TransportNoticePopUP
       :name="'Примечание'"
       :text="noticeText"
+      :destination="noticeDistenation"
+      :contact="noticeContact"
       :is-open="isNoticePopUpOpen"
       @close="isNoticePopUpOpen = false"
     >
-    </BaseTextPopUP>
+    </TransportNoticePopUP>
     <TransportAddPopup
       :is-open="isTransportPopUpOpen"
       :data="data"
@@ -133,7 +137,7 @@ import BaseTable from '@/components/base/BaseTable.vue';
 import BaseButton from '@/components/base/BaseButton.vue';
 import ModalWindow from '@/components/ui/modal-window.vue';
 import flatPickr from 'vue-flatpickr-component';
-import BaseTextPopUP from '@/components/base/BaseTextPopUP.vue';
+import TransportNoticePopUP from '@/components/transport/TransportNoticePopUP.vue';
 import TransportAddPopup from '@/components/transport/TransportAddPopup.vue';
 import { Russian } from 'flatpickr/dist/l10n/ru.js';
 import 'flatpickr/dist/flatpickr.css';
@@ -152,10 +156,18 @@ const isCarModal = ref(false);
 const isTransportPopUpOpen = ref(false);
 const isNoticePopUpOpen = ref(false);
 const noticeText = ref('');
+const noticeDistenation = ref('');
+const noticeContact = ref('');
 
 onMounted(async () => {
   await store.dispatch('get_all_cars');
-  const now = route.query.date || new Date().toLocaleDateString();
+  var date_now = new Date();
+  var mm = ('0' + (date_now.getMonth() + 1)).slice(-2);
+  var dd = ('0' + date_now.getDate()).slice(-2);
+  var yy = date_now.getFullYear();
+
+  const full_date = mm + '/' + dd + '/' + yy;
+  const now = route.query.date || full_date;
   const car_id = route.query.car || store.state.transport.cars[0].id;
   date.value = now;
   car.value = store.state.transport.cars.find((item) => item.id == car_id);
@@ -198,8 +210,10 @@ function addTransport() {
   };
 }
 
-function set_notice_text(notice) {
-  noticeText.value = notice;
+function set_notice_text(item) {
+  noticeText.value = item.notice;
+  noticeDistenation.value = item.destination;
+  noticeContact.value = item.contact;
   isNoticePopUpOpen.value = true;
 }
 
@@ -325,7 +339,7 @@ watch([date, car], ([newA, newB], [prevA, prevB]) => {
   width: 60px;
 }
 .tbox-3 {
-  width: 100%;
+  width: 50%;
 }
 .tbox-4 {
   width: 105px;
@@ -469,6 +483,20 @@ watch([date, car], ([newA, newB], [prevA, prevB]) => {
     background-image: url('../assets/image/timetable.svg');
     background-size: contain;
     background-repeat: no-repeat;
+  }
+}
+
+@media (max-width: 600px) {
+  .transport_container {
+    & .base__table__container .table th.tbox-3 {
+      display: none;
+    }
+    .hidden {
+      display: none;
+    }
+    .tbox-2 {
+      width: 50%;
+    }
   }
 }
 </style>

@@ -3,12 +3,14 @@ import datetime
 from fastapi import Request
 from repository import AbstractRepository
 
-from .shemas import TransportCreate, TransportUpdate
-from .models import Transport
+from .shemas import TransportCreate, TransportUpdate, CarUpdate
+from .models import Transport, Car
 from .exceptions import (
     transport_in_db_exc,
     transport_not_found_exc,
     transport_in_db_time_exc,
+    car_in_db_exc,
+    car_not_found_exc,
 )
 
 from authorization.exceptions import not_permission_exc
@@ -117,3 +119,24 @@ class CarService:
     async def get_cars(self):
         cars = await self.car_repo.find_all()
         return cars
+
+    async def add_cars(self, car_in):
+        filter = {"name": car_in.name}
+        car = await self.car_repo.get_by_filter(filter)
+        if car:
+            raise car_in_db_exc
+        car = Car(**car_in.model_dump())
+        car = await self.car_repo.add_one(car)
+        return car
+
+    async def update_cars(self, car_id: int, car_in):
+        car = await self.car_repo.update(car_id, car_in, exclude=False)
+        if not car:
+            raise car_not_found_exc
+        return car
+
+    async def delete_cars(self, car_id: int):
+        car = await self.car_repo.delete(car_id)
+        if not car:
+            raise car_not_found_exc
+        return car

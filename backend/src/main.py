@@ -13,24 +13,6 @@ from middleware import auth_middleware
 app = FastAPI(debug=True)
 
 
-origins = [
-    "http://localhost",
-    "http://127.0.0.1",
-    "http://localhost:5173",
-    "https://localhost:5173/",
-    "http://127.0.0.1:5173",
-    "https://127.0.0.1:5173/",
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-
 # router = APIRouter(dependencies=[Depends(auth_middleware)])
 
 # Add the middleware to FastAPI
@@ -51,22 +33,14 @@ app.include_router(
 )
 
 
-# from fastapi.routing import APIRoute
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-
-# def get_route_info(route: APIRoute):
-#     return {
-#         "path": route.path,
-#         "methods": route.methods,
-#         "dependencies": route.dependencies,
-#         # Add more attributes as needed
-#     }
-
-
-# for route in app.routes:
-#     if isinstance(route, APIRoute):
-#         route_info = get_route_info(route)
-#         print(route_info)
 # Запуск сервера Uvicorn
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)

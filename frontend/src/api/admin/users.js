@@ -22,17 +22,23 @@ export const updateUser = (id, payload) => {
 
 export const deleteUser = (id) => {
   const url = '/users/' + id;
-  console.log(url);
+
   return DefaultApiInstance.delete(url);
 };
 
 export const adminaddRole = (payload) => {
   const url = '/authorization/';
-  console.log(url, payload);
+
   return DefaultApiInstance.post(url, payload);
 };
 export const adminupdateRole = (id, payload) => {
   const url = '/authorization/' + id;
 
   return DefaultApiInstance.patch(url, payload);
+};
+
+export const deleteRole = (id) => {
+  const url = '/authorization/' + id;
+
+  return DefaultApiInstance.delete(url);
 };

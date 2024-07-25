@@ -2,8 +2,7 @@ import axios from 'axios';
 import router from '@/router';
 import store from '@/store';
 
-const baseURL = 'http://127.0.0.1:8000';
-// const baseURL = 'https://scaner.3s.by/api/v2/'
+const baseURL = import.meta.env.VITE_BASE_URL;
 
 const defaultConfig = {
   baseURL: baseURL,
@@ -99,6 +98,7 @@ DefaultApiInstance.interceptors.response.use(
       error.response.data.detail === 'refresh token invalid (user not found)'
     ) {
       router.push({ name: 'home' }).then(() => {
+        store.commit('resetUser');
         store.commit('openLoginPopup');
       });
 

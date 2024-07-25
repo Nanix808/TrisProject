@@ -124,20 +124,5 @@ class TestUser:
         response = await ac.delete(f"/users/{user_id}")
         assert response.status_code == 204
         response = await ac.get(f"/users/{user_id}")
-        user = response.json()
-        assert response.status_code == 200
-        assert user["is_active"] == False
 
-    @pytest.mark.asyncio
-    async def test_delete_users(self, ac: AsyncClient, user_id: int = 2):
-        response = await ac.delete(f"/users/{user_id}")
-        assert response.status_code == 204
-        response = await ac.get(f"/users/{user_id}")
-        user = response.json()
-        assert response.status_code == 200
-        assert user["is_active"] == False
-        
-
-    # @pytest.mark.asyncio
-    # async def test_delete_all_user(self, ac: AsyncClient):
-    #     await print(clean_db)
+        assert response.status_code == 404

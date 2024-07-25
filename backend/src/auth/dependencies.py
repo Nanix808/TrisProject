@@ -44,7 +44,7 @@ async def validate_auth_user(
         "sub": user.username,
         "sub_id": user.id,
         "role_id": user.role_id,
-        "permissions": user.role.permissions or [],
+        "permissions": user.role.permissions if user.role else [],
         "username": user.username,
         "email": user.email,
     }
@@ -113,10 +113,19 @@ async def authorize(
     if not user or token != user.refresh_token:
         raise refresh_token_invalide_exc
     # generate new refresh token and update user
-    # jwt_payload = {
-    #     "sub": user.username,
-    #     "username": user.username,
-    #     "email": user.email,
-    # }
-    # await users_crud.update_user_refresh_token(user, jwt_payload)
+    jwt_payload = {
+        "sub": user.username,
+        "sub_id": user.id,
+        "role_id": user.role_id,
+        "permissions": user.role.permissions if user.role else [],
+        "username": user.username,
+        "email": user.email,
+        "is_superuser": user.is_superuser,
+    }
+    refresh_token = await user_service.update_user_refresh_token(
+        user, jwt_payload
+    )
+    access_token = auth_utils.create_access_jwt(jwt_payload)
+    user.refresh_token = refresh_token
+    user.access_token = access_token
     return user

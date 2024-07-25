@@ -1,44 +1,47 @@
 <template>
   <div v-if="props.isOpen">
-    <BasePopUP :name="name" @close="close">
-      <div class="user-box">
-        <EmailInput
-          :error="store.state.user.request_unsuccess"
-          @valid_value="set_email_valid_value"
-        >
-        </EmailInput>
-      </div>
-      <div class="user-box">
-        <PasswordInput
-          :error="store.state.user.request_unsuccess"
-          @valid_value="set_password_valid_value"
-        >
-        </PasswordInput>
-      </div>
-      <div class="button-box">
-        <BaseButton
-          :name="'Войти'"
-          :is-active="isEmailValid && isPasswordValid"
-          @click="userLogin"
-        >
-        </BaseButton>
-        <span @click="openRegisterPopup">Зарегистрироваться</span>
-        <span>Востановить пароль</span>
-      </div>
-    </BasePopUP>
+    <div class="login-popup-container">
+      <BasePopUP :name="name" @close="close">
+        <div class="user-box">
+          <EmailInput
+            :error="store.state.user.request_unsuccess"
+            @valid_value="set_email_valid_value"
+          >
+          </EmailInput>
+        </div>
+        <div class="user-box">
+          <PasswordInput
+            :error="store.state.user.request_unsuccess"
+            @valid_value="set_password_valid_value"
+          >
+          </PasswordInput>
+        </div>
+        <div class="button-box">
+          <BaseButton
+            :name="'Войти'"
+            :is-active="isEmailValid && isPasswordValid"
+            @click="userLogin"
+          >
+          </BaseButton>
+          <span @click="openRegisterPopup">Зарегистрироваться</span>
+          <span @click="logout">Выйти</span>
+        </div>
+      </BasePopUP>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 import BasePopUP from '@/components/base/BasePopUP.vue';
 import EmailInput from '@/components/ui/EmailInput.vue';
 import PasswordInput from '@/components/ui/PasswordInput.vue';
 import BaseButton from '@/components/base/BaseButton.vue';
 
 const store = useStore();
-
+const rooter = useRouter();
 interface Props {
   isOpen: boolean;
   width?: string;
@@ -65,6 +68,11 @@ function userLogin() {
   });
 }
 
+function logout() {
+  store.dispatch('resetUser');
+  rooter.push({ path: '/' });
+}
+
 function set_email_valid_value(isEmail: boolean, value: string) {
   isEmailValid.value = isEmail;
   emailValue.value = value;
@@ -82,7 +90,9 @@ function openRegisterPopup() {
 
 <style lang="scss">
 .login-popup-container {
-  max-width: 480px;
+  & .popup {
+    max-width: 480px;
+  }
 }
 
 .user-box {
@@ -110,6 +120,11 @@ function openRegisterPopup() {
     &:hover {
       color: $default-success;
     }
+  }
+}
+@media (max-width: 720px) {
+  .button-box {
+    flex-direction: column;
   }
 }
 </style>

@@ -24,7 +24,9 @@ class User(Base):
     transport: Mapped["Transport"] = relationship(
         "Transport", back_populates="user"
     )
-    role_id: Mapped[int] = mapped_column(ForeignKey("role.id"), nullable=True)
+    role_id: Mapped[int] = mapped_column(
+        ForeignKey("role.id", ondelete="SET NULL"), nullable=True
+    )
     role: Mapped["Role"] = relationship("Role", back_populates="user")
     # role_id: Mapped[list["Role"]] = relationship(
     #     "Role", back_populates="user", nullable=False

@@ -70,7 +70,6 @@ export default {
       AdminUrlApi.adminUserRoutes
         .getEndpoints()
         .then((res) => {
-          console.log(res.data);
           commit('setEndpointsArray', res.data);
         })
         .catch((error) => {
@@ -109,7 +108,7 @@ export default {
         .adminaddRole(payload)
         .then((res) => {
           dispatch('admin_get_all_roles');
-          console.log(res.data);
+
           // commit('setEndpointsArray', res.data);
         })
         .catch((error) => {
@@ -121,11 +120,21 @@ export default {
         .adminupdateRole(payload.id, payload)
         .then((res) => {
           dispatch('admin_get_all_roles');
-          console.log(res.data);
+
           // commit('setEndpointsArray', res.data);
         })
         .catch((error) => {
           // commit('cleanEndpointsArray');
+        });
+    },
+
+    deleteRole({ commit, dispatch }, id: number) {
+      AdminUrlApi.adminUserRoutes
+        .deleteRole(id)
+        .then((res) => {})
+        .catch((error) => {})
+        .finally(() => {
+          dispatch('admin_get_all_roles');
         });
     },
   },

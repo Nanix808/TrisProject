@@ -1,10 +1,6 @@
 <template>
   <div class="backdrop" @mousedown="close">
-    <div
-      class="popup"
-      @mousedown.stop
-      :style="{ 'max-width': props.width + '%' }"
-    >
+    <div class="popup" @mousedown.stop>
       <div class="container_button_close" @mousedown="close">
         <ButtonClose />
       </div>
@@ -25,7 +21,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   name: 'Имя не заданно',
-  width: 40,
+  width: 100,
 });
 
 // const props = defineProps<Props>();
@@ -61,7 +57,7 @@ input:-webkit-autofill:active {
 
 .popup {
   position: absolute;
-  top: 45%;
+  top: 50%;
   left: 50%;
 
   padding: 40px;

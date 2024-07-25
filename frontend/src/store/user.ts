@@ -32,6 +32,9 @@ export default {
         })
         .then((res) => {
           commit('closeRegisterPopup');
+          alert(
+            'Вы успешно зарегистрировались! Ожидайте пока администратор активирует вашу учетную запись'
+          );
           // setTimeout(() => {
           //   commit("setRegisterSuccess", false);
           // }, 2000);

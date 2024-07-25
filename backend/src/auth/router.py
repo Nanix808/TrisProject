@@ -20,7 +20,7 @@ def auth_user_issue_jwt(
         "sub": user.username,
         "sub_id": user.id,
         "role_id": user.role_id,
-        "permissions": user.role.permissions,
+        "permissions": user.role.permissions if user.role else [],
         "username": user.username,
         "email": user.email,
         "is_superuser": user.is_superuser,
@@ -49,18 +49,8 @@ def auth_user_check_self_info(
 
 @auth_router.post("/refresh/")
 async def refresh(user: UserBase = Depends(authorize)):
-    jwt_payload = {
-        "sub": user.username,
-        "sub_id": user.id,
-        "role_id": user.role_id,
-        "permissions": user.role.permissions,
-        "username": user.username,
-        "email": user.email,
-        "is_superuser": user.is_superuser,
-    }
-    access_token = auth_utils.create_access_jwt(jwt_payload)
     return TokenInfo(
-        access_token=access_token,
+        access_token=user.access_token,
         refresh_token=user.refresh_token,
         token_type="Bearer",
     )

@@ -38,7 +38,7 @@ const cssPropsHover = computed(() => {
 .module__container {
   height: 200px;
   margin: 20px;
-  max-width: 250px;
+  width: 250px;
   & a:visited {
     color: $main-color-font;
   }
@@ -74,6 +74,13 @@ const cssPropsHover = computed(() => {
     background-image: v-bind(cssProps);
     background-repeat: no-repeat;
     background-position: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .module__container {
+    margin: 0 0 20px 0;
+    width: 100%;
   }
 }
 </style>

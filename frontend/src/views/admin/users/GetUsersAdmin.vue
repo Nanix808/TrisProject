@@ -26,12 +26,15 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in store.state.admin_users.users" :key="item">
-            <td class="choised" @click="choiseuser(item.id)">{{ item.id }}</td>
+          <tr
+            v-for="(item, index) in store.state.admin_users.users"
+            :key="item"
+          >
+            <td class="choised" @click="choiseuser(item.id)">{{ index }}</td>
             <td class="choised" @click="choiseuser(item.id)">
-              {{ item.username }}
+              {{ item.username.slice(0, 3) }}
             </td>
-            <td>
+            <td class="hide_role">
               <BaseSelect
                 :options="store.state.admin_users.roles"
                 :default="item.role ? item.role.id : ''"
@@ -151,5 +154,33 @@ function choiseuser(id: number) {
 .box-4 {
   max-width: 120px;
   width: 120px;
+}
+@media (max-width: 900px) {
+  .admin__user__container_button_box {
+    flex-direction: column-reverse;
+    justify-content: flex-start;
+    align-items: flex-start;
+    height: 12vh;
+
+    & button {
+      max-width: 100%;
+      border-radius: 15px;
+      height: 4vh;
+    }
+  }
+  .scrole_table_container {
+    & table {
+      display: none;
+      & tr {
+        & th.box-3,
+        .hide_role {
+          display: none;
+        }
+      }
+      & .box-4 {
+        width: 90px;
+      }
+    }
+  }
 }
 </style>

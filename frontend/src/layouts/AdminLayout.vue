@@ -33,4 +33,11 @@ import { RouterLink, RouterView } from 'vue-router';
     height: 95vh;
   }
 }
+@media (max-width: 600px) {
+  .admin__container {
+    & .admin__left_side {
+      flex: 0 0 70px;
+    }
+  }
+}
 </style>

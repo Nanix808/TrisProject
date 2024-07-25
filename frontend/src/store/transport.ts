@@ -103,6 +103,7 @@ export default {
           //   commit('cleanUsersArray');
         });
     },
+   
   },
   getters: {
     // isAuthenticatedUser: (state: User): boolean => state.email,

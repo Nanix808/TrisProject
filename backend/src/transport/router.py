@@ -10,10 +10,12 @@ from .shemas import (
     TransportUpdate,
     # DateFromRequest,
     TransportReturn,
+    CarUpdate,
 )
 from users.schemas import User
 from auth.dependencies import get_current_active_auth_user
 from authorization.dependencies import get_uid_from_request
+from authorization.dependencies import get_current_active_auth_is_superuser_user
 
 transport_router = APIRouter()
 
@@ -77,4 +79,37 @@ async def get_cars(
     car_service: Annotated[CarService, Depends(car_service)],
 ):
     cars = await car_service.get_cars()
+    return cars
+
+
+@transport_router.post("/cars", status_code=status.HTTP_201_CREATED)
+async def add_cars(
+    car_service: Annotated[CarService, Depends(car_service)],
+    car_in: CarUpdate,
+    isSuperuser: bool = Depends(get_current_active_auth_is_superuser_user),
+):
+    cars = await car_service.add_cars(car_in)
+    return cars
+
+
+@transport_router.patch("/cars/{car_id}", status_code=status.HTTP_201_CREATED)
+async def update_cars(
+    car_service: Annotated[CarService, Depends(car_service)],
+    car_update: CarUpdate,
+    isSuperuser: bool = Depends(get_current_active_auth_is_superuser_user),
+    car_id: int = Path(...),
+):
+    cars = await car_service.update_cars(car_id, car_update)
+    return cars
+
+
+@transport_router.delete(
+    "/cars/{car_id}", status_code=status.HTTP_204_NO_CONTENT
+)
+async def delete_cars(
+    car_service: Annotated[CarService, Depends(car_service)],
+    isSuperuser: bool = Depends(get_current_active_auth_is_superuser_user),
+    car_id: int = Path(...),
+):
+    cars = await car_service.delete_cars(car_id)
     return cars

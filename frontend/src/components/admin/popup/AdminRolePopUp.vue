@@ -1,5 +1,5 @@
 <template>
-  <div v-if="props.isOpen">
+  <div v-if="props.isOpen" class="admin-role-popup-container">
     <BasePopUP :name="props.name" @close="close" :width="60">
       <div class="user-box">
         <BaseInput
@@ -10,6 +10,7 @@
         >
         </BaseInput>
       </div>
+
       <div class="user-box">
         <BaseInput
           :isActive="true"
@@ -32,14 +33,22 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(value, key, index) in checked_value" :key="index">
+            <tr
+              v-for="(value, key, index) in store.state.admin_users
+                .list_endpoints"
+              :key="index"
+            >
               <td class="choised">{{ key }}</td>
               <td class="choised">
                 <input
                   type="checkbox"
                   name="switch"
                   class="check"
-                  :checked="value.includes('GET')"
+                  :checked="
+                    data.id != 0
+                      ? $props.data.permissions[key].includes('GET')
+                      : false
+                  "
                   @change="updateUserParameter($event, key, 'GET')"
                 />
               </td>
@@ -48,7 +57,11 @@
                   type="checkbox"
                   name="switch"
                   class="check"
-                  :checked="value.includes('POST')"
+                  :checked="
+                    data.id != 0
+                      ? $props.data.permissions[key].includes('POST')
+                      : false
+                  "
                   @change="updateUserParameter($event, key, 'POST')"
                 />
               </td>
@@ -57,9 +70,14 @@
                   type="checkbox"
                   name="switch"
                   class="check"
-                  :checked="value.includes('PUTCH') || value.includes('PUT')"
+                  :checked="
+                    data.id != 0
+                      ? $props.data.permissions[key].includes('PATCH') ||
+                        $props.data.permissions[key].includes('PUT')
+                      : false
+                  "
                   @change="
-                    updateUserParameter($event, key, 'PUTCH'),
+                    updateUserParameter($event, key, 'PATCH'),
                       updateUserParameter($event, key, 'PUT')
                   "
                 />
@@ -69,7 +87,11 @@
                   type="checkbox"
                   name="switch"
                   class="check"
-                  :checked="value.includes('DELETE')"
+                  :checked="
+                    data.id != 0
+                      ? $props.data.permissions[key].includes('DELETE')
+                      : false
+                  "
                   @change="updateUserParameter($event, key, 'DELETE')"
                 />
               </td>
@@ -78,7 +100,11 @@
                   type="checkbox"
                   name="switch"
                   class="check"
-                  :checked="value.includes('ADMIN')"
+                  :checked="
+                    data.id != 0
+                      ? $props.data.permissions[key].includes('ADMIN')
+                      : false
+                  "
                   @change="updateUserParameter($event, key, 'ADMIN')"
                 />
               </td>
@@ -94,8 +120,13 @@
           @click="saveChanges"
         >
         </BaseButton>
-        <!-- <BaseButton :name="'Удалить'" :is-active="true" @click="deleteUser">
-        </BaseButton> -->
+        <BaseButton
+          v-if="data.id != 0"
+          :name="'Удалить'"
+          :is-active="true"
+          @click="deleteRole"
+        >
+        </BaseButton>
       </div>
     </BasePopUP>
   </div>
@@ -118,14 +149,14 @@ interface Props {
   data: any;
 }
 const props = withDefaults(defineProps<Props>(), {
-  update: false,
+  // update: false,
 });
 const name = ref('');
 const description = ref();
 
 const checked_value = ref<any>({});
 
-const change_params = ref({});
+const change_params = ref<any>({});
 
 // onMounted(() => {
 //   console.log('mounted');
@@ -170,6 +201,9 @@ function close() {
 
 function updateUserParameter(event, key, value) {
   if (event.target.checked) {
+    if (!checked_value.value[key]) {
+      checked_value.value[key] = [];
+    }
     checked_value.value[key].push(value);
   } else {
     var index = checked_value.value[key].indexOf(value);
@@ -189,8 +223,7 @@ function saveChanges() {
 
   if (props.data.id == 0) {
     store.dispatch('addRole', payload);
-  }
-  else {
+  } else {
     store.dispatch('updateRole', payload);
   }
   emit('close');
@@ -198,19 +231,27 @@ function saveChanges() {
   // change_params.value = {};
 }
 
+function deleteRole() {
+  if (confirm('Вы действительно хотите удалить роль?')) {
+    store.dispatch('deleteRole', props.data.id);
+    emit('close');
+  }
+}
+
 watch(
   () => props.isOpen,
   () => {
-    checked_value.value = JSON.parse(
-      JSON.stringify(store.state.admin_users.list_endpoints)
-    );
+    checked_value.value = props.data.permissions;
+    // checked_value.value = JSON.parse(
+    //   JSON.stringify(store.state.admin_users.list_endpoints)
+    // );
     name.value = props.data.name;
     description.value = props.data.description;
   }
 );
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .user-box {
   display: flex;
   align-items: center;
@@ -252,5 +293,26 @@ watch(
 .check:hover {
   cursor: pointer;
   opacity: 0.8;
+}
+.admin-role-popup-container {
+  & .popup {
+    max-width: 780px;
+  }
+}
+@media (max-width: 850px) {
+  .admin-role-popup-container {
+    & .popup {
+      max-width: auto;
+
+      & .box-2,
+      .box-4 {
+        width: auto;
+        word-break: break-all;
+      }
+    }
+    & .button-box {
+      flex-direction: column;
+    }
+  }
 }
 </style>

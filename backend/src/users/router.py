@@ -21,6 +21,7 @@ from .schemas import (
 
 user_router = APIRouter()
 
+
 @user_router.get(
     "/",
     response_model=list[User],
@@ -67,4 +68,4 @@ async def delete_user(
     user_service: Annotated[UserService, Depends(user_service)],
     user_id: int = Path(...),
 ) -> None:
-    await user_service.delete_is_active(user_id)
+    await user_service.delete_user(user_id)

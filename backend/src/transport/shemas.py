@@ -50,3 +50,7 @@ class TransportReturn(BaseModel):
     date_from: datetime
     date_to: datetime | None = None
     user: UserCreated | None = None
+
+
+class CarUpdate(BaseModel):
+    name: str

@@ -1,7 +1,6 @@
 <template>
   <div class="admin__roles__container">
     <div class="admin__role__container_button_box">
-      <!-- <BaseButton :is-active="false" :name="'Сохранить'"> </BaseButton> -->
       <BaseButton
         :name="'Добавить роль'"
         :is-active="true"
@@ -30,11 +29,9 @@
           </td>
           <td>
             {{ item.description }}
-            <!-- <BaseTextarea :text="item.description"> </BaseTextarea> -->
           </td>
-          <td>
+          <td class="hide_permissions">
             {{ item.permissions }}
-            <!-- <BaseTextarea :text="item.permissions"> </BaseTextarea> -->
           </td>
         </tr>
       </tbody>
@@ -69,7 +66,7 @@ const role = computed(() =>
         id: 0,
         name: '',
         description: '',
-        permissions: '',
+        permissions: {},
       }
 );
 
@@ -110,6 +107,22 @@ tr {
   & button {
     max-width: 200px;
     border-radius: 15px;
+  }
+}
+@media (max-width: 900px) {
+  .admin__roles__container {
+    & .admin__role__container_button_box {
+      height: 6vh;
+      button {
+        max-width: auto;
+        height: 4vh;
+      }
+    }
+
+    & .box-3,
+    .hide_permissions {
+      display: none;
+    }
   }
 }
 </style>
