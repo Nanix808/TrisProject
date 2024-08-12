@@ -105,33 +105,33 @@ function openLoginPopup() {
   & .popup {
     max-width: 480px;
   }
+
+  & .button-box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    & button {
+      width: 200px;
+      margin-bottom: 10px;
+    }
+
+    & span {
+      margin-top: 10px;
+      cursor: pointer;
+      font-size: 12px;
+      color: $default;
+
+      &:hover {
+        color: $second-color;
+      }
+    }
+  }
 }
 .user-box {
   position: relative;
   padding-bottom: 30px;
-}
-
-.button-box {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  & button {
-    width: 200px;
-    margin-bottom: 10px;
-  }
-
-  & span {
-    margin-top: 10px;
-    cursor: pointer;
-    font-size: 12px;
-    color: $default;
-
-    &:hover {
-      color: $second-color;
-    }
-  }
 }
 </style>

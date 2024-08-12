@@ -150,6 +150,11 @@ function deleteUser() {
 }
 
 @media (max-width: 720px) {
+  .admin-user-popup-container {
+    & .button-box {
+      flex-direction: column;
+    }
+  }
   .role_box {
     display: flex;
     flex-direction: column;

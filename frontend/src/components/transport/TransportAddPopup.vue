@@ -153,7 +153,7 @@ const emit = defineEmits<{
 const router = useRouter();
 const car_id = ref(null);
 const date_from = ref(null);
-const date_to = ref('2024-07-22 12:00');
+const date_to = ref(null);
 const datepicker_from = ref(null);
 const datepicker_to = ref(null);
 const destination = ref(null);
@@ -195,7 +195,10 @@ const config = computed(() => {
     static: true,
     minTime: get_router_name_admin_permission.value
       ? '09:00'
-      : get_time_roundToNearestHalfHour(),
+      : new Date().setHours(0, 0, 0, 0) ===
+        new Date(date_from.value).setHours(0, 0, 0, 0)
+      ? get_time_roundToNearestHalfHour()
+      : '09:00',
     maxTime: '18:00',
     minuteIncrement: 30,
     time_24hr: true,
@@ -334,7 +337,6 @@ function addTransport() {
     car_id_page: router.currentRoute.value.query.car,
     id: props.data.id,
     date: props.data.date,
-    user_id: props.user_id,
     date_from: date_from.value,
     date_to: date_to_new,
     car_id: car_id.value,
@@ -344,9 +346,11 @@ function addTransport() {
     contact: contact.value,
     notice: notice.value,
   };
+  console.log(payload);
   if (props.update) {
     store.dispatch('editTransport', payload);
   } else {
+    payload['user_id'] = props.user_id;
     store.dispatch('addTransport', payload);
   }
 
@@ -466,6 +470,9 @@ label,
   .transport-add-popup-container {
     & .popup {
       max-width: auto;
+    }
+    & .car_button-box {
+      flex-direction: column;
     }
   }
 }

@@ -71,7 +71,9 @@
           <td :class="['choised', 'hidden']" @click="">
             {{ get_user(item).contact }}
           </td>
-          <td :class="['choised']" @click="">{{ get_user(item).status }}</td>
+          <td :class="collor_status(get_user(item).status)" @click="">
+            {{ get_user(item).status }}
+          </td>
           <td :class="['choised', 'notice_td']">
             <div
               v-if="get_user(item).notice"
@@ -89,6 +91,7 @@
           v-for="item in store.state.transport.transports_without_time_to"
           :key="item"
           @click="editTransport(item)"
+          class="not_time_table"
         >
           <td class="choised" @click="">9->18</td>
           <td class="choised" @click="">
@@ -98,12 +101,14 @@
           <td class="choised" @click="">{{ item.destination }}</td>
           <td class="choised" @click="">{{ item.contact }}</td>
 
-          <td class="choised" @click="">{{ item.status }}</td>
+          <td class="choised" :class="collor_status(item.status)" @click="">
+            {{ item.status }}
+          </td>
           <td :class="['choised', 'notice_td']">
             <div
               v-if="item.notice"
               class="transport_notice_container transport_notice"
-              @click.stop="set_notice_text(item.destination)"
+              @click.stop="set_notice_text(item)"
             >
               <div class="transport_notice_icon"></div>
             </div>
@@ -125,8 +130,8 @@
       :is-open="isTransportPopUpOpen"
       :data="data"
       :update="edit"
-      :name="'Добавить задачу'"
-      :user_id="1"
+      :name="edit ? 'Изменить задачу' : 'Добавить задачу'"
+      :user_id="store.state.auth.userId"
       @close="isTransportPopUpOpen = false"
     />
   </div>
@@ -220,6 +225,16 @@ function set_notice_text(item) {
 function get_short_name(item) {
   if (item) {
     return item.split('@')[0];
+  }
+}
+
+function collor_status(status) {
+  if (status == 'Принята') {
+    return 'green';
+  } else if (status == 'Выполнена') {
+    return 'blue';
+  } else if (status == 'Отменена') {
+    return 'red';
   }
 }
 
@@ -342,7 +357,7 @@ watch([date, car], ([newA, newB], [prevA, prevB]) => {
   width: 50%;
 }
 .tbox-4 {
-  width: 105px;
+  min-width: 135px;
 }
 .base__table__container .table td.notice_td {
   padding: 0;
@@ -369,8 +384,10 @@ watch([date, car], ([newA, newB], [prevA, prevB]) => {
 .base__table__container tr.collor_table_0 > td,
 .base__table__container tr.collor_table_1 > td,
 .base__table__container tr.collor_table_2 > td,
-.base__table__container tr.collor_table_3 > td {
+.base__table__container tr.collor_table_3 > td,
+.not_time_table {
   border: none;
+  cursor: pointer;
 }
 
 .transport_button_box {
@@ -485,7 +502,15 @@ watch([date, car], ([newA, newB], [prevA, prevB]) => {
     background-repeat: no-repeat;
   }
 }
-
+.green {
+  color: rgb(91, 81, 225);
+}
+.blue {
+  color: rgb(36, 134, 42);
+}
+.red {
+  color: $default-error;
+}
 @media (max-width: 600px) {
   .transport_container {
     & .base__table__container .table th.tbox-3 {

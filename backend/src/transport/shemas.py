@@ -24,7 +24,6 @@ class TransportUpdate(BaseModel):
     status: Status | None = None
     contact: str | None = None
     car_id: int | None = None
-    user_id: int | None = None
     date_from: datetime | None = None
     date_to: datetime | None = None
 

@@ -1,6 +1,10 @@
 <template>
   <div v-if="props.isOpen" class="admin-car-popup-container">
-    <BasePopUP :name="props.name" @close="close" :width="60">
+    <BasePopUP
+      :name="props.data.id == 0 ? props.name : 'Редактировать машину'"
+      @close="close"
+      :width="60"
+    >
       <div class="user-box">
         <BaseInput
           :isActive="true"
@@ -125,7 +129,7 @@ function saveChanges() {
 }
 
 function deleteRole() {
-  if (confirm('Вы действительно хотите удалить роль?')) {
+  if (confirm('Вы действительно хотите удалить машину?')) {
     store.dispatch('deleteCar', props.data.id);
     emit('close');
   }

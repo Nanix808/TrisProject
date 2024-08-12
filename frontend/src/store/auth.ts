@@ -30,13 +30,17 @@ export default {
     const refreshToken = localStorage.getItem('refreshToken') || null;
     const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
     const isSuperUser = localStorage.getItem('isSuperUser') === 'true';
+    const userId =
+      localStorage.getItem('userId') === null
+        ? null
+        : Number(localStorage.getItem('userId'));
     const name = localStorage.getItem('name');
     const refreshTokenRequest = null;
     const permissions = JSON.parse(localStorage.getItem('permissions')) || null;
 
     return {
       userName: '',
-      userId: null,
+      userId,
       userEmail: '',
       accessToken,
       refreshToken,
@@ -44,7 +48,6 @@ export default {
       name: name || '',
       isSuperUser,
       permissions,
-      // переменная для хранения запроса токена (для избежания race condition)
       refreshTokenRequest,
     };
   },
@@ -62,6 +65,7 @@ export default {
 
       localStorage.removeItem('name');
       localStorage.removeItem('accessToken');
+      localStorage.removeItem('userId');
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('isAuthenticated');
       localStorage.removeItem('isSuperUser');
@@ -79,7 +83,9 @@ export default {
       state.isSuperUser = is_admin;
       const permissions = isPermissions(data.access_token);
       state.permissions = permissions;
-      state.userId = getIdUser(data.access_token);
+      const userId = getIdUser(data.access_token);
+      state.userId = userId;
+      localStorage.setItem('userId', userId.toString());
       localStorage.setItem('accessToken', data.access_token);
       localStorage.setItem('isSuperUser', is_admin.toString());
       localStorage.setItem('refreshToken', data.refresh_token);

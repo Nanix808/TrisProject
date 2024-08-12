@@ -100,7 +100,7 @@ function openRegisterPopup() {
   padding-bottom: 30px;
 }
 
-.button-box {
+.login-popup-container .button-box {
   width: 100%;
   display: flex;
   flex-direction: column;

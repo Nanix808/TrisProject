@@ -29,7 +29,7 @@
     </BaseTable>
 
     <AdminCarPopUp
-      :name="'Изменить машину'"
+      :name="'Добавить машину'"
       :isOpen="store.state.popup.isAdminCarPopupOpen"
       :data="car"
       @close="store.commit('closeAdminCarPopup')"

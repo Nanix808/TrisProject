@@ -57,7 +57,6 @@ export const getIdUser = (token: string | null): number | null => {
     const tokenInfo = token.split('.')[1];
     const tokenInfoDecoded = window.atob(tokenInfo);
     const { sub_id }: IAuthTokenInfo = JSON.parse(tokenInfoDecoded);
-
     return Number(sub_id);
   } catch (e) {
     console.error(e);
