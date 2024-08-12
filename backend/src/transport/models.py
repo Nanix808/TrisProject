@@ -28,11 +28,11 @@ class Status(str, enum.Enum):
 class Transport(UserRelationMixin, Base):
     _user_back_populates = "transport"
 
-    destination = mapped_column(String(150))
+    destination = mapped_column(String(200))
     notice: Mapped[str | None] = mapped_column(String(500))
     type_task: Mapped[TypeTask] = mapped_column(nullable=True)
     status: Mapped[Status] = mapped_column(nullable=True)
-    contact: Mapped[str | None] = mapped_column(String(50))
+    contact: Mapped[str | None] = mapped_column(String(200))
     car_id: Mapped[int] = mapped_column(ForeignKey("car.id"))
     car: Mapped["Car"] = relationship("Car", back_populates="transport")
     created_on: Mapped[DateTime] = mapped_column(
