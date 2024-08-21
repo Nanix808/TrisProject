@@ -11,3 +11,4 @@ backend/certs/*
 frontend/node_modules/*
 frontend/dist/*
 frontend/.vite/*
+kafka/kafka-windows-docker-data/*

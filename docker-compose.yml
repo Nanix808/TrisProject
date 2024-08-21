@@ -44,10 +44,6 @@ services:
     ports:
       - '8000:80'
     restart: unless-stopped
-    # entrypoint: /bin/sh
-    # arguments:
-     
-    #   -VITE_BASE_URL=tris_backend
     environment:
       VITE_BASE_URL: trisbackend
     depends_on:
@@ -56,28 +52,8 @@ services:
       - mycustomnetwork 
  
 
-
-  # frontend:  
-
-
-  # postgres_test:
-  #   image: postgres:latest
-  #   environment:
-  #     POSTGRES_DB: "tris_test"
-  #     POSTGRES_USER: "test"
-  #     POSTGRES_PASSWORD: "test"
-  #     TZ: "Europe/Moscow"
-  #     PGTZ: "Europe/Moscow"
-  #   ports:
-  #     - "5433:5432"
-  #   networks:
-  #     - mycustomnetwork      
-
-
-
 volumes:
   postgres_db:
-
 
 networks:
   mycustomnetwork:
