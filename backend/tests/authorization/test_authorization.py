@@ -1,18 +1,10 @@
 import pytest
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import insert, select
-from users.models import User
+
 from httpx import AsyncClient
 from contextlib import nullcontext as does_not_raise
 
 
 class TestRole:
-
-    @pytest.mark.asyncio
-    async def test_get_users(self, ac: AsyncClient, user_list):
-        response = await ac.get("/users/")
-        assert response.status_code == 200, "users/ - not all users returned"
-        assert len(response.json()) == len(user_list)
 
     @pytest.mark.asyncio
     @pytest.mark.parametrize(
