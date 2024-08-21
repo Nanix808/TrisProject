@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Boolean, DateTime, Text, JSON, ForeignKey
+from sqlalchemy import Column, String, Boolean, DateTime, Text, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql import func
 from models import Base
@@ -28,9 +28,6 @@ class User(Base):
         ForeignKey("role.id", ondelete="SET NULL"), nullable=True
     )
     role: Mapped["Role"] = relationship("Role", back_populates="user")
-    # role_id: Mapped[list["Role"]] = relationship(
-    #     "Role", back_populates="user", nullable=False
-    # )
     refresh_token: Mapped[str] = Column(Text)
 
     def set_password(self, password):
@@ -46,9 +43,6 @@ class User(Base):
             "username": self.username,
         }
 
-    # def __repr__(self):
-    #     return f"{self.id}{self.username}>"
-
 
 class Profile(UserRelationMixin, Base):
     _user_id_unique = True
@@ -57,10 +51,3 @@ class Profile(UserRelationMixin, Base):
     first_name: Mapped[str | None] = mapped_column(String(40))
     last_name: Mapped[str | None] = mapped_column(String(40))
     bio: Mapped[str | None]
-
-
-# class Role(Base):
-#     name: Mapped[str | None] = mapped_column(String(40))
-#     description: Mapped[str | None] = mapped_column(String(255))
-#     permissions: Mapped[list | None] = mapped_column(JSON, nullable=False)
-#     user: Mapped["User"] = relationship("User", back_populates="role")

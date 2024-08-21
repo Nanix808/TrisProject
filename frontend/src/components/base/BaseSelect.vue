@@ -45,7 +45,6 @@ onMounted(() => {
 
   & select {
     appearance: none;
-    /* safari */
     -webkit-appearance: none;
     width: 100%;
     font-size: 1rem;

@@ -35,20 +35,15 @@ export default {
         .then((res) => {
           commit('setTransportsArray', res.data);
         })
-        .catch((error) => {
-          //   commit('cleanUsersArray');
-        });
+        .catch((error) => {});
     },
     get_transport_by_date({ commit }, payload: any) {
       UrlApi.transportRoutes
         .getTransport_by_date(payload)
         .then((res) => {
-          // console.log(res.data);
           commit('setTransportsArray', res.data);
         })
-        .catch((error) => {
-          //   commit('cleanUsersArray');
-        });
+        .catch((error) => {});
     },
     addTransport({ commit, dispatch }, payload: any) {
       UrlApi.transportRoutes
@@ -67,14 +62,10 @@ export default {
       UrlApi.transportRoutes
         .editTransport(payload.id, payload)
         .then((res) => {
-          // location.reload();
           dispatch(
             'get_transport_by_date',
             (payload = { date_in: payload.date, car_id: payload.car_id_page })
           );
-          // self.get_transport_by_date({ commit }, payload);
-
-          // commit('setTransportsArray', res.data);
         })
         .catch((error) => {
           commit('cleanUsersArray');
@@ -99,13 +90,8 @@ export default {
         .then((res) => {
           commit('setCarsArray', res.data);
         })
-        .catch((error) => {
-          //   commit('cleanUsersArray');
-        });
+        .catch((error) => {});
     },
-   
   },
-  getters: {
-    // isAuthenticatedUser: (state: User): boolean => state.email,
-  },
+  getters: {},
 };

@@ -1,7 +1,7 @@
 from typing import Annotated
 from datetime import datetime
 
-from fastapi import APIRouter, Depends, status, Path, Request, Body
+from fastapi import APIRouter, Depends, status, Path
 
 from .service import TransportService, CarService
 from .dependencies import transport_service, car_service
@@ -12,8 +12,6 @@ from .shemas import (
     TransportReturn,
     CarUpdate,
 )
-from users.schemas import User
-from auth.dependencies import get_current_active_auth_user
 from authorization.dependencies import get_uid_from_request
 from authorization.dependencies import get_current_active_auth_is_superuser_user
 

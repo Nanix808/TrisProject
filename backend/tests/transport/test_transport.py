@@ -1,10 +1,8 @@
 import pytest
-import datetime
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import insert, select
-from transport.models import Transport, Car, TypeTask, Status
 from httpx import AsyncClient
 from contextlib import nullcontext as does_not_raise
+
+from transport.models import TypeTask, Status
 
 
 class TestTransort:

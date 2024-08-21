@@ -33,8 +33,3 @@ export const deleteTransport = (id) => {
   const url = '/transport/' + id;
   return DefaultApiInstance.delete(url);
 };
-
-// export const createUser = (payload) => {
-//   const url = '/users/';
-//   return DefaultApiInstance.post(url, payload);
-// };

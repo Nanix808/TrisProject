@@ -20,11 +20,6 @@ oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl=settings.auth_jwt.tokenUrl,
 )
 
-
-# async def validate_auth_user2():
-#     return 2
-
-
 async def validate_auth_user(
     payload: UserLogin,
     user_service: Annotated[UserService, Depends(user_service)],

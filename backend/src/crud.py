@@ -1,13 +1,7 @@
 from abc import ABC, abstractmethod
 
-from sqlalchemy import insert, select
-from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from contextlib import asynccontextmanager
-
-# from db.db import async_session_maker
-
-from database import get_async_session
 
 
 class AbstractRepository(ABC):
@@ -34,7 +28,3 @@ class SQLAlchemyRepository(AbstractRepository):
         res = await self.session.execute(stmt)
         res = res.scalars().all()
         return res
-        # return res.scalars().all()
-
-        # res = [row[0].to_read_model() for row in res.all()]
-        # return res

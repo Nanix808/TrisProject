@@ -35,9 +35,6 @@ DefaultApiInstance.interceptors.request.use(
       return config;
     }
     // Здесь можно модифицировать конфигурацию запроса
-    // config.headers.authorization = `Bearer ${localStorage.getItem(
-    //   'accessToken'
-    // )}`;
     const accessToken = await store.dispatch('getAccessToken');
 
     if (accessToken) {
@@ -56,33 +53,6 @@ DefaultApiInstance.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-// Добавление интерцептора для запросов
-// DefaultApiInstance.interceptors.request.use(
-//   (config) => {
-//     // if (config.url && urlsSkipAuth.includes(config.url)) {
-//     //   return config;
-//     // }
-//     // Здесь можно модифицировать конфигурацию запроса
-//     console.log('1111111111111111111111111');
-//     // const accessToken = store.dispatch('getAccessToken');
-//     console.log(accessToken, '22222222222222222222222');
-//     // if (accessToken) {
-//     //   const autharization = `Bearer ${accessToken}`;
-
-//     //   config.headers = {
-//     //     ...config.headers,
-//     //     authorization: autharization,
-//     //   };
-//     //   // config.headers.authorization = `Bearer ${localStorage.getItem(
-//     //   //   'accessToken'
-//     //   // )}`;
-//     // }
-//     return config;
-//   },
-//   (error) => {
-//     return Promise.reject(error);
-//   }
-// );
 
 // Добавление интерцептора для ответов
 DefaultApiInstance.interceptors.response.use(
@@ -101,34 +71,6 @@ DefaultApiInstance.interceptors.response.use(
         store.commit('resetUser');
         store.commit('openLoginPopup');
       });
-
-      // axios
-      //   .post(
-      //     'http://127.0.0.1:8000/auth/refresh/',
-      //     {},
-      //     {
-      //       headers: {
-      //         'Content-Type': 'application/json',
-      //         Authorization: `Bearer ${localStorage.getItem('refreshToken')}`,
-      //       },
-      //     }
-      //   )
-      //   .then((res) => {
-      //     localStorage.setItem('accessToken', res.data.access_token);
-      //     error.config.headers.authorization = `Bearer ${res.data.access_token}`;
-      //     return '';
-      //   })
-      //   .catch((error) => {
-      //     if (
-      //       error.response.data.detail ===
-      //       'refresh token invalid (user not found)'
-      //     ) {
-      //       console.log('redirect to login');
-      //       router.push({ name: 'home' }).then(() => {
-      //         store.commit('openLoginPopup');
-      //       });
-      //     }
-      //   });
     }
 
     if (error.response.status === 401) {

@@ -2,7 +2,7 @@ import pytest
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from authorization.models import Role
-from users.models import User
+
 
 @pytest.fixture(scope="session")
 def roles_list_authorization():
@@ -29,7 +29,3 @@ async def test_create_roles_data_from_role(
         session.add(role)
     await session.commit()
     await session.refresh(role)
-    # yield
-    # await session.execute(User.__table__.delete())
-    # await session.execute(Role.__table__.delete())
-    # await session.commit()

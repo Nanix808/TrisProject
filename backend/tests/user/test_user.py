@@ -1,7 +1,4 @@
 import pytest
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import insert, select
-from users.models import User
 from httpx import AsyncClient
 from contextlib import nullcontext as does_not_raise
 
@@ -23,9 +20,6 @@ class TestUser:
 
         response = await ac.get(f"/users/{user_id}")
         assert response.status_code == status_code, "users/ - not user returned"
-        # if response.status_code == 200:
-        #     user = response.json()
-        #     assert user_list[0]["username"] == user["username"]
 
     @pytest.mark.asyncio
     async def test_get_users(self, ac: AsyncClient, user_list):

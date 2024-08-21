@@ -1,7 +1,6 @@
 import datetime
 import pytest
 
-# from fastapi import Request
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.testclient import TestClient
 
@@ -91,7 +90,6 @@ async def get_user():
         {
             "id": 1,
             "username": "User_1",
-            # "password_hash": "Password_1",
             "is_active": True,
             "role_id": 1,
             "is_superuser": True,

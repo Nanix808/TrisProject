@@ -25,9 +25,7 @@ const emit = defineEmits<{
 <style lang="scss">
 button {
   width: 100%;
-
   background-color: $second-color;
-  /* Green */
   border: none;
   color: white;
   padding: 6px;

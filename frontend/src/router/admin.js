@@ -51,7 +51,6 @@ export default [
       {
         path: '',
         name: 'admin_users1',
-        // component: () => import('../views/admin/users/GetUsersAdmin.vue'),
       },
     ],
   },

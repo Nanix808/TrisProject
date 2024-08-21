@@ -1,22 +1,19 @@
 from asyncio import current_task
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.ext.asyncio import (
-    AsyncSession,
-    create_async_engine,
     async_sessionmaker,
     async_scoped_session,
-    AsyncConnection,
 )
-from contextlib import contextmanager, asynccontextmanager
-from typing import AsyncIterator
+from contextlib import asynccontextmanager
 from config import settings
-from models import Base
 from sqlalchemy.pool import NullPool
 
 
 class DatabaseHelper:
     def __init__(self, url: str, echo: bool = False):
-        self.engine = create_async_engine(url=url, echo=echo, poolclass=NullPool)
+        self.engine = create_async_engine(
+            url=url, echo=echo, poolclass=NullPool
+        )
         self.session_factory = async_sessionmaker(
             bind=self.engine,
             autoflush=False,

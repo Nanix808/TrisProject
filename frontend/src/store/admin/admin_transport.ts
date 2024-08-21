@@ -18,7 +18,6 @@ export default {
           dispatch('get_all_cars');
         })
         .catch((error) => {
-          //   commit('cleanUsersArray');
         });
     },
     async updateCar({ commit, dispatch }, payload: any) {
@@ -28,7 +27,6 @@ export default {
           dispatch('get_all_cars');
         })
         .catch((error) => {
-          //   commit('cleanUsersArray');
         });
     },
     deleteCar({ commit, dispatch }, id: number) {

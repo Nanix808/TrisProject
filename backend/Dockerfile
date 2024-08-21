@@ -16,32 +16,6 @@ EXPOSE 8000
 RUN apt update
 
 RUN apt-get -y update
-# RUN apt-get install build-essential -y
-# RUN apt-get install zlib1g-dev -y
-# RUN apt-get install build-essential -y
-# RUN apt-get install zlib1g-dev -y
-# RUN apt-get install libncurses5-dev -y
-# RUN apt-get install libgdbm-dev -y
-# RUN apt-get install libnss3-dev -y
-# RUN apt-get install libreadline-dev -y
-# RUN apt-get install libffi-dev -y
-# RUN apt-get install libsqlite3-dev -y
-# RUN apt-get install wget -y
-# RUN apt-get install libbz2-dev -y
-# RUN apt-get install libgl1-mesa-glx -y
-# RUN apt-get install libpcap-dev -y
-# RUN apt-get install libpq-dev -y
-
-# RUN apt-get install libssl-dev -y
-# RUN apt-get install cargo -y
-# RUN apt-get install pkg-config -y
-
-# RUN apt-get install libkrb5-dev -y
-# RUN apt-get install gcc -y
-
-# RUN apt-get install libzbar-dev -y
-# RUN apt-get install libzbar0 -y
-
 RUN apt-get install build-essential -y
 RUN apt-get install libssl-dev -y
 RUN apt-get install libffi-dev -y

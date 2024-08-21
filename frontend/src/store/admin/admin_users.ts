@@ -30,16 +30,6 @@ export default {
     },
     setEndpointsArray(state: UsersState, newEndpoint: any) {
       state.list_endpoints = newEndpoint;
-
-      // for (let key in newEndpoint) {
-      //   if (newEndpoint.hasOwnProperty(key)) {
-      //     console.log(`${key} : ${newEndpoint[key]}`);
-      //   }
-
-      // newEndpoint.forEach((item) => {
-      //   state.list_endpoints.push(item);
-      // });
-      // }
     },
     cleanEndpointsArray(state: UsersState, newEndpoint: any) {
       state.list_endpoints = [];

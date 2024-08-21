@@ -149,7 +149,7 @@ interface Props {
   data: any;
 }
 const props = withDefaults(defineProps<Props>(), {
-  // update: false,
+
 });
 const name = ref('');
 const description = ref();
@@ -157,11 +157,6 @@ const description = ref();
 const checked_value = ref<any>({});
 
 const change_params = ref<any>({});
-
-// onMounted(() => {
-//   console.log('mounted');
-//   checked_value.value = store.state.admin_users.list_endpoints;
-// });
 
 const isChangeCheckedValue = computed(() => {
   return (

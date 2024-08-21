@@ -60,7 +60,6 @@ async def get_permissions(
     if not role:
         raise not_permission_exc
     request_method = str(request.method).upper()
-    # action = translate_method_to_action(request_method)
     resource = request.url.path[1:].split("/")[0]
 
     permissions = role.permissions.get(resource, None)
@@ -71,6 +70,3 @@ async def get_permissions(
                 request.state.uid = 0
             return True
     return False
-    # if user.is_active:
-    #     return user
-    # raise unactive_exc

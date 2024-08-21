@@ -107,7 +107,6 @@ function updateUserParameter(parameter: any, type: string, id: number) {
 function saveChanges() {
   store.dispatch('updatedUser', change_params.value);
   change_params.value = {};
-  // Object.keys(change_params).forEach((key) => delete change_params[key]);
 }
 
 function choiseuser(id: number) {

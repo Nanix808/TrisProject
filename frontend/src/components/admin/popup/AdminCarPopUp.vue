@@ -60,11 +60,6 @@ const checked_value = ref<any>({});
 
 const change_params = ref<any>({});
 
-// onMounted(() => {
-//   console.log('mounted');
-//   checked_value.value = store.state.admin_users.list_endpoints;
-// });
-
 const isChangeCheckedValue = computed(() => {
   return (
     JSON.stringify(checked_value.value) !==
@@ -139,9 +134,6 @@ watch(
   () => props.isOpen,
   () => {
     checked_value.value = props.data.permissions;
-    // checked_value.value = JSON.parse(
-    //   JSON.stringify(store.state.admin_users.list_endpoints)
-    // );
     name.value = props.data.name;
     description.value = props.data.description;
   }

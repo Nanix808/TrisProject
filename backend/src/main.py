@@ -1,6 +1,5 @@
-from fastapi import FastAPI, Request, Depends
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from starlette.middleware.base import BaseHTTPMiddleware
 import uvicorn
 from auth.router import auth_router
 from users.router import user_router
@@ -11,13 +10,6 @@ from middleware import auth_middleware
 
 
 app = FastAPI(debug=True)
-
-
-# router = APIRouter(dependencies=[Depends(auth_middleware)])
-
-# Add the middleware to FastAPI
-# app.add_middleware(RBACMiddleware)
-
 
 # Add the router to FastAPI
 app.include_router(auth_router, prefix="/auth", tags=["auth"])

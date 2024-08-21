@@ -41,7 +41,6 @@ class TransportRepository(SQLAlchemyRepository):
                 )
                 empty = await session.execute(stmt)
                 empty = empty.scalars().all()
-            #     empty = await session.scalars(stmt).all()
             return empty
 
 

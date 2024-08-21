@@ -24,13 +24,3 @@ export interface UsersState {
   roles: Role[];
   list_endpoints: object | null;
 }
-
-// export interface Roles {
-//   name: string;
-//   description: string;
-//   permissions: boolean;
-// }
-
-// export interface RolesState {
-//   roles: Roles[];
-// }

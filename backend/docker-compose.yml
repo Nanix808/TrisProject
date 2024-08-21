@@ -21,21 +21,9 @@ services:
       POSTGRES_USER: "test"
       POSTGRES_PASSWORD: "test"
     ports:
-      - "5433:5432"
+      - "5434:5432"
     networks:
       - mycustomnetwork      
-
-
-#   bewise_ai:
-#     build: ./
-#     container_name: bewise_ai
-#     ports:
-#       - '8000:8000'
-#     restart: unless-stopped
-#     depends_on:
-#       - postgres
-#     networks:
-#       - mycustomnetwork
 
 
 volumes:

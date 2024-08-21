@@ -1,15 +1,10 @@
 import enum
-import datetime
 from sqlalchemy import String, ForeignKey, DateTime
 from sqlalchemy.sql import func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from models import Base
 
-
-from .mixins import TransportRelationMixin
-from users.models import User
 from users.mixins import UserRelationMixin
-from sqlalchemy.dialects.postgresql import ENUM as PgEnum
 
 
 class TypeTask(str, enum.Enum):

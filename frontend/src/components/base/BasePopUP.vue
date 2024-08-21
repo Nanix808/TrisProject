@@ -24,8 +24,6 @@ const props = withDefaults(defineProps<Props>(), {
   width: 100,
 });
 
-// const props = defineProps<Props>();
-
 const emit = defineEmits<{
   (e: 'close'): void;
 }>();
@@ -33,8 +31,6 @@ const emit = defineEmits<{
 function close() {
   emit('close');
 }
-
-//   import Password from 'vue-password-strength-meter'
 </script>
 
 <style lang="scss">

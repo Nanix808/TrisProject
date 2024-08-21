@@ -1,12 +1,8 @@
-import datetime
-
-from fastapi import Request
 from repository import AbstractRepository
 
-from .shemas import TransportCreate, TransportUpdate, CarUpdate
+from .shemas import TransportCreate, TransportUpdate
 from .models import Transport, Car
 from .exceptions import (
-    transport_in_db_exc,
     transport_not_found_exc,
     transport_in_db_time_exc,
     car_in_db_exc,

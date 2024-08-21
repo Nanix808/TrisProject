@@ -1,6 +1,5 @@
 <template>
   <div class="header__container">
-    <!-- <span @click="/admin">Admin</span> -->
     <div>
       <div class="main_home">
         <router-link to="/"
@@ -41,23 +40,6 @@ const isLoginPopupOpen = computed(() => store.state.popup.isLoginPopupOpen);
 const isRegisterPopupOpen = computed(
   () => store.state.popup.isRegisterPopupOpen
 );
-// && !store.state.user.registerSuccess
-
-// function closeLoginPopup() {
-//     store.commit('closeLoginPopup');
-// }
-// function openLoginPopup() {
-//     store.commit('openLoginPopup');
-// }
-
-// function closeRegisterPopup() {
-//     store.commit('closeRegisterPopup');
-// }
-// function openRegisterPopup() {
-
-//     return store.state.popup.isRegisterPopupOpen && !store.state.user.registerSuccess
-//     store.commit('openRegisterPopup');
-// }
 </script>
 
 <style lang="scss">

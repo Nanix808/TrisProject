@@ -1,21 +1,14 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, status, Path
-from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import APIRouter, Depends, status, Path
 
-
-from database import db_helper
-from authorization.dependencies import get_current_active_auth_is_superuser_user
 from .dependencies import user_by_id, user_service
-from .repositories import UserRepository
 from .service import UserService
 from .schemas import (
     User,
-    UserBase,
     UserCreate,
     UserCreated,
     UserUpdate,
-    UserUpdatePartial,
 )
 
 

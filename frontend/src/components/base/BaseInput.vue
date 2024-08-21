@@ -43,7 +43,6 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
 });
 
-// const props = defineProps<Props>();
 
 const emit = defineEmits<{
   (e: 'input_value', value: string): void;

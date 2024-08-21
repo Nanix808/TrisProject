@@ -1,7 +1,6 @@
 <template>
   <div class="admin__roles__container">
     <div class="admin__role__container_button_box">
-      <!-- <BaseButton :is-active="false" :name="'Сохранить'"> </BaseButton> -->
       <BaseButton
         :name="'Добавить транспорт'"
         :is-active="true"
